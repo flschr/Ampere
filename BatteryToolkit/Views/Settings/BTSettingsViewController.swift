@@ -8,6 +8,8 @@ import os.log
 
 @MainActor
 internal final class BTSettingsViewController: NSViewController {
+    private static let contentSize = NSSize(width: 520, height: 353)
+
     private enum ChargePreset: Int, CaseIterable {
         case everyday
         case desk
@@ -50,6 +52,7 @@ internal final class BTSettingsViewController: NSViewController {
     private var currentSettings: [String: NSObject & Sendable]? = nil
     private var presetLabel: NSTextField? = nil
     private var presetControl: NSSegmentedControl? = nil
+    private weak var cancelButton: NSButton? = nil
     private var optimizedChargingWarning: NSTextField? = nil
     private var isPowerFooterVisible = true
     
@@ -141,6 +144,18 @@ internal final class BTSettingsViewController: NSViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
 
+        self.view.widthAnchor.constraint(
+            equalToConstant: Self.contentSize.width
+        ).isActive = true
+        self.view.heightAnchor.constraint(
+            equalToConstant: Self.contentSize.height
+        ).isActive = true
+        self.configurePowerTabTextFields()
+        self.cancelButton = self.view.subviews.compactMap {
+            $0 as? NSButton
+        }.first {
+            $0.action == #selector(self.cancelButtonAction(_:))
+        }
         self.configureUserTab()
         self.addPresetControl()
         self.addOptimizedChargingWarning()
@@ -288,6 +303,32 @@ internal final class BTSettingsViewController: NSViewController {
         self.statusItemDisplayModePopUpButton =
             settingsUserView.statusItemDisplayModePopUpButton
     }
+
+    private func configurePowerTabTextFields() {
+        guard let powerView = self.powerTab.view else {
+            assertionFailure()
+            return
+        }
+
+        for textField in powerView.allTextFields {
+            textField.setContentCompressionResistancePriority(
+                .defaultLow,
+                for: .horizontal
+            )
+
+            guard !textField.isEditable else {
+                continue
+            }
+
+            if textField.font?.pointSize ?? 0 < NSFont.systemFontSize {
+                textField.cell?.wraps = true
+                textField.lineBreakMode = .byWordWrapping
+            } else {
+                textField.cell?.wraps = false
+                textField.lineBreakMode = .byTruncatingTail
+            }
+        }
+    }
     
     private func setMinCharge(value: Int) {
         self.minChargeNum = NSNumber(value: value)
@@ -333,6 +374,17 @@ internal final class BTSettingsViewController: NSViewController {
                 constant: -18
             ),
         ])
+        if let cancelButton {
+            presetControl.trailingAnchor.constraint(
+                lessThanOrEqualTo: cancelButton.leadingAnchor,
+                constant: -12
+            ).isActive = true
+        } else {
+            presetControl.trailingAnchor.constraint(
+                lessThanOrEqualTo: self.view.trailingAnchor,
+                constant: -20
+            ).isActive = true
+        }
 
         self.presetControl = presetControl
         self.presetLabel = label
@@ -471,6 +523,15 @@ internal final class BTSettingsViewController: NSViewController {
             }
         } catch {
             BTErrorHandler.errorHandler(error: error)
+        }
+    }
+}
+
+private extension NSView {
+    var allTextFields: [NSTextField] {
+        self.subviews.flatMap { subview in
+            ([subview as? NSTextField].compactMap { $0 }) +
+                subview.allTextFields
         }
     }
 }

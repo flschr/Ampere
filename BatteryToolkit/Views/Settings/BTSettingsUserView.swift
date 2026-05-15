@@ -32,12 +32,22 @@ internal final class BTSettingsUserView: NSView {
             labelWithString: BTLocalization.Settings.autostart
         )
         autostartLabel.translatesAutoresizingMaskIntoConstraints = false
+        autostartLabel.lineBreakMode = .byWordWrapping
+        autostartLabel.maximumNumberOfLines = 2
+        autostartLabel.setContentCompressionResistancePriority(
+            .defaultLow,
+            for: .horizontal
+        )
 
         let autostartInfo = NSTextField(
             wrappingLabelWithString: BTLocalization.Settings.menuBarExtraInfo
         )
         autostartInfo.translatesAutoresizingMaskIntoConstraints = false
         autostartInfo.textColor = .secondaryLabelColor
+        autostartInfo.setContentCompressionResistancePriority(
+            .defaultLow,
+            for: .horizontal
+        )
 
         self.autostartSwitch.translatesAutoresizingMaskIntoConstraints = false
         self.autostartSwitch.controlSize = .mini
@@ -46,6 +56,10 @@ internal final class BTSettingsUserView: NSView {
             labelWithString: BTLocalization.Settings.StatusItem.displayMode
         )
         statusItemLabel.translatesAutoresizingMaskIntoConstraints = false
+        statusItemLabel.setContentCompressionResistancePriority(
+            .defaultLow,
+            for: .horizontal
+        )
 
         self.statusItemDisplayModePopUpButton.translatesAutoresizingMaskIntoConstraints = false
         self.statusItemDisplayModePopUpButton.controlSize = .small
@@ -62,12 +76,20 @@ internal final class BTSettingsUserView: NSView {
             labelWithString: BTLocalization.Settings.uninstall
         )
         uninstallTitle.translatesAutoresizingMaskIntoConstraints = false
+        uninstallTitle.setContentCompressionResistancePriority(
+            .defaultLow,
+            for: .horizontal
+        )
 
         let uninstallInfo = NSTextField(
             wrappingLabelWithString: BTLocalization.Settings.uninstallInfo
         )
         uninstallInfo.translatesAutoresizingMaskIntoConstraints = false
         uninstallInfo.textColor = .secondaryLabelColor
+        uninstallInfo.setContentCompressionResistancePriority(
+            .defaultLow,
+            for: .horizontal
+        )
 
         let uninstallButton = NSButton(
             title: BTLocalization.Settings.uninstallBatteryToolkit,
@@ -120,7 +142,8 @@ internal final class BTSettingsUserView: NSView {
                 equalTo: autostartLabel.leadingAnchor
             ),
             autostartInfo.trailingAnchor.constraint(
-                equalTo: autostartLabel.trailingAnchor
+                lessThanOrEqualTo: self.autostartSwitch.leadingAnchor,
+                constant: -18
             ),
 
             statusItemLabel.topAnchor.constraint(

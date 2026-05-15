@@ -9,7 +9,8 @@ import os.log
 @main
 @MainActor
 internal final class BTAppDelegate: NSObject, NSApplicationDelegate {
-    private var menuBarExtraItem: NSStatusItem?
+    private var initialized = false
+    private var statusItemController: BTStatusItemController?
     @IBOutlet private var menuBarExtraMenu: NSMenu!
 
     @IBOutlet private var settingsItem: NSMenuItem!
@@ -31,10 +32,10 @@ internal final class BTAppDelegate: NSObject, NSApplicationDelegate {
 
     func applicationWillBecomeActive(_: Notification) {
         //
-        // Use the menuBarExtraItem value as an indicator for whether the app
-        // has fully initialized.
+        // Use initialized as an indicator for whether the app has finished
+        // daemon setup. The status item can intentionally be hidden.
         //
-        guard self.menuBarExtraItem != nil else {
+        guard self.initialized else {
             return
         }
 
@@ -42,7 +43,7 @@ internal final class BTAppDelegate: NSObject, NSApplicationDelegate {
     }
 
     func applicationWillResignActive(_: Notification) {
-        guard self.menuBarExtraItem != nil else {
+        guard self.initialized else {
             return
         }
 
@@ -73,18 +74,16 @@ internal final class BTAppDelegate: NSObject, NSApplicationDelegate {
                 self.disableBackgroundItem.isEnabled = true
                 self.settingsItem.isEnabled = true
                 self.commandsMenuItem.isHidden = false
-                
-                let image = NSImage(
-                    named: NSImage.Name("ExtraItemIcon")
-                )
-                image?.isTemplate = true
-                
-                let extraItem = NSStatusBar.system.statusItem(
-                    withLength: NSStatusItem.squareLength
-                )
-                extraItem.button?.image = image
-                extraItem.menu = self.menuBarExtraMenu
-                self.menuBarExtraItem = extraItem
+
+                if self.statusItemController == nil {
+                    let statusItemController = BTStatusItemController(
+                        menu: self.menuBarExtraMenu
+                    )
+                    statusItemController.start()
+                    self.statusItemController = statusItemController
+                }
+
+                self.initialized = true
                 
                 if !NSApp.isActive {
                     BTAccessoryMode.activate()

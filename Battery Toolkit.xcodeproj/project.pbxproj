@@ -15,6 +15,10 @@
 		CE1F5E3A28D7399D00F61F67 /* CSIdentification.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1F5E3528D7339D00F61F67 /* CSIdentification.swift */; };
 		CE1F5E3C28D760D400F61F67 /* BTLocalization.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1F5E3B28D760D400F61F67 /* BTLocalization.swift */; };
 		CE1F5E3E28D76C6D00F61F67 /* Settings.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CE1F5E4128D76C6D00F61F67 /* Settings.storyboard */; };
+		CE2400002D7E000000000001 /* BTLocalization+Commands.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400602D7E000000000001 /* BTLocalization+Commands.swift */; };
+		CE2400002D7E000000000002 /* BTLocalization+Settings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400612D7E000000000001 /* BTLocalization+Settings.swift */; };
+		CE2400002D7E000000000003 /* BTLocalization+StatusItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400622D7E000000000001 /* BTLocalization+StatusItem.swift */; };
+		CE2400012D7D000000000001 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE2400102D7D000000000001 /* Localizable.strings */; };
 		CE2322D428E5EB8B00874CDE /* BTLoginItem.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2322D328E5EB8B00874CDE /* BTLoginItem.swift */; };
 		CE2B96C028A7E2BB00FE3DDB /* GlobalSleep.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2B96BF28A7E2BB00FE3DDB /* GlobalSleep.swift */; };
 		CE30CBA128C48995001E2AC6 /* BTSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE30CBA028C48995001E2AC6 /* BTSettingsViewController.swift */; };
@@ -40,6 +44,9 @@
 		CE50557328D65C6D000E4387 /* BTPreprocessor.m in Sources */ = {isa = PBXBuildFile; fileRef = CEE387BD28A836AA00C2007C /* BTPreprocessor.m */; };
 		CE52867B28298B6E00860C7B /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CE52867A28298B6E00860C7B /* Assets.xcassets */; };
 		CE52868628298CA300860C7B /* BTAppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE52868528298CA300860C7B /* BTAppDelegate.swift */; };
+		CE5300012D7D100000000001 /* BTStatusItemController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5300002D7D100000000001 /* BTStatusItemController.swift */; };
+		CE5300032D7D100000000001 /* BTStatusItemDisplayMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5300022D7D100000000001 /* BTStatusItemDisplayMode.swift */; };
+		CE5300052D7D100000000001 /* BTStatusItemSnapshot.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5300042D7D100000000001 /* BTStatusItemSnapshot.swift */; };
 		CE54510228D9FE9D00D6EB5F /* BTDaemonManagement.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE54510128D9FE9D00D6EB5F /* BTDaemonManagement.swift */; };
 		CE54510428DA017300D6EB5F /* BTAppPrompts.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE54510328DA017300D6EB5F /* BTAppPrompts.swift */; };
 		CE5E5AE328DE214200AF1D07 /* BTAccessoryMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE5E5AE228DE214200AF1D07 /* BTAccessoryMode.swift */; };
@@ -173,6 +180,25 @@
 		CE1F5E3528D7339D00F61F67 /* CSIdentification.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CSIdentification.swift; sourceTree = "<group>"; };
 		CE1F5E3B28D760D400F61F67 /* BTLocalization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTLocalization.swift; sourceTree = "<group>"; };
 		CE1F5E4028D76C6D00F61F67 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Settings.storyboard; sourceTree = "<group>"; };
+		CE2400602D7E000000000001 /* BTLocalization+Commands.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BTLocalization+Commands.swift"; sourceTree = "<group>"; };
+		CE2400612D7E000000000001 /* BTLocalization+Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BTLocalization+Settings.swift"; sourceTree = "<group>"; };
+		CE2400622D7E000000000001 /* BTLocalization+StatusItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BTLocalization+StatusItem.swift"; sourceTree = "<group>"; };
+		CE2400202D7D000000000001 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE2400212D7D000000000001 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE2400222D7D000000000001 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE2400232D7D000000000001 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Localizable.strings; sourceTree = "<group>"; };
+		CE2400302D7D000000000001 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Main.strings; sourceTree = "<group>"; };
+		CE2400312D7D000000000001 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Main.strings; sourceTree = "<group>"; };
+		CE2400322D7D000000000001 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Main.strings; sourceTree = "<group>"; };
+		CE2400332D7D000000000001 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Main.strings; sourceTree = "<group>"; };
+		CE2400402D7D000000000001 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Settings.strings; sourceTree = "<group>"; };
+		CE2400412D7D000000000001 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Settings.strings; sourceTree = "<group>"; };
+		CE2400422D7D000000000001 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Settings.strings; sourceTree = "<group>"; };
+		CE2400432D7D000000000001 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Settings.strings; sourceTree = "<group>"; };
+		CE2400502D7D000000000001 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/Upgrading.strings; sourceTree = "<group>"; };
+		CE2400512D7D000000000001 /* fr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = fr; path = fr.lproj/Upgrading.strings; sourceTree = "<group>"; };
+		CE2400522D7D000000000001 /* it */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = it; path = it.lproj/Upgrading.strings; sourceTree = "<group>"; };
+		CE2400532D7D000000000001 /* es */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = es; path = es.lproj/Upgrading.strings; sourceTree = "<group>"; };
 		CE2322D328E5EB8B00874CDE /* BTLoginItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTLoginItem.swift; sourceTree = "<group>"; };
 		CE2B96BD28A7CEFE00FE3DDB /* IOPMLibPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IOPMLibPrivate.h; sourceTree = "<group>"; };
 		CE2B96BF28A7E2BB00FE3DDB /* GlobalSleep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSleep.swift; sourceTree = "<group>"; };
@@ -201,6 +227,9 @@
 		CE52867A28298B6E00860C7B /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		CE52867F28298B6E00860C7B /* BatteryToolkit.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = BatteryToolkit.entitlements; sourceTree = "<group>"; };
 		CE52868528298CA300860C7B /* BTAppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTAppDelegate.swift; sourceTree = "<group>"; };
+		CE5300002D7D100000000001 /* BTStatusItemController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTStatusItemController.swift; sourceTree = "<group>"; };
+		CE5300022D7D100000000001 /* BTStatusItemDisplayMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTStatusItemDisplayMode.swift; sourceTree = "<group>"; };
+		CE5300042D7D100000000001 /* BTStatusItemSnapshot.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTStatusItemSnapshot.swift; sourceTree = "<group>"; };
 		CE54510128D9FE9D00D6EB5F /* BTDaemonManagement.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTDaemonManagement.swift; sourceTree = "<group>"; };
 		CE54510328DA017300D6EB5F /* BTAppPrompts.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTAppPrompts.swift; sourceTree = "<group>"; };
 		CE5E5AE228DE214200AF1D07 /* BTAccessoryMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTAccessoryMode.swift; sourceTree = "<group>"; };
@@ -365,6 +394,10 @@
 				CE6B760628BC1ABC008DF170 /* BTAppXPCClient.swift */,
 				CE397477285A25A1002D0EC9 /* BTDaemonXPCClient.swift */,
 				CE1F5E3B28D760D400F61F67 /* BTLocalization.swift */,
+				CE2400602D7E000000000001 /* BTLocalization+Commands.swift */,
+				CE2400612D7E000000000001 /* BTLocalization+Settings.swift */,
+				CE2400622D7E000000000001 /* BTLocalization+StatusItem.swift */,
+				CE2400102D7D000000000001 /* Localizable.strings */,
 				CE2322D328E5EB8B00874CDE /* BTLoginItem.swift */,
 			);
 			path = BatteryToolkit;
@@ -477,6 +510,9 @@
 				CE37DD0A283F80960060C43F /* Main.storyboard */,
 				CE52868528298CA300860C7B /* BTAppDelegate.swift */,
 				CE5E5AE428DE292D00AF1D07 /* BTCommandsMenuDelegate.swift */,
+				CE5300002D7D100000000001 /* BTStatusItemController.swift */,
+				CE5300022D7D100000000001 /* BTStatusItemDisplayMode.swift */,
+				CE5300042D7D100000000001 /* BTStatusItemSnapshot.swift */,
 			);
 			path = Main;
 			sourceTree = "<group>";
@@ -661,6 +697,9 @@
 				en,
 				Base,
 				de,
+				fr,
+				it,
+				es,
 			);
 			mainGroup = CE52866A28298B6D00860C7B;
 			productRefGroup = CE52866A28298B6D00860C7B;
@@ -684,6 +723,7 @@
 				CE1F5E3E28D76C6D00F61F67 /* Settings.storyboard in Resources */,
 				CE3179F128DC729900E9C121 /* Upgrading.storyboard in Resources */,
 				CE37DD0C283F80960060C43F /* Main.storyboard in Resources */,
+				CE2400012D7D000000000001 /* Localizable.strings in Resources */,
 				CE52867B28298B6E00860C7B /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -746,6 +786,9 @@
 				CE30CBA328C48995001E2AC6 /* BTSettingsUserView.swift in Sources */,
 				CE30CBA128C48995001E2AC6 /* BTSettingsViewController.swift in Sources */,
 				CE5E5AE528DE292D00AF1D07 /* BTCommandsMenuDelegate.swift in Sources */,
+				CE5300012D7D100000000001 /* BTStatusItemController.swift in Sources */,
+				CE5300032D7D100000000001 /* BTStatusItemDisplayMode.swift in Sources */,
+				CE5300052D7D100000000001 /* BTStatusItemSnapshot.swift in Sources */,
 				CE85D05F28D7B7E6005D1E0C /* BTDaemonManagement+Service.swift in Sources */,
 				CEA3909328DFAE1C0023261A /* BTXPCValidation.swift in Sources */,
 				CEECE33028BB742500821A3B /* BTServiceCommProtocol.swift in Sources */,
@@ -754,6 +797,9 @@
 					CE5F00012D7C000000000001 /* IOPSPrivate.swift in Sources */,
 					CE52868628298CA300860C7B /* BTAppDelegate.swift in Sources */,
 				CE1F5E3C28D760D400F61F67 /* BTLocalization.swift in Sources */,
+				CE2400002D7E000000000001 /* BTLocalization+Commands.swift in Sources */,
+				CE2400002D7E000000000002 /* BTLocalization+Settings.swift in Sources */,
+				CE2400002D7E000000000003 /* BTLocalization+StatusItem.swift in Sources */,
 				CE3C1DA728CA33FD008A0F7D /* BTLegacyHelperInfo.swift in Sources */,
 				CE2322D428E5EB8B00874CDE /* BTLoginItem.swift in Sources */,
 				CEB4A42828D3B184004FA277 /* BTStateInfo.swift in Sources */,
@@ -818,14 +864,33 @@
 			isa = PBXVariantGroup;
 			children = (
 				CE1F5E4028D76C6D00F61F67 /* Base */,
+				CE2400402D7D000000000001 /* de */,
+				CE2400412D7D000000000001 /* fr */,
+				CE2400422D7D000000000001 /* it */,
+				CE2400432D7D000000000001 /* es */,
 			);
 			name = Settings.storyboard;
+			sourceTree = "<group>";
+		};
+		CE2400102D7D000000000001 /* Localizable.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CE2400202D7D000000000001 /* de */,
+				CE2400212D7D000000000001 /* fr */,
+				CE2400222D7D000000000001 /* it */,
+				CE2400232D7D000000000001 /* es */,
+			);
+			name = Localizable.strings;
 			sourceTree = "<group>";
 		};
 		CE3179F328DC729900E9C121 /* Upgrading.storyboard */ = {
 			isa = PBXVariantGroup;
 			children = (
 				CE3179F228DC729900E9C121 /* Base */,
+				CE2400502D7D000000000001 /* de */,
+				CE2400512D7D000000000001 /* fr */,
+				CE2400522D7D000000000001 /* it */,
+				CE2400532D7D000000000001 /* es */,
 			);
 			name = Upgrading.storyboard;
 			sourceTree = "<group>";
@@ -834,6 +899,10 @@
 			isa = PBXVariantGroup;
 			children = (
 				CE37DD0B283F80960060C43F /* Base */,
+				CE2400302D7D000000000001 /* de */,
+				CE2400312D7D000000000001 /* fr */,
+				CE2400322D7D000000000001 /* it */,
+				CE2400332D7D000000000001 /* es */,
 			);
 			name = Main.storyboard;
 			sourceTree = "<group>";

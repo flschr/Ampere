@@ -58,6 +58,7 @@ internal final class BTSettingsViewController: NSViewController {
     @IBOutlet private var powerTab: NSTabViewItem!
     
     @IBOutlet private var autostartSwitch: NSSwitch!
+    private var statusItemDisplayModePopUpButton: NSPopUpButton!
     
     @IBOutlet private var minChargeTextField: NSTextField!
     @IBOutlet private var minChargeSlider: NSSlider!
@@ -166,6 +167,8 @@ internal final class BTSettingsViewController: NSViewController {
                 window: self.view.window
             )
         }
+
+        self.saveStatusItemDisplayMode()
         
         let settings: [String: NSObject & Sendable] = [
             BTSettingsInfo.Keys.minCharge: self.minChargeNum,
@@ -282,6 +285,8 @@ internal final class BTSettingsViewController: NSViewController {
         ])
 
         self.autostartSwitch = settingsUserView.autostartSwitch
+        self.statusItemDisplayModePopUpButton =
+            settingsUserView.statusItemDisplayModePopUpButton
     }
     
     private func setMinCharge(value: Int) {
@@ -412,6 +417,23 @@ internal final class BTSettingsViewController: NSViewController {
             forKey: self.autostartSetting
         )
         self.autostartSwitch.state = autostart ? .on : .off
+        self.statusItemDisplayModePopUpButton.selectItem(
+            withTag: BTStatusItemDisplayMode.current.rawValue
+        )
+    }
+
+    private func saveStatusItemDisplayMode() {
+        let selectedTag = self.statusItemDisplayModePopUpButton.selectedTag()
+        guard
+            selectedTag >= 0,
+            let displayMode = BTStatusItemDisplayMode(
+                rawValue: selectedTag
+            )
+        else {
+            return
+        }
+
+        BTStatusItemDisplayMode.current = displayMode
     }
     
     private func initPowerState() async {

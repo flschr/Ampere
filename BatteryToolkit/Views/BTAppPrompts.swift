@@ -112,6 +112,23 @@ internal enum BTAppPrompts {
         }
     }
 
+    static func promptRemoveDaemonAndAppData(window: NSWindow?) async {
+        let alert = NSAlert()
+        alert.messageText =
+            BTLocalization.Prompts.Daemon.uninstallMessage
+        alert.informativeText =
+            BTLocalization.Prompts.Daemon.uninstallInfo
+        alert.alertStyle = NSAlert.Style.warning
+        _ = alert.addButton(
+            withTitle: BTLocalization.Prompts.uninstall
+        )
+        _ = alert.addButton(withTitle: BTLocalization.Prompts.cancel)
+        let response = await self.runPrompt(alert: alert, window: window)
+        if response == NSApplication.ModalResponse.alertFirstButtonReturn {
+            await self.tryRemoveDaemonAndAppData(window: window)
+        }
+    }
+
     static func promptTryRemoveDaemonError() async {
         let alert = NSAlert()
         alert.messageText = BTLocalization.Prompts.Daemon.disableFailMessage
@@ -121,6 +138,21 @@ internal enum BTAppPrompts {
         let response = self.runPromptStandalone(alert: alert)
         if response == NSApplication.ModalResponse.alertFirstButtonReturn {
             await self.tryRemoveDaemon()
+        }
+    }
+
+    static func promptTryRemoveDaemonAndAppDataError(
+        window: NSWindow?
+    ) async {
+        let alert = NSAlert()
+        alert.messageText =
+            BTLocalization.Prompts.Daemon.uninstallFailMessage
+        alert.alertStyle = NSAlert.Style.critical
+        _ = alert.addButton(withTitle: BTLocalization.Prompts.retry)
+        _ = alert.addButton(withTitle: BTLocalization.Prompts.cancel)
+        let response = await self.runPrompt(alert: alert, window: window)
+        if response == NSApplication.ModalResponse.alertFirstButtonReturn {
+            await self.tryRemoveDaemonAndAppData(window: window)
         }
     }
 
@@ -136,7 +168,7 @@ internal enum BTAppPrompts {
             return
         }
 
-        self.cleanupAndTerminate()
+        await self.cleanupAndTerminate()
     }
 
     static func promptUnexpectedError(window: NSWindow?) {
@@ -168,7 +200,7 @@ internal enum BTAppPrompts {
         }
     }
 
-    private static func cleanupAndTerminate() {
+    private static func cleanupAndTerminate() async {
         _ = BTLoginItem.disable()
 
         if let domain = Bundle.main.bundleIdentifier {
@@ -181,18 +213,44 @@ internal enum BTAppPrompts {
     private static func tryRemoveDaemon() async {
         do {
             try await BTActions.removeDaemon()
-            self.cleanupAndTerminate()
+            await self.cleanupAndTerminate()
         } catch {
             await self.promptTryRemoveDaemonError()
+        }
+    }
+
+    private static func tryRemoveDaemonAndAppData(window: NSWindow?) async {
+        do {
+            try await BTActions.removeDaemon()
+            try await self.trashApp()
+            await self.cleanupAndTerminate()
+        } catch {
+            await self.promptTryRemoveDaemonAndAppDataError(window: window)
         }
     }
 
     private static func forceRemoveDaemon() async {
         do {
             try await BTActions.removeDaemon()
-            self.cleanupAndTerminate()
+            await self.cleanupAndTerminate()
         } catch {
             await self.promptForceRemoveDaemonError()
+        }
+    }
+
+    private static func trashApp() async throws {
+        let appUrl = Bundle.main.bundleURL
+
+        try await withCheckedThrowingContinuation {
+            (continuation: CheckedContinuation<Void, any Error>) in
+            NSWorkspace.shared.recycle([appUrl]) { _, error in
+                if let error {
+                    continuation.resume(throwing: error)
+                    return
+                }
+
+                continuation.resume()
+            }
         }
     }
 

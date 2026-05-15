@@ -8,16 +8,16 @@
 ##
 
 # Remove the Battery Toolkit daemon.
-sudo rm /Library/LaunchDaemons/me.mhaeuser.batterytoolkitd.plist
+sudo rm /Library/LaunchDaemons/app.justasimple.battertoolkit.daemon.plist
 sudo rm /Library/PrivilegedHelperTools/me.mhaeuser.batterytoolkitd
-sudo launchctl remove me.mhaeuser.batterytoolkitd
+sudo launchctl remove app.justasimple.battertoolkit.daemon
 
 # Remove the Battery Toolkit daemon data.
-sudo defaults delete me.mhaeuser.batterytoolkitd
-sudo security authorizationdb remove me.mhaeuser.batterytoolkitd.manage
+sudo defaults delete app.justasimple.battertoolkit.daemon
+sudo security authorizationdb remove app.justasimple.battertoolkit.daemon.manage
 
 # Remove the Battery Toolkit Autostart helper.
-launchctl remove me.mhaeuser.BatteryToolkitAutostart
+launchctl remove app.justasimple.battertoolkit.autostart
 
 # Remove the Battery Toolkit app data.
-defaults remove me.mhaeuser.BatteryToolkit
+defaults remove app.justasimple.battertoolkit

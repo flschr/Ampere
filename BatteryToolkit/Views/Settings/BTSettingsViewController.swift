@@ -8,9 +8,50 @@ import os.log
 
 @MainActor
 internal final class BTSettingsViewController: NSViewController {
+    private enum ChargePreset: Int, CaseIterable {
+        case everyday
+        case desk
+        case travel
+
+        var title: String {
+            switch self {
+            case .everyday:
+                return BTLocalization.Settings.Presets.everyday
+            case .desk:
+                return BTLocalization.Settings.Presets.desk
+            case .travel:
+                return BTLocalization.Settings.Presets.travel
+            }
+        }
+
+        var minCharge: Int {
+            switch self {
+            case .everyday:
+                return 70
+            case .desk:
+                return 50
+            case .travel:
+                return 80
+            }
+        }
+
+        var maxCharge: Int {
+            switch self {
+            case .everyday, .desk:
+                return 80
+            case .travel:
+                return 90
+            }
+        }
+    }
+
     private let autostartSetting = "autostart"
     
     private var currentSettings: [String: NSObject & Sendable]? = nil
+    private var presetLabel: NSTextField? = nil
+    private var presetControl: NSSegmentedControl? = nil
+    private var optimizedChargingWarning: NSTextField? = nil
+    private var isPowerFooterVisible = true
     
     @IBOutlet private var tabView: NSTabView!
     @IBOutlet private var userTab: NSTabViewItem!
@@ -95,6 +136,14 @@ internal final class BTSettingsViewController: NSViewController {
             }
         }
     }
+
+    override func viewDidLoad() {
+        super.viewDidLoad()
+
+        self.configureUserTab()
+        self.addPresetControl()
+        self.addOptimizedChargingWarning()
+    }
     
     @IBAction private func cancelButtonAction(_: NSButton) {
         self.view.window?.windowController?.close()
@@ -165,6 +214,14 @@ internal final class BTSettingsViewController: NSViewController {
             }
         }
     }
+
+    @objc private func uninstallButtonAction(_: NSButton) {
+        Task {
+            await BTAppPrompts.promptRemoveDaemonAndAppData(
+                window: self.view.window
+            )
+        }
+    }
     
     override func viewWillAppear() {
         super.viewWillAppear()
@@ -184,18 +241,162 @@ internal final class BTSettingsViewController: NSViewController {
     
     func selectUserTab() {
         self.tabView.selectTabViewItem(self.userTab)
+        self.setPowerFooterVisible(false)
     }
     
     func selectPowerTab() {
         self.tabView.selectTabViewItem(self.powerTab)
+        self.setPowerFooterVisible(true)
+    }
+
+    private func configureUserTab() {
+        guard let userView = self.userTab.view else {
+            assertionFailure()
+            return
+        }
+
+        NSLayoutConstraint.deactivate(userView.constraints)
+        for subview in userView.subviews {
+            subview.removeFromSuperview()
+        }
+
+        let settingsUserView = BTSettingsUserView(
+            uninstallTarget: self,
+            uninstallAction: #selector(self.uninstallButtonAction(_:))
+        )
+        userView.addSubview(settingsUserView)
+
+        NSLayoutConstraint.activate([
+            settingsUserView.topAnchor.constraint(
+                equalTo: userView.topAnchor
+            ),
+            settingsUserView.leadingAnchor.constraint(
+                equalTo: userView.leadingAnchor
+            ),
+            settingsUserView.trailingAnchor.constraint(
+                equalTo: userView.trailingAnchor
+            ),
+            settingsUserView.bottomAnchor.constraint(
+                equalTo: userView.bottomAnchor
+            ),
+        ])
+
+        self.autostartSwitch = settingsUserView.autostartSwitch
     }
     
     private func setMinCharge(value: Int) {
         self.minChargeNum = NSNumber(value: value)
+        self.updatePresetSelection()
     }
     
     private func setMaxCharge(value: Int) {
         self.maxChargeNum = NSNumber(value: value)
+        self.updatePresetSelection()
+    }
+
+    private func addPresetControl() {
+        let label = NSTextField(
+            labelWithString: BTLocalization.Settings.preset
+        )
+        label.translatesAutoresizingMaskIntoConstraints = false
+
+        let presetControl = NSSegmentedControl(
+            labels: ChargePreset.allCases.map(\.title),
+            trackingMode: .selectOne,
+            target: self,
+            action: #selector(self.presetChanged(_:))
+        )
+        presetControl.translatesAutoresizingMaskIntoConstraints = false
+        presetControl.segmentStyle = .rounded
+
+        self.view.addSubview(label)
+        self.view.addSubview(presetControl)
+
+        NSLayoutConstraint.activate([
+            label.leadingAnchor.constraint(
+                equalTo: self.view.leadingAnchor,
+                constant: 20
+            ),
+            label.centerYAnchor.constraint(equalTo: presetControl.centerYAnchor),
+
+            presetControl.leadingAnchor.constraint(
+                equalTo: label.trailingAnchor,
+                constant: 8
+            ),
+            presetControl.bottomAnchor.constraint(
+                equalTo: self.view.bottomAnchor,
+                constant: -18
+            ),
+        ])
+
+        self.presetControl = presetControl
+        self.presetLabel = label
+        self.updatePresetSelection()
+    }
+
+    private func addOptimizedChargingWarning() {
+        let warning = NSTextField(
+            labelWithString: BTLocalization.Settings.optimizedChargingWarning
+        )
+        warning.translatesAutoresizingMaskIntoConstraints = false
+        warning.textColor = .systemOrange
+        warning.lineBreakMode = .byTruncatingTail
+        warning.maximumNumberOfLines = 1
+        warning.isHidden = true
+
+        self.view.addSubview(warning)
+
+        let bottomAnchor = self.presetControl?.topAnchor ??
+            self.view.bottomAnchor
+        NSLayoutConstraint.activate([
+            warning.leadingAnchor.constraint(
+                equalTo: self.view.leadingAnchor,
+                constant: 20
+            ),
+            warning.trailingAnchor.constraint(
+                lessThanOrEqualTo: self.view.trailingAnchor,
+                constant: -20
+            ),
+            warning.bottomAnchor.constraint(
+                equalTo: bottomAnchor,
+                constant: -6
+            ),
+        ])
+
+        self.optimizedChargingWarning = warning
+    }
+
+    @objc private func presetChanged(_ sender: NSSegmentedControl) {
+        guard
+            let preset = ChargePreset(rawValue: sender.selectedSegment)
+        else {
+            return
+        }
+
+        self.setMinCharge(value: preset.minCharge)
+        self.setMaxCharge(value: preset.maxCharge)
+    }
+
+    private func updatePresetSelection() {
+        let matchingPreset = ChargePreset.allCases.first { preset in
+            preset.minCharge == Int(self.minChargeVal) &&
+                preset.maxCharge == Int(self.maxChargeVal)
+        }
+
+        self.presetControl?.selectedSegment = matchingPreset?.rawValue ?? -1
+    }
+
+    private func updateOptimizedChargingWarning() {
+        self.optimizedChargingWarning?.isHidden =
+            !self.isPowerFooterVisible ||
+                !IOPSPrivate.OptimizedBatteryChargingEngaged()
+    }
+
+    private func setPowerFooterVisible(_ isVisible: Bool) {
+        self.isPowerFooterVisible = isVisible
+        self.presetLabel?.isHidden = !isVisible
+        self.presetControl?.isHidden = !isVisible
+        self.updateOptimizedChargingWarning()
     }
     
     private func setAdapterSleep(value: Bool) {
@@ -217,6 +418,7 @@ internal final class BTSettingsViewController: NSViewController {
         do {
             let settings = try await BTActions.getSettings()
             self.currentSettings = settings
+            self.updateOptimizedChargingWarning()
             
             let minChargeNum =
             settings[BTSettingsInfo.Keys.minCharge] as? NSNumber

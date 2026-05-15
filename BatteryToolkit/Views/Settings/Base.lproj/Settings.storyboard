@@ -310,7 +310,7 @@
                                     </tabViewItem>
                                     <tabViewItem label="User" identifier="" id="r6x-U7-0zu" userLabel="User">
                                         <view key="view" id="j3z-8d-YbE">
-                                            <rect key="frame" x="0.0" y="0.0" width="495" height="107"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="495" height="284"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WLE-5m-DuI" userLabel="Autostart Label">

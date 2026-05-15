@@ -12,14 +12,14 @@
 	<key>BundleProgram</key>
 	<string>Contents/Library/LaunchServices/me.mhaeuser.batterytoolkitd</string>
 	<key>Label</key>
-	<string>me.mhaeuser.batterytoolkitd</string>
+	<string>app.justasimple.battertoolkit.daemon</string>
 	<key>RunAtLoad</key>
 	<true/>
 	<key>EnableTransactions</key>
 	<false/>
 	<key>MachServices</key>
 	<dict>
-		<key>EMH49F8A2Y.me.mhaeuser.batterytoolkitd</key>
+		<key>H2FNY8B779.app.justasimple.battertoolkit.daemon</key>
 		<true/>
 	</dict>
 </dict>

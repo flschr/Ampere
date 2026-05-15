@@ -53,6 +53,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
     private func refresh() async {
         do {
             let state = try await BTActions.getState()
+            let settings = try await BTActions.getSettings()
 
             let enabledNum = state[BTStateInfo.Keys.enabled] as? NSNumber
             guard let enabled = enabledNum?.boolValue else {
@@ -97,6 +98,8 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
             state[BTStateInfo.Keys.chargingMode] as? NSNumber
             let maxChargeNum =
             state[BTStateInfo.Keys.maxCharge] as? NSNumber
+            let minChargeNum =
+            settings[BTSettingsInfo.Keys.minCharge] as? NSNumber
 
             guard
                 let powerDisabled = powerDisabledNum?.boolValue,
@@ -104,7 +107,8 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
                 let chargingDisabled = chargingDisabledNum?.boolValue,
                 let progress = progressNum?.intValue,
                 let chargingMode = chargingModeNum?.intValue,
-                let maxCharge = maxChargeNum?.intValue
+                let maxCharge = maxChargeNum?.intValue,
+                let minCharge = minChargeNum?.intValue
             else {
                 throw BTError.commFailed
             }
@@ -137,11 +141,17 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
                     self.infoChargingToFullItem.isHidden = true
                     self.infoChargingUnknownModeItem.isHidden = true
                     self.infoChargingToLimitItem.isHidden = false
+                    self.infoChargingToLimitItem.title =
+                        BTLocalization.Commands.chargingUntil(
+                            maxCharge: maxCharge
+                        )
                     
                 case Int(BTStateInfo.ChargingMode.toFull.rawValue):
                     self.infoChargingToLimitItem.isHidden = true
                     self.infoChargingUnknownModeItem.isHidden = true
                     self.infoChargingToFullItem.isHidden = false
+                    self.infoChargingToFullItem.title =
+                        BTLocalization.Commands.chargingToFull
                     
                 default:
                     os_log("Unknown charging mode: \(chargingMode)")
@@ -160,18 +170,28 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
                     self.infoRequestedChargingToFullItem.isHidden = true
                     self.infoNotChargingUnknownModeItem.isHidden = true
                     self.infoNotChargingItem.isHidden = false
+                    self.infoNotChargingItem.title =
+                        BTLocalization.Commands.holdingCharge(
+                            minCharge: minCharge
+                        )
                     
                 case Int(BTStateInfo.ChargingMode.toLimit.rawValue):
                     self.infoNotChargingItem.isHidden = true
                     self.infoRequestedChargingToFullItem.isHidden = true
                     self.infoNotChargingUnknownModeItem.isHidden = true
                     self.infoRequestedChargingToLimitItem.isHidden = false
+                    self.infoRequestedChargingToLimitItem.title =
+                        BTLocalization.Commands.waitingToCharge(
+                            maxCharge: maxCharge
+                        )
                     
                 case Int(BTStateInfo.ChargingMode.toFull.rawValue):
                     self.infoNotChargingItem.isHidden = true
                     self.infoRequestedChargingToLimitItem.isHidden = true
                     self.infoNotChargingUnknownModeItem.isHidden = true
                     self.infoRequestedChargingToFullItem.isHidden = false
+                    self.infoRequestedChargingToFullItem.title =
+                        BTLocalization.Commands.waitingToChargeFull
                     
                 default:
                     os_log("Unknown charging mode: \(chargingMode)")
@@ -187,11 +207,12 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
             let chargeBelowFull = progress <= BTStateInfo.ChargingProgress
                 .belowFull.rawValue
 
-            self.infoChargingToLimitItem.title = "Charging to \(maxCharge) %"
-            self.infoRequestedChargingToLimitItem.title = "Requested Charging to \(maxCharge) %"
-
-            self.chargeToLimitNowItem.title = "Charge to \(maxCharge) % Now"
-            self.requestChargingToLimitItem.title = "Request Charging to \(maxCharge) % Now"
+            self.chargeToLimitNowItem.title =
+                BTLocalization.Commands.chargeToLimitNow(maxCharge: maxCharge)
+            self.requestChargingToLimitItem.title =
+                BTLocalization.Commands.requestChargingToLimitNow(
+                    maxCharge: maxCharge
+                )
 
             if connected {
                 self.requestChargingToFullItem.isHidden = true

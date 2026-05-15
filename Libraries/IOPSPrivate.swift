@@ -4,6 +4,7 @@
 //
 
 import IOKit
+import IOKit.ps
 import notify
 import os.log
 
@@ -33,6 +34,36 @@ public enum IOPSPrivate {
         }
 
         return (packedBatteryBits & kPSTimeRemainingNotifyExternalBit) != 0
+    }
+
+    static func OptimizedBatteryChargingEngaged() -> Bool {
+        guard
+            let powerSources = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(),
+            let powerSourceList = IOPSCopyPowerSourcesList(powerSources)?
+                .takeRetainedValue() as? [CFTypeRef]
+        else {
+            return false
+        }
+
+        for source in powerSourceList {
+            guard
+                let description = IOPSGetPowerSourceDescription(
+                    powerSources,
+                    source
+                )?.takeUnretainedValue() as? [String: Any],
+                let engaged = description[
+                    "Optimized Battery Charging Engaged"
+                ] as? Bool
+            else {
+                continue
+            }
+
+            if engaged {
+                return true
+            }
+        }
+
+        return false
     }
     
     private static func GetPackedBatteryBits() -> UInt64? {

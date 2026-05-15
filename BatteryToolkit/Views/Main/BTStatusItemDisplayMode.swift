@@ -7,7 +7,7 @@ import Foundation
 
 internal enum BTStatusItemDisplayMode: Int, CaseIterable {
     case iconOnly = 0
-    case iconAndPercent = 1
+    case percentInIcon = 1
     case percentOnly = 2
     case hidden = 3
 
@@ -20,8 +20,8 @@ internal enum BTStatusItemDisplayMode: Int, CaseIterable {
         switch self {
         case .iconOnly:
             return BTLocalization.Settings.StatusItem.iconOnly
-        case .iconAndPercent:
-            return BTLocalization.Settings.StatusItem.iconAndPercent
+        case .percentInIcon:
+            return BTLocalization.Settings.StatusItem.percentInIcon
         case .percentOnly:
             return BTLocalization.Settings.StatusItem.percentOnly
         case .hidden:
@@ -32,7 +32,7 @@ internal enum BTStatusItemDisplayMode: Int, CaseIterable {
     static var current: BTStatusItemDisplayMode {
         get {
             let value = UserDefaults.standard.integer(forKey: self.defaultsKey)
-            return BTStatusItemDisplayMode(rawValue: value) ?? .iconAndPercent
+            return BTStatusItemDisplayMode(rawValue: value) ?? .percentInIcon
         }
 
         set {

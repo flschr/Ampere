@@ -70,9 +70,9 @@ extension BTLocalization {
                 comment: "Menu bar display mode showing only the battery icon"
             )
 
-            static let iconAndPercent = NSLocalizedString(
-                "Icon and percentage",
-                comment: "Menu bar display mode showing the battery icon and charge percentage"
+            static let percentInIcon = NSLocalizedString(
+                "Percentage inside icon",
+                comment: "Menu bar display mode showing the charge percentage inside the battery icon"
             )
 
             static let percentOnly = NSLocalizedString(

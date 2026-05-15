@@ -87,8 +87,27 @@ internal final class BTStatusItemController {
         let snapshot = await self.statusSnapshot()
         let mode = BTStatusItemDisplayMode.current
 
-        button.image = mode == .percentOnly ? nil : snapshot.image
-        button.title = mode == .iconOnly ? "" : snapshot.title
+        switch mode {
+        case .iconOnly:
+            button.image = snapshot.image
+            button.title = ""
+
+        case .percentInIcon:
+            button.image = BTStatusItemIconFactory.percentImage(
+                percent: snapshot.percent,
+                fallback: snapshot.image
+            )
+            button.title = ""
+
+        case .percentOnly:
+            button.image = nil
+            button.title = snapshot.title
+
+        case .hidden:
+            button.image = nil
+            button.title = ""
+        }
+
         button.toolTip = snapshot.toolTip
     }
 

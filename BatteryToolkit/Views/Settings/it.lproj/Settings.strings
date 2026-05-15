@@ -1,6 +1,6 @@
 "0sD-aV-92m.title" = "%";
-"1HE-SM-FyJ.title" = "Il Mac non entrerà in stop durante la ricarica, così Battery Toolkit potrà monitorare il livello della batteria. Lo stop verrà riattivato quando il Mac smetterà di caricare per qualsiasi motivo.";
-"23Z-ec-mgU.title" = "Apri Battery Toolkit automaticamente quando accedi al Mac";
+"1HE-SM-FyJ.title" = "Il Mac non entrerà in stop durante la ricarica, così Ampere potrà monitorare il livello della batteria. Lo stop verrà riattivato quando il Mac smetterà di caricare per qualsiasi motivo.";
+"23Z-ec-mgU.title" = "Apri Ampere automaticamente quando accedi al Mac";
 "3Kk-Vy-Cgc.title" = "Sincronizza lo stato di alimentazione del Mac con l'indicatore luminoso MagSafe. Lampeggia in ambra durante la ricarica, resta ambra quando la ricarica è in pausa, diventa verde quando la batteria è completamente carica e si spegne quando l'alimentatore è disattivato.";
 "47S-lH-kMQ.title" = "Sincronizza indicatore MagSafe";
 "5XS-zv-zfd.title" = "Mostra un elemento nella barra dei menu per controllare facilmente lo stato di alimentazione del Mac. L'attività in background è indipendente dall'applicazione e non è influenzata da questa impostazione.";

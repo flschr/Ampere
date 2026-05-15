@@ -1,12 +1,12 @@
 "07e-WI-TcK.title" = "Demander la recharge à la limite";
-"1Xt-HY-uBw.title" = "Battery Toolkit";
+"1Xt-HY-uBw.title" = "Ampere";
 "3rS-ZA-NoH.title" = "Parole";
 "4ER-ok-uTQ.title" = "Reprendre l'activité en arrière-plan";
 "4Kg-1R-KWJ.title" = "Recharge (mode inconnu)";
 "4co-eu-OrS.title" = "Fermer";
-"4sb-4s-VLi.title" = "Quitter Battery Toolkit";
+"4sb-4s-VLi.title" = "Quitter Ampere";
 "5QF-Oa-p0T.title" = "Édition";
-"5kV-Vb-QxS.title" = "À propos de Battery Toolkit";
+"5kV-Vb-QxS.title" = "À propos de Ampere";
 "67P-gA-Pem.title" = "Commandes";
 "6dh-zS-Vam.title" = "Rétablir";
 "78l-zk-UHb.title" = "Réglages…";
@@ -24,7 +24,7 @@
 "Kd2-mp-pUS.title" = "Tout afficher";
 "LEy-Sb-Iyb.title" = "Désactiver la recharge";
 "NMo-om-nkz.title" = "Services";
-"Olw-nP-bQN.title" = "Masquer Battery Toolkit";
+"Olw-nP-bQN.title" = "Masquer Ampere";
 "Oyz-dy-DGm.title" = "Arrêter la lecture";
 "PTV-ys-cbR.title" = "Adaptateur secteur : désactivé";
 "QRX-If-BNP.title" = "Recharge en pause";
@@ -32,7 +32,7 @@
 "Ruw-6m-B2m.title" = "Tout sélectionner";
 "SF3-Mb-O2s.title" = "Suspendre l'activité en arrière-plan";
 "SUV-eg-AcA.title" = "Adaptateur secteur : activé";
-"Smu-3d-BCn.title" = "Quitter Battery Toolkit";
+"Smu-3d-BCn.title" = "Quitter Ampere";
 "TNZ-j8-gVs.title" = "Recharger à la limite maintenant";
 "ULK-Wm-406.title" = "Annuler la demande de recharge";
 "Vdr-fp-XzO.title" = "Masquer les autres";
@@ -64,7 +64,7 @@
 "tXk-Dr-ZCO.title" = "Recharge (mode inconnu)";
 "ter-ZE-C7E.title" = "Désactiver l'adaptateur secteur";
 "u4J-Rf-19m.title" = "Demander la recharge à 100 %";
-"uQy-DD-JDr.title" = "Battery Toolkit";
+"uQy-DD-JDr.title" = "Ampere";
 "uRl-iY-unG.title" = "Couper";
 "usR-Tg-EZv.title" = "Fichier";
 "v10-VJ-vXg.title" = "Activer l'adaptateur secteur";

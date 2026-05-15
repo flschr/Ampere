@@ -48,12 +48,12 @@ internal enum BTLocalization {
         )
 
         static let quitMessage = NSLocalizedString(
-            "Quit Battery Toolkit?",
+            "Quit Ampere?",
             comment: "Prompt caption asking whether to quit the app"
         )
 
         static let quitInfo = NSLocalizedString(
-            "Battery Toolkit will continue to run in the background. To permanently suspend it, disable the background activity from the Battery Toolkit menu.",
+            "Ampere will continue to run in the background. To permanently suspend it, disable the background activity from the Ampere menu.",
             comment: "Prompt caption asking whether to quit the app"
         )
 
@@ -74,7 +74,7 @@ internal enum BTLocalization {
 
         enum Daemon {
             static let requiredInfo = NSLocalizedString(
-                "To manage the power state of your Mac, Battery Toolkit needs to run in the background.",
+                "To manage the power state of your Mac, Ampere needs to run in the background.",
                 comment: "Prompt text explaining the requirement for background activity"
             )
 
@@ -84,7 +84,7 @@ internal enum BTLocalization {
             )
 
             static let allowInfo = NSLocalizedString(
-                "Do you want to approve the Battery Toolkit Login Item in System Settings?",
+                "Do you want to approve the Ampere Login Item in System Settings?",
                 comment: "Prompt text asking to approve background activity"
             )
 
@@ -99,7 +99,7 @@ internal enum BTLocalization {
             )
 
             static let disableInfo = NSLocalizedString(
-                "Do you want to disable background activity for Battery Toolkit?",
+                "Do you want to disable background activity for Ampere?",
                 comment: "Prompt text asking whether to disable background activity"
             )
 
@@ -109,17 +109,17 @@ internal enum BTLocalization {
             )
 
             static let uninstallMessage = NSLocalizedString(
-                "Uninstall Battery Toolkit?",
+                "Uninstall Ampere?",
                 comment: "Prompt caption asking whether to uninstall the app"
             )
 
             static let uninstallInfo = NSLocalizedString(
-                "Battery Toolkit will remove the background service, disable automatic startup, delete its local settings, move the app to the Trash, and quit.",
+                "Ampere will remove the background service, disable automatic startup, delete its local settings, move the app to the Trash, and quit.",
                 comment: "Prompt text explaining what uninstalling the app does"
             )
 
             static let uninstallFailMessage = NSLocalizedString(
-                "An error occurred uninstalling Battery Toolkit.",
+                "An error occurred uninstalling Ampere.",
                 comment: "Prompt caption informing of failure to uninstall the app"
             )
 
@@ -139,7 +139,7 @@ internal enum BTLocalization {
             )
 
             static let unsupportedInfo = NSLocalizedString(
-                "Battery Toolkit does not support managing the power state of your Mac. Background activity will be disabled.",
+                "Ampere does not support managing the power state of your Mac. Background activity will be disabled.",
                 comment: "Prompt text informing the user the app does not support this machine and that background activity will be disabled in response"
             )
         }

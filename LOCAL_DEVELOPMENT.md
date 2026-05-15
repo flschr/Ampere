@@ -12,6 +12,18 @@ Development certificate.
 - Privileged daemon Mach service:
   `H2FNY8B779.app.justasimple.battertoolkit.daemon`
 
+## Product Naming
+
+The user-facing app name is `Ampere`. The main app target builds
+`Ampere.app`, and the generated bundle name, display name, and executable name
+are `Ampere`.
+
+The Xcode project, scheme, bundle identifiers, helper identifiers, XPC service
+identifier, privileged daemon identifier, and internal `BT*` symbols still use
+the original Battery Toolkit naming. This preserves the app's local identity,
+stored preferences, login item relationship, XPC validation, and privileged
+helper installation paths.
+
 ## Signing
 
 - Development team: `H2FNY8B779`
@@ -39,7 +51,7 @@ xcodebuild -project "Battery Toolkit.xcodeproj" \
 The local Debug app is written to Xcode DerivedData, for example:
 
 ```text
-~/Library/Developer/Xcode/DerivedData/Battery_Toolkit-*/Build/Products/Debug/Battery Toolkit.app
+~/Library/Developer/Xcode/DerivedData/Battery_Toolkit-*/Build/Products/Debug/Ampere.app
 ```
 
 Use Debug builds for local installation while signing with `Apple Development`.
@@ -49,7 +61,7 @@ hardening.
 
 ## Install For Local Testing
 
-Copy the built `Battery Toolkit.app` to `/Applications`, then open it from
+Copy the built `Ampere.app` to `/Applications`, then open it from
 there. macOS will ask you to approve the background service before the
 privileged daemon can run.
 

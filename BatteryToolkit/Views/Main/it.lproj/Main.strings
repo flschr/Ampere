@@ -1,12 +1,12 @@
 "07e-WI-TcK.title" = "Richiedi ricarica al limite";
-"1Xt-HY-uBw.title" = "Battery Toolkit";
+"1Xt-HY-uBw.title" = "Ampere";
 "3rS-ZA-NoH.title" = "Voce";
 "4ER-ok-uTQ.title" = "Riprendi attività in background";
 "4Kg-1R-KWJ.title" = "Ricarica (modalità sconosciuta)";
 "4co-eu-OrS.title" = "Chiudi";
-"4sb-4s-VLi.title" = "Esci da Battery Toolkit";
+"4sb-4s-VLi.title" = "Esci da Ampere";
 "5QF-Oa-p0T.title" = "Modifica";
-"5kV-Vb-QxS.title" = "Informazioni su Battery Toolkit";
+"5kV-Vb-QxS.title" = "Informazioni su Ampere";
 "67P-gA-Pem.title" = "Comandi";
 "6dh-zS-Vam.title" = "Ripeti";
 "78l-zk-UHb.title" = "Impostazioni…";
@@ -24,7 +24,7 @@
 "Kd2-mp-pUS.title" = "Mostra tutto";
 "LEy-Sb-Iyb.title" = "Disattiva ricarica";
 "NMo-om-nkz.title" = "Servizi";
-"Olw-nP-bQN.title" = "Nascondi Battery Toolkit";
+"Olw-nP-bQN.title" = "Nascondi Ampere";
 "Oyz-dy-DGm.title" = "Interrompi lettura";
 "PTV-ys-cbR.title" = "Alimentatore: disattivato";
 "QRX-If-BNP.title" = "Ricarica in pausa";
@@ -32,7 +32,7 @@
 "Ruw-6m-B2m.title" = "Seleziona tutto";
 "SF3-Mb-O2s.title" = "Metti in pausa attività in background";
 "SUV-eg-AcA.title" = "Alimentatore: attivato";
-"Smu-3d-BCn.title" = "Esci da Battery Toolkit";
+"Smu-3d-BCn.title" = "Esci da Ampere";
 "TNZ-j8-gVs.title" = "Ricarica al limite ora";
 "ULK-Wm-406.title" = "Annulla richiesta di ricarica";
 "Vdr-fp-XzO.title" = "Nascondi altri";
@@ -64,7 +64,7 @@
 "tXk-Dr-ZCO.title" = "Ricarica (modalità sconosciuta)";
 "ter-ZE-C7E.title" = "Disattiva alimentatore";
 "u4J-Rf-19m.title" = "Richiedi ricarica al 100 %";
-"uQy-DD-JDr.title" = "Battery Toolkit";
+"uQy-DD-JDr.title" = "Ampere";
 "uRl-iY-unG.title" = "Taglia";
 "usR-Tg-EZv.title" = "File";
 "v10-VJ-vXg.title" = "Attiva alimentatore";

@@ -1,6 +1,6 @@
 "0sD-aV-92m.title" = "%";
 "1HE-SM-FyJ.title" = "Votre Mac sera empêché de se mettre en veille pendant la recharge afin de surveiller le niveau de batterie. La veille sera réactivée dès que votre Mac arrêtera de charger, quelle qu'en soit la raison.";
-"23Z-ec-mgU.title" = "Ouvrir Battery Toolkit automatiquement à l'ouverture de session sur votre Mac";
+"23Z-ec-mgU.title" = "Ouvrir Ampere automatiquement à l'ouverture de session sur votre Mac";
 "3Kk-Vy-Cgc.title" = "Synchronise l'état d'alimentation de votre Mac avec le voyant MagSafe. Il clignote en orange pendant la recharge, reste orange lorsque la recharge est en pause, devient vert lorsque la batterie est pleine et s'éteint lorsque l'adaptateur secteur est désactivé.";
 "47S-lH-kMQ.title" = "Synchroniser le voyant MagSafe";
 "5XS-zv-zfd.title" = "Affiche un élément dans la barre des menus pour contrôler facilement l'état d'alimentation de votre Mac. L'activité en arrière-plan est indépendante de l'application et n'est pas affectée par ce réglage.";

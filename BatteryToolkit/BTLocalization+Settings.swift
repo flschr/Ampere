@@ -30,13 +30,13 @@ extension BTLocalization {
         )
 
         static let optimizedChargingWarning = NSLocalizedString(
-            "macOS Optimized Battery Charging is on. Turn it off in Battery settings so Battery Toolkit can manage charging reliably.",
+            "macOS Optimized Battery Charging is on. Turn it off in Battery settings so Ampere can manage charging reliably.",
             comment: "Warning shown when macOS Optimized Battery Charging is enabled"
         )
 
         static let autostart = NSLocalizedString(
-            "Open Battery Toolkit automatically when you log in to your Mac",
-            comment: "Settings label for launching Battery Toolkit automatically on login"
+            "Open Ampere automatically when you log in to your Mac",
+            comment: "Settings label for launching Ampere automatically on login"
         )
 
         static let menuBarExtraInfo = NSLocalizedString(
@@ -50,12 +50,12 @@ extension BTLocalization {
         )
 
         static let uninstallInfo = NSLocalizedString(
-            "Remove the background service, disable automatic startup, delete Battery Toolkit's local settings, and move the app to the Trash.",
+            "Remove the background service, disable automatic startup, delete Ampere's local settings, and move the app to the Trash.",
             comment: "Settings description explaining what uninstalling the background service does"
         )
 
         static let uninstallBatteryToolkit = NSLocalizedString(
-            "Uninstall Battery Toolkit…",
+            "Uninstall Ampere…",
             comment: "Settings button to remove the background service, delete app data, and move the app to the Trash"
         )
 

@@ -8,12 +8,12 @@ import Foundation
 extension BTLocalization {
     enum StatusItem {
         static let unknown = NSLocalizedString(
-            "Battery Toolkit status unavailable",
+            "Ampere status unavailable",
             comment: "Menu bar tooltip when the current power state cannot be read"
         )
 
         static let paused = NSLocalizedString(
-            "Battery Toolkit is paused",
+            "Ampere is paused",
             comment: "Menu bar tooltip when background activity is paused"
         )
 

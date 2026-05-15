@@ -1,12 +1,12 @@
 "07e-WI-TcK.title" = "Solicitar carga hasta el límite";
-"1Xt-HY-uBw.title" = "Battery Toolkit";
+"1Xt-HY-uBw.title" = "Ampere";
 "3rS-ZA-NoH.title" = "Voz";
 "4ER-ok-uTQ.title" = "Reanudar actividad en segundo plano";
 "4Kg-1R-KWJ.title" = "Cargando (modo desconocido)";
 "4co-eu-OrS.title" = "Cerrar";
-"4sb-4s-VLi.title" = "Salir de Battery Toolkit";
+"4sb-4s-VLi.title" = "Salir de Ampere";
 "5QF-Oa-p0T.title" = "Editar";
-"5kV-Vb-QxS.title" = "Acerca de Battery Toolkit";
+"5kV-Vb-QxS.title" = "Acerca de Ampere";
 "67P-gA-Pem.title" = "Comandos";
 "6dh-zS-Vam.title" = "Rehacer";
 "78l-zk-UHb.title" = "Ajustes…";
@@ -24,7 +24,7 @@
 "Kd2-mp-pUS.title" = "Mostrar todo";
 "LEy-Sb-Iyb.title" = "Desactivar carga";
 "NMo-om-nkz.title" = "Servicios";
-"Olw-nP-bQN.title" = "Ocultar Battery Toolkit";
+"Olw-nP-bQN.title" = "Ocultar Ampere";
 "Oyz-dy-DGm.title" = "Dejar de hablar";
 "PTV-ys-cbR.title" = "Adaptador de corriente: desactivado";
 "QRX-If-BNP.title" = "Carga en pausa";
@@ -32,7 +32,7 @@
 "Ruw-6m-B2m.title" = "Seleccionar todo";
 "SF3-Mb-O2s.title" = "Pausar actividad en segundo plano";
 "SUV-eg-AcA.title" = "Adaptador de corriente: activado";
-"Smu-3d-BCn.title" = "Salir de Battery Toolkit";
+"Smu-3d-BCn.title" = "Salir de Ampere";
 "TNZ-j8-gVs.title" = "Cargar hasta el límite ahora";
 "ULK-Wm-406.title" = "Cancelar solicitud de carga";
 "Vdr-fp-XzO.title" = "Ocultar otros";
@@ -64,7 +64,7 @@
 "tXk-Dr-ZCO.title" = "Cargando (modo desconocido)";
 "ter-ZE-C7E.title" = "Desactivar adaptador de corriente";
 "u4J-Rf-19m.title" = "Solicitar carga al 100 %";
-"uQy-DD-JDr.title" = "Battery Toolkit";
+"uQy-DD-JDr.title" = "Ampere";
 "uRl-iY-unG.title" = "Cortar";
 "usR-Tg-EZv.title" = "Archivo";
 "v10-VJ-vXg.title" = "Activar adaptador de corriente";

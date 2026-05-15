@@ -1244,6 +1244,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				PRODUCT_NAME = Ampere;
 					PRODUCT_BUNDLE_IDENTIFIER = app.justasimple.battertoolkit;
 			};
 			name = Debug;
@@ -1259,6 +1260,7 @@
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
+				PRODUCT_NAME = Ampere;
 					PRODUCT_BUNDLE_IDENTIFIER = app.justasimple.battertoolkit;
 			};
 			name = Release;

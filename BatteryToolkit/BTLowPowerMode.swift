@@ -9,11 +9,20 @@ internal enum BTLowPowerMode {
     private static let pmsetURL = URL(fileURLWithPath: "/usr/bin/pmset")
 
     static func isEnabled() throws -> Bool {
+        let customSettings = try self.powerSettings(arguments: ["-g", "custom"])
+        if let powerModes = customSettings["powermode"], !powerModes.isEmpty {
+            return powerModes.allSatisfy { $0 == "1" }
+        }
+        if let lowPowerModes = customSettings["lowpowermode"],
+           !lowPowerModes.isEmpty {
+            return lowPowerModes.allSatisfy { $0 != "0" }
+        }
+
         let activeSettings = try self.powerSettings(arguments: ["-g"])
-        if let powerMode = activeSettings["powermode"] {
+        if let powerMode = activeSettings["powermode"]?.first {
             return powerMode == "1"
         }
-        if let lowPowerMode = activeSettings["lowpowermode"] {
+        if let lowPowerMode = activeSettings["lowpowermode"]?.first {
             return lowPowerMode != "0"
         }
 
@@ -41,9 +50,9 @@ internal enum BTLowPowerMode {
         ])
     }
 
-    private static func powerSettings(arguments: [String]) throws -> [String: String] {
+    private static func powerSettings(arguments: [String]) throws -> [String: [String]] {
         let output = try self.runPMSet(arguments: arguments)
-        var settings: [String: String] = [:]
+        var settings: [String: [String]] = [:]
 
         for line in output.components(separatedBy: .newlines) {
             let components = line.split(separator: " ")
@@ -53,7 +62,7 @@ internal enum BTLowPowerMode {
                 continue
             }
 
-            settings[String(key)] = String(value)
+            settings[String(key), default: []].append(String(value))
         }
 
         return settings

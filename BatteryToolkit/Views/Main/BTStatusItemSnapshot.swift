@@ -209,7 +209,7 @@ internal enum BTStatusItemSnapshotFactory {
         ) ?? NSImage(named: NSImage.Name("ExtraItemIcon")) ?? NSImage()
         if #available(macOS 12.0, *) {
             let configuration = NSImage.SymbolConfiguration(
-                paletteColors: [.white, .systemYellow]
+                paletteColors: [.systemYellow, .white]
             )
             let configuredImage =
                 image.withSymbolConfiguration(configuration) ?? image

@@ -7,6 +7,7 @@
 "Disable and Quit" = "Desactivar y salir";
 "Open System Settings" = "Abrir Ajustes del Sistema";
 "Quit Ampere?" = "¿Salir de Ampere?";
+"Ampere will stop the background service and disable automatic startup. Charging management will not continue until you open Ampere again." = "Ampere detendrá el servicio en segundo plano y desactivará el inicio automático. La gestión de carga no continuará hasta que vuelvas a abrir Ampere.";
 "Ampere will continue to run in the background. To permanently suspend it, disable the background activity from the Ampere menu." = "Ampere seguirá ejecutándose en segundo plano. Para suspenderlo de forma permanente, desactiva la actividad en segundo plano desde el menú de Ampere.";
 "To temporarily suspend it, disable the background activity in System Settings." = "Para suspenderlo temporalmente, desactiva la actividad en segundo plano en Ajustes del Sistema.";
 "An unexpected error has occured." = "Se ha producido un error inesperado.";

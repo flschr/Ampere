@@ -4,40 +4,24 @@
 //
 
 import Cocoa
-import ServiceManagement
 
 @MainActor
 internal enum BTAppPrompts {
     private(set) static var open: UInt8 = 0
 
-    static func promptQuit() {
+    static func promptQuit() async {
         let alert = NSAlert()
         alert.messageText = BTLocalization.Prompts.quitMessage
-        if #available(macOS 13.0, *) {
-            alert.informativeText = BTLocalization.Prompts.quitInfo + " " + BTLocalization.Prompts.quitInfoMacOS13
-        } else {
-            alert.informativeText = BTLocalization.Prompts.quitInfo
-        }
+        alert.informativeText = BTLocalization.Prompts.quitInfo
         alert.alertStyle = NSAlert.Style.informational
         _ = alert.addButton(withTitle: BTLocalization.Prompts.quit)
         _ = alert.addButton(withTitle: BTLocalization.Prompts.cancel)
-        if #available(macOS 13.0, *) {
-            _ = alert.addButton(withTitle: BTLocalization.Prompts.openSystemSettings)
-        }
         let response = self.runPromptStandalone(alert: alert)
         switch response {
         case NSApplication.ModalResponse.alertFirstButtonReturn:
-            NSApp.terminate(self)
+            await self.tryQuit()
             
         case NSApplication.ModalResponse.alertSecondButtonReturn:
-            break
-            
-        case NSApplication.ModalResponse.alertThirdButtonReturn:
-            if #available(macOS 13.0, *) {
-                SMAppService.openSystemSettingsLoginItems()
-            } else {
-                assertionFailure()
-            }
             break
 
         default:
@@ -141,6 +125,18 @@ internal enum BTAppPrompts {
         }
     }
 
+    static func promptTryQuitError() async {
+        let alert = NSAlert()
+        alert.messageText = BTLocalization.Prompts.Daemon.disableFailMessage
+        alert.alertStyle = NSAlert.Style.critical
+        _ = alert.addButton(withTitle: BTLocalization.Prompts.retry)
+        _ = alert.addButton(withTitle: BTLocalization.Prompts.cancel)
+        let response = self.runPromptStandalone(alert: alert)
+        if response == NSApplication.ModalResponse.alertFirstButtonReturn {
+            await self.tryQuit()
+        }
+    }
+
     static func promptTryRemoveDaemonAndAppDataError(
         window: NSWindow?
     ) async {
@@ -201,13 +197,28 @@ internal enum BTAppPrompts {
     }
 
     private static func cleanupAndTerminate() async {
+        await self.disableStartupAndTerminate(removeAppSettings: true)
+    }
+
+    private static func disableStartupAndTerminate(
+        removeAppSettings: Bool
+    ) async {
         _ = BTLoginItem.disable()
 
-        if let domain = Bundle.main.bundleIdentifier {
+        if removeAppSettings, let domain = Bundle.main.bundleIdentifier {
             UserDefaults.standard.removePersistentDomain(forName: domain)
         }
 
         NSApp.terminate(nil)
+    }
+
+    private static func tryQuit() async {
+        do {
+            try await BTActions.quitDaemon()
+            await self.disableStartupAndTerminate(removeAppSettings: false)
+        } catch {
+            await self.promptTryQuitError()
+        }
     }
 
     private static func tryRemoveDaemon() async {

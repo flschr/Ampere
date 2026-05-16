@@ -45,6 +45,20 @@ internal enum BTDaemonManagement {
         }
     }
 
+    @BTBackgroundActor static func quit() async throws {
+        if #available(macOS 13.0, *) {
+            try await self.Service.unregister()
+        } else {
+            let authData = try await BTAppXPCClient.getDaemonAuthorization()
+            let simpleAuth = SimpleAuth.fromData(authData: authData)
+            guard let simpleAuth else {
+                throw BTError.notAuthorized
+            }
+
+            self.Legacy.unregister(simpleAuth: simpleAuth)
+        }
+    }
+
     @BTBackgroundActor static func remove() async throws {
         let authData = try await BTAppXPCClient.getDaemonAuthorization()
 

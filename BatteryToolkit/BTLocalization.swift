@@ -53,13 +53,8 @@ internal enum BTLocalization {
         )
 
         static let quitInfo = NSLocalizedString(
-            "Ampere will continue to run in the background. To permanently suspend it, disable the background activity from the Ampere menu.",
-            comment: "Prompt caption asking whether to quit the app"
-        )
-
-        static let quitInfoMacOS13 = NSLocalizedString(
-            "To temporarily suspend it, disable the background activity in System Settings.",
-            comment: "Prompt caption asking whether to quit the app"
+            "Ampere will stop the background service and disable automatic startup. Charging management will not continue until you open Ampere again.",
+            comment: "Prompt text explaining what happens when quitting the app"
         )
 
         static let unexpectedErrorMessage = NSLocalizedString(

@@ -75,6 +75,10 @@ internal enum BTActions {
         try await BTDaemonManagement.remove()
     }
 
+    @BTBackgroundActor static func quitDaemon() async throws {
+        try await BTDaemonManagement.quit()
+    }
+
     @BTBackgroundActor static func pauseActivity() async throws {
         try await BTDaemonXPCClient.pauseActivity()
     }

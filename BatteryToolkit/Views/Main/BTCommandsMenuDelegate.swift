@@ -205,7 +205,9 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
     }
 
     @IBAction private func quitHandler(sender _: NSMenuItem) {
-        BTAppPrompts.promptQuit()
+        Task {
+            await BTAppPrompts.promptQuit()
+        }
     }
 
     @IBAction private func disablePowerAdapterHandler(sender _: NSMenuItem) {

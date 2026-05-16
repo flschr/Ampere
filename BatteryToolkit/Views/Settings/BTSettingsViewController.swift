@@ -116,7 +116,7 @@ internal final class BTSettingsViewController: NSViewController {
         }.first {
             $0.action == #selector(self.cancelButtonAction(_:))
         }
-        self.addUninstallButton()
+        self.addAboutButton()
         self.addPresetControl()
         self.addOptimizedChargingWarning()
     }
@@ -170,12 +170,8 @@ internal final class BTSettingsViewController: NSViewController {
         }
     }
 
-    @objc private func uninstallButtonAction(_: NSButton) {
-        Task {
-            await BTAppPrompts.promptRemoveDaemonAndAppData(
-                window: self.view.window
-            )
-        }
+    @objc private func aboutButtonAction(_: NSButton) {
+        self.presentAsSheet(BTAboutInfoViewController())
     }
     
     override func viewWillAppear() {
@@ -242,26 +238,39 @@ internal final class BTSettingsViewController: NSViewController {
         }
     }
 
-    private func addUninstallButton() {
-        let uninstallButton = NSButton(
-            title: BTLocalization.Settings.uninstallBatteryToolkit,
+    private func addAboutButton() {
+        let aboutButton = NSButton(
+            title: "",
             target: self,
-            action: #selector(self.uninstallButtonAction(_:))
+            action: #selector(self.aboutButtonAction(_:))
         )
-        uninstallButton.translatesAutoresizingMaskIntoConstraints = false
-        uninstallButton.bezelStyle = .rounded
+        aboutButton.translatesAutoresizingMaskIntoConstraints = false
+        aboutButton.bezelStyle = .circular
+        aboutButton.image = NSImage(
+            systemSymbolName: "info.circle",
+            accessibilityDescription:
+                BTLocalization.Settings.About.infoButtonAccessibilityLabel
+        )
+        aboutButton.imagePosition = .imageOnly
+        aboutButton.toolTip =
+            BTLocalization.Settings.About.infoButtonAccessibilityLabel
+        aboutButton.setAccessibilityLabel(
+            BTLocalization.Settings.About.infoButtonAccessibilityLabel
+        )
 
-        self.view.addSubview(uninstallButton)
+        self.view.addSubview(aboutButton)
 
         NSLayoutConstraint.activate([
-            uninstallButton.leadingAnchor.constraint(
+            aboutButton.leadingAnchor.constraint(
                 equalTo: self.view.leadingAnchor,
                 constant: 20
             ),
-            uninstallButton.bottomAnchor.constraint(
+            aboutButton.bottomAnchor.constraint(
                 equalTo: self.view.bottomAnchor,
                 constant: -20
             ),
+            aboutButton.widthAnchor.constraint(equalToConstant: 24),
+            aboutButton.heightAnchor.constraint(equalToConstant: 24),
         ])
     }
     

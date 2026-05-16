@@ -22,6 +22,11 @@
 		CE2400002D7E000000000004 /* BTLowPowerMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400632D7E000000000001 /* BTLowPowerMode.swift */; };
 		CE2400002D7E000000000005 /* BTLowPowerMode.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400632D7E000000000001 /* BTLowPowerMode.swift */; };
 		CE2400012D7D000000000001 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE2400102D7D000000000001 /* Localizable.strings */; };
+		CE2400702E01000000000001 /* BTAboutInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400722E01000000000001 /* BTAboutInfoModel.swift */; };
+		CE2400712E01000000000001 /* BTAboutInfoViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400732E01000000000001 /* BTAboutInfoViewController.swift */; };
+		CE2400742E01000000000001 /* BTAboutInfoViewFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400762E01000000000001 /* BTAboutInfoViewFactory.swift */; };
+		CE2400752E01000000000001 /* BTAboutInfoViewFactory+Controls.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400772E01000000000001 /* BTAboutInfoViewFactory+Controls.swift */; };
+		CE2400782E01000000000001 /* BTLicenseViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400792E01000000000001 /* BTLicenseViewController.swift */; };
 		CE2B96C028A7E2BB00FE3DDB /* GlobalSleep.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2B96BF28A7E2BB00FE3DDB /* GlobalSleep.swift */; };
 		CE30CBA128C48995001E2AC6 /* BTSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE30CBA028C48995001E2AC6 /* BTSettingsViewController.swift */; };
 		CE3179EA28DB540600E9C121 /* SimpleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3179E928DB540600E9C121 /* SimpleAuth.swift */; };
@@ -228,6 +233,11 @@
 		CE2400612D7E000000000001 /* BTLocalization+Settings.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BTLocalization+Settings.swift"; sourceTree = "<group>"; };
 		CE2400622D7E000000000001 /* BTLocalization+StatusItem.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BTLocalization+StatusItem.swift"; sourceTree = "<group>"; };
 		CE2400632D7E000000000001 /* BTLowPowerMode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTLowPowerMode.swift; sourceTree = "<group>"; };
+		CE2400722E01000000000001 /* BTAboutInfoModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTAboutInfoModel.swift; sourceTree = "<group>"; };
+		CE2400732E01000000000001 /* BTAboutInfoViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTAboutInfoViewController.swift; sourceTree = "<group>"; };
+		CE2400762E01000000000001 /* BTAboutInfoViewFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTAboutInfoViewFactory.swift; sourceTree = "<group>"; };
+		CE2400772E01000000000001 /* BTAboutInfoViewFactory+Controls.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BTAboutInfoViewFactory+Controls.swift"; sourceTree = "<group>"; };
+		CE2400792E01000000000001 /* BTLicenseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTLicenseViewController.swift; sourceTree = "<group>"; };
 		CE2B96BD28A7CEFE00FE3DDB /* IOPMLibPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IOPMLibPrivate.h; sourceTree = "<group>"; };
 		CE2B96BF28A7E2BB00FE3DDB /* GlobalSleep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSleep.swift; sourceTree = "<group>"; };
 		CE2B96C228A81C5100FE3DDB /* BTPreprocessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BTPreprocessor.h; sourceTree = "<group>"; };
@@ -529,6 +539,11 @@
 			isa = PBXGroup;
 			children = (
 				CE1F5E4128D76C6D00F61F67 /* Settings.storyboard */,
+				CE2400722E01000000000001 /* BTAboutInfoModel.swift */,
+				CE2400732E01000000000001 /* BTAboutInfoViewController.swift */,
+				CE2400762E01000000000001 /* BTAboutInfoViewFactory.swift */,
+				CE2400772E01000000000001 /* BTAboutInfoViewFactory+Controls.swift */,
+				CE2400792E01000000000001 /* BTLicenseViewController.swift */,
 				CE5E5AE728DE31EB00AF1D07 /* BTSettingsMenuItem.swift */,
 				CEAA00172E00000000000001 /* BTSettingsModel.swift */,
 				CE30CBA028C48995001E2AC6 /* BTSettingsViewController.swift */,
@@ -877,6 +892,11 @@
 				CEAA00012E00000000000001 /* BTBatteryModels.swift in Sources */,
 				CE0DB56328BEB4E600B8FC4C /* BTSettingsInfo.swift in Sources */,
 				CE5E5AF328DF183E00AF1D07 /* BTAuthorizationRights.swift in Sources */,
+				CE2400702E01000000000001 /* BTAboutInfoModel.swift in Sources */,
+				CE2400712E01000000000001 /* BTAboutInfoViewController.swift in Sources */,
+				CE2400742E01000000000001 /* BTAboutInfoViewFactory.swift in Sources */,
+				CE2400752E01000000000001 /* BTAboutInfoViewFactory+Controls.swift in Sources */,
+				CE2400782E01000000000001 /* BTLicenseViewController.swift in Sources */,
 				CEAA000E2E00000000000001 /* BTSettingsModel.swift in Sources */,
 				CE30CBA128C48995001E2AC6 /* BTSettingsViewController.swift in Sources */,
 				CE5E5AE528DE292D00AF1D07 /* BTCommandsMenuDelegate.swift in Sources */,

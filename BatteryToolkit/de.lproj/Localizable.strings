@@ -7,6 +7,7 @@
 "Disable and Quit" = "Deaktivieren und beenden";
 "Open System Settings" = "Systemeinstellungen öffnen";
 "Quit Ampere?" = "Ampere beenden?";
+"Ampere will stop the background service and disable automatic startup. Charging management will not continue until you open Ampere again." = "Ampere beendet den Hintergrunddienst und deaktiviert den automatischen Start. Die Ladeverwaltung läuft erst weiter, wenn du Ampere erneut öffnest.";
 "Ampere will continue to run in the background. To permanently suspend it, disable the background activity from the Ampere menu." = "Ampere läuft weiterhin im Hintergrund. Um es dauerhaft anzuhalten, deaktiviere die Hintergrundaktivität im Ampere-Menü.";
 "To temporarily suspend it, disable the background activity in System Settings." = "Um es vorübergehend anzuhalten, deaktiviere die Hintergrundaktivität in den Systemeinstellungen.";
 "An unexpected error has occured." = "Ein unerwarteter Fehler ist aufgetreten.";
@@ -26,6 +27,18 @@
 "Your Mac is not supported." = "Dein Mac wird nicht unterstützt.";
 "Ampere does not support managing the power state of your Mac. Background activity will be disabled." = "Ampere unterstützt die Verwaltung des Energiezustands deines Mac nicht. Die Hintergrundaktivität wird deaktiviert.";
 "Preferences" = "Einstellungen";
+"About Ampere" = "Info zu Ampere";
+"Version %@ (%@)" = "Version %@ (%@)";
+"Author/Publisher: %@" = "Autor/Publisher: %@";
+"Website" = "Website";
+"Privacy" = "Datenschutz";
+"License" = "Lizenz";
+"Attribution & Licenses" = "Attribution & Lizenzen";
+"Ampere is based on Battery Toolkit and includes components distributed under the BSD 3-Clause License." = "Ampere basiert auf Battery Toolkit und enthält Komponenten, die unter der BSD-3-Clause-Lizenz vertrieben werden.";
+"BSD 3-Clause License" = "BSD-3-Clause-Lizenz";
+"The full license text is provided below for binary distribution." = "Der vollständige Lizenztext wird unten für die binäre Distribution bereitgestellt.";
+"Unknown" = "Unbekannt";
+"Close" = "Schließen";
 "Running on Battery" = "Auf Akku";
 "Using Power Adapter" = "Netzteil wird verwendet";
 "Charging until %d %%" = "Lädt bis %d %%";

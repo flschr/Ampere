@@ -11,6 +11,11 @@ import os.log
 internal enum BTDaemonXPCClient {
     private static var connect: NSXPCConnection? = nil
 
+    private enum AuthorizationRequirement {
+        case none
+        case manage
+    }
+
     static func disconnectDaemon() {
         guard let connect = self.connect else {
             return
@@ -46,99 +51,39 @@ internal enum BTDaemonXPCClient {
     }
 
     static func disablePowerAdapter() async throws {
-        let authData = try await BTAppXPCClient.getManageAuthorization()
-        try await withCheckedThrowingContinuation { continuation in
-            self.runExecute(
-                continuation: continuation,
-                authData: authData,
-                command: BTDaemonCommCommand.disablePowerAdapter
-            )
-        }
+        try await self.run(command: .disablePowerAdapter, authorization: .manage)
     }
 
     static func enablePowerAdapter() async throws {
-        try await withCheckedThrowingContinuation { continuation in
-            self.runExecute(
-                continuation: continuation,
-                authData: nil,
-                command: BTDaemonCommCommand.enablePowerAdapter
-            )
-        }
+        try await self.run(command: .enablePowerAdapter, authorization: .none)
     }
 
     static func chargeToLimit() async throws {
-        try await withCheckedThrowingContinuation { continuation in
-            self.runExecute(
-                continuation: continuation,
-                authData: nil,
-                command: BTDaemonCommCommand.chargeToLimit
-            )
-        }
+        try await self.run(command: .chargeToLimit, authorization: .none)
     }
 
     static func chargeToFull() async throws {
-        try await withCheckedThrowingContinuation { continuation in
-            self.runExecute(
-                continuation: continuation,
-                authData: nil,
-                command: BTDaemonCommCommand.chargeToFull
-            )
-        }
+        try await self.run(command: .chargeToFull, authorization: .none)
     }
 
     static func disableCharging() async throws {
-        let authData = try await BTAppXPCClient.getManageAuthorization()
-        try await withCheckedThrowingContinuation { continuation in
-            self.runExecute(
-                continuation: continuation,
-                authData: authData,
-                command: BTDaemonCommCommand.disableCharging
-            )
-        }
+        try await self.run(command: .disableCharging, authorization: .manage)
     }
 
     static func pauseActivity() async throws {
-        let authData = try await BTAppXPCClient.getManageAuthorization()
-        try await withCheckedThrowingContinuation { continuation in
-            self.runExecute(
-                continuation: continuation,
-                authData: authData,
-                command: BTDaemonCommCommand.pauseActivity
-            )
-        }
+        try await self.run(command: .pauseActivity, authorization: .manage)
     }
 
     static func resumeActivity() async throws {
-        let authData = try await BTAppXPCClient.getManageAuthorization()
-        try await withCheckedThrowingContinuation { continuation in
-            self.runExecute(
-                continuation: continuation,
-                authData: authData,
-                command: BTDaemonCommCommand.resumeActivity
-            )
-        }
+        try await self.run(command: .resumeActivity, authorization: .manage)
     }
 
     static func enableLowPowerMode() async throws {
-        let authData = try await BTAppXPCClient.getManageAuthorization()
-        try await withCheckedThrowingContinuation { continuation in
-            self.runExecute(
-                continuation: continuation,
-                authData: authData,
-                command: BTDaemonCommCommand.enableLowPowerMode
-            )
-        }
+        try await self.run(command: .enableLowPowerMode, authorization: .manage)
     }
 
     static func disableLowPowerMode() async throws {
-        let authData = try await BTAppXPCClient.getManageAuthorization()
-        try await withCheckedThrowingContinuation { continuation in
-            self.runExecute(
-                continuation: continuation,
-                authData: authData,
-                command: BTDaemonCommCommand.disableLowPowerMode
-            )
-        }
+        try await self.run(command: .disableLowPowerMode, authorization: .manage)
     }
 
     static func getSettings() async throws -> [String: NSObject & Sendable] {
@@ -179,9 +124,7 @@ internal enum BTDaemonXPCClient {
     static func finishUpdate() {
         Task {
             do {
-                try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, any Error>) in
-                    self.runExecute(continuation: continuation, authData: nil, command: BTDaemonCommCommand.finishUpdate)
-                }
+                try await self.run(command: .finishUpdate, authorization: .none)
             }
             catch {
                 //
@@ -204,15 +147,34 @@ internal enum BTDaemonXPCClient {
     }
 
     static func prepareDisable(authData: Data) async throws {
-        let authData = try await BTAppXPCClient.getManageAuthorization()
-        try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, any Error>) in
-            self.runExecute(continuation: continuation, authData: authData, command: BTDaemonCommCommand.prepareDisable)
-        }
+        try await self.run(command: .prepareDisable, authData: authData)
     }
 
     static func isSupported() async throws {
+        try await self.run(command: .isSupported, authorization: .none)
+    }
+
+    private static func run(
+        command: BTDaemonCommCommand,
+        authorization: AuthorizationRequirement
+    ) async throws {
+        let authData: Data?
+        switch authorization {
+        case .none:
+            authData = nil
+        case .manage:
+            authData = try await BTAppXPCClient.getManageAuthorization()
+        }
+
+        try await self.run(command: command, authData: authData)
+    }
+
+    private static func run(
+        command: BTDaemonCommCommand,
+        authData: Data?
+    ) async throws {
         try await withCheckedThrowingContinuation { (continuation: CheckedContinuation<Void, any Error>) in
-            self.runExecute(continuation: continuation, authData: nil, command: BTDaemonCommCommand.isSupported)
+            self.runExecute(continuation: continuation, authData: authData, command: command)
         }
     }
 

@@ -62,17 +62,6 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         }
     }
 
-    private func hidePowerItems() {
-        self.disablePowerAdapterItem.isHidden = true
-        self.enablePowerAdapterItem.isHidden = true
-        self.chargeToFullNowItem.isHidden = true
-        self.chargeToLimitNowItem.isHidden = true
-        self.disableChargingItem.isHidden = true
-        self.requestChargingToFullItem.isHidden = true
-        self.requestChargingToLimitItem.isHidden = true
-        self.cancelChargingRequestItem.isHidden = true
-    }
-
     private func refreshLowPowerModeItem() async {
         do {
             let enabled = try await BTActions.getLowPowerModeEnabled()
@@ -97,260 +86,18 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         do {
             let state = try await BTActions.getState()
             let settings = try await BTActions.getSettings()
-
-            let enabledNum = state[BTStateInfo.Keys.enabled] as? NSNumber
-            guard let enabled = enabledNum?.boolValue else {
-                throw BTError.commFailed
-            }
-
-            guard enabled else {
-                self.remainingTimeItem?.isHidden = true
-                self.infoUnknownStateItem.isHidden = true
-                self.infoPowerAdapterEnabledItem.isHidden = true
-                self.infoPowerAdapterDisabledItem.isHidden = true
-                self.infoChargingToLimitItem.isHidden = true
-                self.infoChargingToFullItem.isHidden = true
-                self.infoChargingUnknownModeItem.isHidden = true
-                self.infoNotChargingItem.isHidden = true
-                self.infoRequestedChargingToLimitItem.isHidden = true
-                self.infoRequestedChargingToFullItem.isHidden = true
-                self.infoNotChargingUnknownModeItem.isHidden = true
-
-                self.hidePowerItems()
-
-                self.pauseActivityItem.isHidden = true
-                self.resumeActivityItem.isHidden = false
-
-                self.infoPausedItem.isHidden = false
-
-                return
-            }
-
-            self.infoPausedItem.isHidden = true
-
-            self.resumeActivityItem.isHidden = true
-            self.pauseActivityItem.isHidden = false
-
-            let powerDisabledNum =
-            state[BTStateInfo.Keys.powerDisabled] as? NSNumber
-            let connectedNum =
-            state[BTStateInfo.Keys.connected] as? NSNumber
-            let chargingDisabledNum =
-            state[BTStateInfo.Keys.chargingDisabled] as? NSNumber
-            let batteryPercentNum =
-            state[BTStateInfo.Keys.batteryPercent] as? NSNumber
-            let progressNum = state[BTStateInfo.Keys.progress] as? NSNumber
-            let chargingModeNum =
-            state[BTStateInfo.Keys.chargingMode] as? NSNumber
-            let maxChargeNum =
-            state[BTStateInfo.Keys.maxCharge] as? NSNumber
-            let minChargeNum =
-            settings[BTSettingsInfo.Keys.minCharge] as? NSNumber
-
-            guard
-                let powerDisabled = powerDisabledNum?.boolValue,
-                let connected = connectedNum?.boolValue,
-                let chargingDisabled = chargingDisabledNum?.boolValue,
-                let batteryPercent = batteryPercentNum?.intValue,
-                let progress = progressNum?.intValue,
-                let chargingMode = chargingModeNum?.intValue,
-                let maxCharge = maxChargeNum?.intValue,
-                let minCharge = minChargeNum?.intValue
-            else {
-                throw BTError.commFailed
-            }
-
-            self.updateRemainingTimeItem(
-                powerDisabled: powerDisabled,
-                connected: connected,
-                chargingDisabled: chargingDisabled,
-                batteryPercent: batteryPercent,
-                chargingMode: chargingMode,
-                maxCharge: maxCharge,
-                minCharge: minCharge
+            let batteryState = try BTBatteryState(payload: state)
+            let batterySettings = try BTBatterySettings(payload: settings)
+            let snapshot = BTCommandsMenuSnapshotFactory.make(
+                state: batteryState,
+                settings: batterySettings,
+                timeToEmptyEstimate: IOPSPrivate.GetTimeToEmptyEstimate(),
+                timeToFullEstimate: IOPSPrivate.GetTimeToFullChargeEstimate()
             )
-            
-            self.infoUnknownStateItem.isHidden = true
-            
-            if !powerDisabled {
-                self.infoPowerAdapterDisabledItem.isHidden = true
-                self.infoPowerAdapterEnabledItem.isHidden = false
-                self.infoPowerAdapterEnabledItem.title =
-                    BTLocalization.Commands.usingPowerAdapter
-                
-                self.enablePowerAdapterItem.isHidden = true
-                self.disablePowerAdapterItem.isHidden = false
-                self.disablePowerAdapterItem.title =
-                    BTLocalization.Commands.usePowerAdapter
-                self.disablePowerAdapterItem.state = .on
-            } else {
-                self.infoPowerAdapterEnabledItem.isHidden = true
-                self.infoPowerAdapterDisabledItem.isHidden = false
-                self.infoPowerAdapterDisabledItem.title =
-                    BTLocalization.Commands.runningOnBattery
-                
-                self.disablePowerAdapterItem.isHidden = true
-                self.enablePowerAdapterItem.isHidden = false
-                self.enablePowerAdapterItem.title =
-                    BTLocalization.Commands.usePowerAdapter
-                self.enablePowerAdapterItem.state = .off
-            }
-            
-            if !chargingDisabled {
-                self.infoNotChargingItem.isHidden = true
-                self.infoRequestedChargingToLimitItem.isHidden = true
-                self.infoRequestedChargingToFullItem.isHidden = true
-                self.infoNotChargingUnknownModeItem.isHidden = true
-                
-                switch chargingMode {
-                case Int(BTStateInfo.ChargingMode.standard.rawValue),
-                    Int(BTStateInfo.ChargingMode.toLimit.rawValue):
-                    self.infoChargingToFullItem.isHidden = true
-                    self.infoChargingUnknownModeItem.isHidden = true
-                    self.infoChargingToLimitItem.isHidden = false
-                    self.infoChargingToLimitItem.title =
-                        BTLocalization.Commands.chargingUntil(
-                            maxCharge: maxCharge
-                        )
-                    
-                case Int(BTStateInfo.ChargingMode.toFull.rawValue):
-                    self.infoChargingToLimitItem.isHidden = true
-                    self.infoChargingUnknownModeItem.isHidden = true
-                    self.infoChargingToFullItem.isHidden = false
-                    self.infoChargingToFullItem.title =
-                        BTLocalization.Commands.chargingToFull
-                    
-                default:
-                    os_log("Unknown charging mode: \(chargingMode)")
-                    self.infoChargingToLimitItem.isHidden = true
-                    self.infoChargingToFullItem.isHidden = true
-                    self.infoChargingUnknownModeItem.isHidden = false
-                }
-            } else {
-                self.infoChargingToLimitItem.isHidden = true
-                self.infoChargingToFullItem.isHidden = true
-                self.infoChargingUnknownModeItem.isHidden = true
-                
-                switch chargingMode {
-                case Int(BTStateInfo.ChargingMode.standard.rawValue):
-                    self.infoRequestedChargingToLimitItem.isHidden = true
-                    self.infoRequestedChargingToFullItem.isHidden = true
-                    self.infoNotChargingUnknownModeItem.isHidden = true
-                    self.infoNotChargingItem.isHidden = false
-                    self.infoNotChargingItem.title =
-                        BTLocalization.Commands.holdingCharge(
-                            minCharge: minCharge
-                        )
-                    
-                case Int(BTStateInfo.ChargingMode.toLimit.rawValue):
-                    self.infoNotChargingItem.isHidden = true
-                    self.infoRequestedChargingToFullItem.isHidden = true
-                    self.infoNotChargingUnknownModeItem.isHidden = true
-                    self.infoRequestedChargingToLimitItem.isHidden = false
-                    self.infoRequestedChargingToLimitItem.title =
-                        BTLocalization.Commands.waitingToCharge(
-                            maxCharge: maxCharge
-                        )
-                    
-                case Int(BTStateInfo.ChargingMode.toFull.rawValue):
-                    self.infoNotChargingItem.isHidden = true
-                    self.infoRequestedChargingToLimitItem.isHidden = true
-                    self.infoNotChargingUnknownModeItem.isHidden = true
-                    self.infoRequestedChargingToFullItem.isHidden = false
-                    self.infoRequestedChargingToFullItem.title =
-                        BTLocalization.Commands.waitingToChargeFull
-                    
-                default:
-                    os_log("Unknown charging mode: \(chargingMode)")
-                    self.infoNotChargingItem.isHidden = true
-                    self.infoRequestedChargingToLimitItem.isHidden = true
-                    self.infoRequestedChargingToFullItem.isHidden = true
-                    self.infoNotChargingUnknownModeItem.isHidden = false
-                }
-            }
-            
-            let chargeBelowMax = progress <= BTStateInfo.ChargingProgress
-                .belowMax.rawValue
-            let chargeBelowFull = progress <= BTStateInfo.ChargingProgress
-                .belowFull.rawValue
 
-            self.chargeToLimitNowItem.title =
-                BTLocalization.Commands.chargeToLimitNow(maxCharge: maxCharge)
-            self.requestChargingToLimitItem.title =
-                BTLocalization.Commands.requestChargingToLimitNow(
-                    maxCharge: maxCharge
-                )
-
-            if connected {
-                self.requestChargingToFullItem.isHidden = true
-                self.requestChargingToLimitItem.isHidden = true
-                self.cancelChargingRequestItem.isHidden = true
-                self.disableChargingItem.isHidden = chargingDisabled
-                
-                switch chargingMode {
-                case Int(BTStateInfo.ChargingMode.standard.rawValue),
-                    Int(BTStateInfo.ChargingMode.toLimit.rawValue):
-                    self.chargeToLimitNowItem
-                        .isHidden = !chargingDisabled || !chargeBelowMax
-                    self.chargeToFullNowItem.isHidden = !chargeBelowFull
-                    
-                case Int(BTStateInfo.ChargingMode.toFull.rawValue):
-                    self.chargeToFullNowItem.isHidden = true
-                    self.chargeToLimitNowItem.isHidden = !chargeBelowMax
-                    
-                default:
-                    self.chargeToFullNowItem.isHidden = !chargeBelowFull
-                    self.chargeToLimitNowItem.isHidden = !chargeBelowMax
-                }
-            } else {
-                self.chargeToFullNowItem.isHidden = true
-                self.chargeToLimitNowItem.isHidden = true
-                self.disableChargingItem.isHidden = true
-                
-                switch chargingMode {
-                case Int(BTStateInfo.ChargingMode.standard.rawValue):
-                    self.cancelChargingRequestItem.isHidden = true
-                    self.requestChargingToFullItem
-                        .isHidden = !chargeBelowFull
-                    self.requestChargingToLimitItem
-                        .isHidden = !chargeBelowMax
-                    
-                case Int(BTStateInfo.ChargingMode.toLimit.rawValue):
-                    self.requestChargingToLimitItem.isHidden = true
-                    self.requestChargingToFullItem
-                        .isHidden = !chargeBelowFull
-                    self.cancelChargingRequestItem.isHidden = false
-                    
-                case Int(BTStateInfo.ChargingMode.toFull.rawValue):
-                    self.requestChargingToFullItem.isHidden = true
-                    self.requestChargingToLimitItem
-                        .isHidden = !chargeBelowMax
-                    self.cancelChargingRequestItem.isHidden = false
-                    
-                default:
-                    self.requestChargingToFullItem
-                        .isHidden = !chargeBelowFull
-                    self.requestChargingToLimitItem
-                        .isHidden = !chargeBelowMax
-                    self.cancelChargingRequestItem.isHidden = false
-                }
-            }
+            self.apply(snapshot: snapshot)
         } catch {
-            self.remainingTimeItem?.isHidden = true
-            self.infoPowerAdapterEnabledItem.isHidden = true
-            self.infoPowerAdapterDisabledItem.isHidden = true
-            self.infoChargingToLimitItem.isHidden = true
-            self.infoChargingToFullItem.isHidden = true
-            self.infoChargingUnknownModeItem.isHidden = true
-            self.infoNotChargingItem.isHidden = true
-            self.infoRequestedChargingToLimitItem.isHidden = true
-            self.infoRequestedChargingToFullItem.isHidden = true
-            self.infoNotChargingUnknownModeItem.isHidden = true
-
-            self.hidePowerItems()
-
-            self.infoUnknownStateItem.isHidden = false
-
+            self.apply(snapshot: .unknown)
             BTErrorHandler.errorHandler(error: error)
         }
     }
@@ -377,154 +124,69 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         self.refreshTimer = nil
     }
 
-    private func updateRemainingTimeItem(
-        powerDisabled: Bool,
-        connected: Bool,
-        chargingDisabled: Bool,
-        batteryPercent: Int,
-        chargingMode: Int,
-        maxCharge: Int,
-        minCharge: Int
-    ) {
-        guard
-            let title = self.remainingTimeTitle(
-                powerDisabled: powerDisabled,
-                connected: connected,
-                chargingDisabled: chargingDisabled,
-                batteryPercent: batteryPercent,
-                chargingMode: chargingMode,
-                maxCharge: maxCharge,
-                minCharge: minCharge
-            )
-        else {
-            self.remainingTimeItem?.isHidden = true
-            return
-        }
-
-        self.remainingTimeItem?.title = title
-        self.remainingTimeItem?.isHidden = false
-    }
-
-    private func remainingTimeTitle(
-        powerDisabled: Bool,
-        connected: Bool,
-        chargingDisabled: Bool,
-        batteryPercent: Int,
-        chargingMode: Int,
-        maxCharge: Int,
-        minCharge: Int
-    ) -> String? {
-        if !connected || powerDisabled {
-            guard let estimate = IOPSPrivate.GetTimeToEmptyEstimate() else {
-                return nil
-            }
-
-            if chargingDisabled &&
-                chargingMode == Int(BTStateInfo.ChargingMode.standard.rawValue) &&
-                batteryPercent > minCharge {
-                return self.timeTitle(
-                    targetPercent: minCharge,
-                    seconds: self.scaledDischargeTime(
-                        estimate: estimate,
-                        currentPercent: batteryPercent,
-                        targetPercent: minCharge
-                    )
-                )
-            }
-
-            return self.timeTitleToEmpty(seconds: estimate)
-        }
-
-        guard !chargingDisabled else {
-            return nil
-        }
-
-        guard let estimate = IOPSPrivate.GetTimeToFullChargeEstimate() else {
-            return nil
-        }
-
-        switch chargingMode {
-        case Int(BTStateInfo.ChargingMode.toFull.rawValue):
-            return self.timeTitle(
-                targetPercent: 100,
-                seconds: self.scaledChargeTime(
-                    estimate: estimate,
-                    currentPercent: batteryPercent,
-                    targetPercent: 100
-                )
-            )
-
-        default:
-            return self.timeTitle(
-                targetPercent: maxCharge,
-                seconds: self.scaledChargeTime(
-                    estimate: estimate,
-                    currentPercent: batteryPercent,
-                    targetPercent: maxCharge
-                )
-            )
-        }
-    }
-
-    private func scaledDischargeTime(
-        estimate: TimeInterval,
-        currentPercent: Int,
-        targetPercent: Int
-    ) -> TimeInterval? {
-        guard currentPercent > 0 && targetPercent < currentPercent else {
-            return nil
-        }
-
-        return estimate *
-            (Double(currentPercent - targetPercent) / Double(currentPercent))
-    }
-
-    private func scaledChargeTime(
-        estimate: TimeInterval,
-        currentPercent: Int,
-        targetPercent: Int
-    ) -> TimeInterval? {
-        guard currentPercent < 100 && targetPercent > currentPercent else {
-            return nil
-        }
-
-        return estimate *
-            (Double(targetPercent - currentPercent) / Double(100 - currentPercent))
-    }
-
-    private func timeTitleToEmpty(seconds: TimeInterval?) -> String? {
-        guard let duration = self.durationString(seconds: seconds) else {
-            return nil
-        }
-
-        return BTLocalization.Commands.untilEmpty(duration: duration)
-    }
-
-    private func timeTitle(
-        targetPercent: Int,
-        seconds: TimeInterval?
-    ) -> String? {
-        guard let duration = self.durationString(seconds: seconds) else {
-            return nil
-        }
-
-        return BTLocalization.Commands.untilCharge(
-            percent: targetPercent,
-            duration: duration
+    private func apply(snapshot: BTCommandsMenuSnapshot) {
+        self.apply(snapshot.remainingTime, to: self.remainingTimeItem)
+        self.apply(snapshot.unknownState, to: self.infoUnknownStateItem)
+        self.apply(snapshot.paused, to: self.infoPausedItem)
+        self.apply(
+            snapshot.powerAdapterEnabled,
+            to: self.infoPowerAdapterEnabledItem
         )
+        self.apply(
+            snapshot.powerAdapterDisabled,
+            to: self.infoPowerAdapterDisabledItem
+        )
+        self.apply(snapshot.chargingToLimit, to: self.infoChargingToLimitItem)
+        self.apply(snapshot.chargingToFull, to: self.infoChargingToFullItem)
+        self.apply(
+            snapshot.chargingUnknownMode,
+            to: self.infoChargingUnknownModeItem
+        )
+        self.apply(snapshot.notCharging, to: self.infoNotChargingItem)
+        self.apply(
+            snapshot.requestedChargingToLimit,
+            to: self.infoRequestedChargingToLimitItem
+        )
+        self.apply(
+            snapshot.requestedChargingToFull,
+            to: self.infoRequestedChargingToFullItem
+        )
+        self.apply(
+            snapshot.notChargingUnknownMode,
+            to: self.infoNotChargingUnknownModeItem
+        )
+        self.apply(snapshot.disablePowerAdapter, to: self.disablePowerAdapterItem)
+        self.apply(snapshot.enablePowerAdapter, to: self.enablePowerAdapterItem)
+        self.apply(snapshot.chargeToFullNow, to: self.chargeToFullNowItem)
+        self.apply(snapshot.chargeToLimitNow, to: self.chargeToLimitNowItem)
+        self.apply(snapshot.disableCharging, to: self.disableChargingItem)
+        self.apply(
+            snapshot.requestChargingToFull,
+            to: self.requestChargingToFullItem
+        )
+        self.apply(
+            snapshot.requestChargingToLimit,
+            to: self.requestChargingToLimitItem
+        )
+        self.apply(
+            snapshot.cancelChargingRequest,
+            to: self.cancelChargingRequestItem
+        )
+        self.apply(snapshot.pauseActivity, to: self.pauseActivityItem)
+        self.apply(snapshot.resumeActivity, to: self.resumeActivityItem)
     }
 
-    private func durationString(seconds: TimeInterval?) -> String? {
-        guard let seconds, seconds.isFinite, seconds > 0 else {
-            return nil
+    private func apply(
+        _ snapshot: BTMenuItemSnapshot,
+        to item: NSMenuItem?
+    ) {
+        item?.isHidden = snapshot.isHidden
+        if let title = snapshot.title {
+            item?.title = title
         }
-
-        let formatter = DateComponentsFormatter()
-        formatter.allowedUnits = [.hour, .minute]
-        formatter.unitsStyle = .abbreviated
-        formatter.maximumUnitCount = 2
-
-        return formatter.string(from: seconds)
+        if let stateOn = snapshot.stateOn {
+            item?.state = stateOn ? .on : .off
+        }
     }
 
     @IBAction private func quitHandler(sender _: NSMenuItem) {

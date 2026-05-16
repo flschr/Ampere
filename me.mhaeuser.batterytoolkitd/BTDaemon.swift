@@ -25,7 +25,7 @@ internal enum BTDaemon {
 
     static func getState() -> [String: NSObject & Sendable] {
         guard enabled else {
-            return [BTStateInfo.Keys.enabled: NSNumber(value: 0)]
+            return BTBatteryState(enabled: false).payload
         }
 
         let chargingDisabled = BTPowerState.isChargingDisabled()
@@ -36,18 +36,16 @@ internal enum BTDaemon {
         let mode = BTPowerEvents.chargingMode
         let maxCharge = BTSettings.maxCharge
 
-        return [
-            BTStateInfo.Keys.enabled: NSNumber(value: 1),
-            BTStateInfo.Keys.powerDisabled: NSNumber(value: powerDisabled),
-            BTStateInfo.Keys.connected: NSNumber(value: connected),
-            BTStateInfo.Keys
-                .chargingDisabled: NSNumber(value: chargingDisabled),
-            BTStateInfo.Keys
-                .batteryPercent: NSNumber(value: batteryPercent),
-            BTStateInfo.Keys.progress: NSNumber(value: progress.rawValue),
-            BTStateInfo.Keys.chargingMode: NSNumber(value: mode.rawValue),
-            BTStateInfo.Keys.maxCharge: NSNumber(value: maxCharge)
-        ]
+        return BTBatteryState(
+            enabled: true,
+            powerDisabled: powerDisabled,
+            connected: connected,
+            chargingDisabled: chargingDisabled,
+            batteryPercent: Int(batteryPercent),
+            progress: progress,
+            chargingMode: mode,
+            maxCharge: Int(maxCharge)
+        ).payload
     }
     
     private static func start() throws {

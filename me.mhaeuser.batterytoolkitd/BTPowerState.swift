@@ -46,22 +46,18 @@ internal enum BTPowerState {
         if chargingDisabled != self.chargingDisabled {
             self.chargingDisabled = chargingDisabled
 
-            if chargingDisabled {
-                GlobalSleep.restore()
-            } else {
-                GlobalSleep.disable()
-            }
+            self.apply(
+                sleepEffect: BTPowerEventStateMachine.chargingSleepEffect(
+                    chargingDisabled: chargingDisabled
+                )
+            )
         }
 
         let powerDisabled = SMCComm.Power.isPowerAdapterDisabled()
         if powerDisabled != self.powerDisabled {
             self.powerDisabled = powerDisabled
 
-            if powerDisabled {
-                self.disableAdapterSleep()
-            } else {
-                self.restoreAdapterSleep()
-            }
+            self.applyPowerAdapterSleepEffect(powerDisabled: powerDisabled)
         }
 
         if BTSettings.magSafeSync {
@@ -81,11 +77,7 @@ internal enum BTPowerState {
             return
         }
 
-        if !BTSettings.adapterSleep {
-            GlobalSleep.disable()
-        } else {
-            GlobalSleep.restore()
-        }
+        self.applyPowerAdapterSleepEffect(powerDisabled: true)
     }
 
     static func syncMagSafeStatePowerEnabled(percent: UInt8) {
@@ -218,14 +210,30 @@ internal enum BTPowerState {
     }
 
     private static func disableAdapterSleep() {
-        if !BTSettings.adapterSleep {
-            GlobalSleep.disable()
-        }
+        self.applyPowerAdapterSleepEffect(powerDisabled: true)
     }
 
     private static func restoreAdapterSleep() {
-        if !BTSettings.adapterSleep {
+        self.applyPowerAdapterSleepEffect(powerDisabled: false)
+    }
+
+    private static func applyPowerAdapterSleepEffect(powerDisabled: Bool) {
+        self.apply(
+            sleepEffect: BTPowerEventStateMachine.powerAdapterSleepEffect(
+                powerDisabled: powerDisabled,
+                adapterSleep: BTSettings.adapterSleep
+            )
+        )
+    }
+
+    private static func apply(sleepEffect: BTPowerEventStateMachine.SleepEffect) {
+        switch sleepEffect {
+        case .disableSleep:
+            GlobalSleep.disable()
+        case .restoreSleep:
             GlobalSleep.restore()
+        case .none:
+            break
         }
     }
 }

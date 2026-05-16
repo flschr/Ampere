@@ -9,46 +9,71 @@ internal enum BTLowPowerMode {
     private static let pmsetURL = URL(fileURLWithPath: "/usr/bin/pmset")
 
     static func isEnabled() throws -> Bool {
-        let customSettings = try self.powerSettings(arguments: ["-g", "custom"])
-        if let powerModes = customSettings["powermode"], !powerModes.isEmpty {
-            return powerModes.allSatisfy { $0 == "1" }
-        }
-        if let lowPowerModes = customSettings["lowpowermode"],
-           !lowPowerModes.isEmpty {
-            return lowPowerModes.allSatisfy { $0 != "0" }
-        }
-
-        let activeSettings = try self.powerSettings(arguments: ["-g"])
-        if let powerMode = activeSettings["powermode"]?.first {
-            return powerMode == "1"
-        }
-        if let lowPowerMode = activeSettings["lowpowermode"]?.first {
-            return lowPowerMode != "0"
-        }
-
-        throw BTError.malformedData
+        try self.readState().isEnabled
     }
 
     static func setEnabled(_ enabled: Bool) throws {
-        do {
-            try self.setPowerMode(enabled ? "1" : "0")
-        } catch {
-            try self.setLowPowerMode(enabled)
+        let key = try self.preferredWriteKey()
+        try self.set(key: key, enabled: enabled)
+
+        let state = try self.readState()
+        guard state.key == key, state.matches(enabled: enabled) else {
+            throw BTError.commFailed
         }
     }
 
-    private static func setPowerMode(_ value: String) throws {
-        try self.runPMSet(arguments: ["-b", "powermode", value])
-        try self.runPMSet(arguments: ["-c", "powermode", value])
-        self.refreshPowerSettings()
+    internal static func state(
+        customOutput: String,
+        activeOutput: String?
+    ) throws -> BTLowPowerModeState {
+        try BTLowPowerModeParser.state(
+            customOutput: customOutput,
+            activeOutput: activeOutput
+        )
     }
 
-    private static func setLowPowerMode(_ enabled: Bool) throws {
-        try self.runPMSet(arguments: [
-            "-a",
-            "lowpowermode",
-            enabled ? "1" : "0",
-        ])
+    internal static func powerModeCapabilities(
+        from output: String
+    ) -> Set<BTLowPowerModeSettingKey> {
+        BTLowPowerModeParser.powerModeCapabilities(from: output)
+    }
+
+    private static func readState() throws -> BTLowPowerModeState {
+        try BTLowPowerModeParser.state(
+            customOutput: self.runPMSet(arguments: ["-g", "custom"]),
+            activeOutput: self.runPMSet(arguments: ["-g"])
+        )
+    }
+
+    private static func preferredWriteKey() throws -> BTLowPowerModeSettingKey {
+        if let capabilities = try? self.runPMSet(arguments: ["-g", "cap"]) {
+            let keys = BTLowPowerModeParser.powerModeCapabilities(
+                from: capabilities
+            )
+            if keys.contains(.lowPowerMode) {
+                return .lowPowerMode
+            }
+            if keys.contains(.powerMode) {
+                return .powerMode
+            }
+        }
+
+        return try self.readState().key
+    }
+
+    private static func set(
+        key: BTLowPowerModeSettingKey,
+        enabled: Bool
+    ) throws {
+        let value = key.setValue(enabled: enabled)
+        switch key {
+        case .lowPowerMode:
+            try self.runPMSet(arguments: ["-a", key.rawValue, value])
+        case .powerMode:
+            try self.runPMSet(arguments: ["-b", key.rawValue, value])
+            try self.runPMSet(arguments: ["-c", key.rawValue, value])
+        }
+
         self.refreshPowerSettings()
     }
 
@@ -56,32 +81,15 @@ internal enum BTLowPowerMode {
         _ = try? self.runPMSet(arguments: ["touch"])
     }
 
-    private static func powerSettings(arguments: [String]) throws -> [String: [String]] {
-        let output = try self.runPMSet(arguments: arguments)
-        var settings: [String: [String]] = [:]
-
-        for line in output.components(separatedBy: .newlines) {
-            let components = line.split(separator: " ")
-            guard let key = components.first,
-                  let value = components.last
-            else {
-                continue
-            }
-
-            settings[String(key), default: []].append(String(value))
-        }
-
-        return settings
-    }
-
     @discardableResult private static func runPMSet(arguments: [String]) throws -> String {
         let process = Process()
         let outputPipe = Pipe()
+        let errorPipe = Pipe()
 
         process.executableURL = self.pmsetURL
         process.arguments = arguments
         process.standardOutput = outputPipe
-        process.standardError = Pipe()
+        process.standardError = errorPipe
 
         do {
             try process.run()
@@ -90,11 +98,13 @@ internal enum BTLowPowerMode {
         }
 
         process.waitUntilExit()
+        let output = outputPipe.fileHandleForReading.readDataToEndOfFile()
+        _ = errorPipe.fileHandleForReading.readDataToEndOfFile()
+
         guard process.terminationStatus == 0 else {
             throw BTError.commFailed
         }
 
-        let output = outputPipe.fileHandleForReading.readDataToEndOfFile()
         guard let string = String(data: output, encoding: .utf8) else {
             throw BTError.malformedData
         }

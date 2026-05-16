@@ -70,24 +70,13 @@ internal enum BTPowerEvents {
     }
 
     static func wakeFromSleep() {
-        //
-        // Immediately disable sleep to not interrupt the setup phase.
-        //
-        GlobalSleep.disable()
-        
         assert(self.powerCreated)
 
-        BTPowerState.refreshState()
-
-        if self.percentCreated {
-            _ = self.handleChargeHysteresis()
+        for effect in BTPowerEventStateMachine.wakeFromSleepEffects(
+            percentHandlerRegistered: self.percentCreated
+        ) {
+            self.apply(wakeEffect: effect)
         }
-
-        self.handleLimitedPowerGuarded()
-        //
-        // Restore sleep from the setup phase.
-        //
-        GlobalSleep.restore()
     }
 
     static func settingsChanged() {
@@ -207,18 +196,14 @@ internal enum BTPowerEvents {
         // In case charging to limit or full were requested while the device
         // was on battery, enable it now if appropriate.
         //
-        switch self.chargingMode {
-        case .toLimit:
-            if percent < BTSettings.maxCharge {
-                _ = BTPowerState.enableCharging(percent: percent)
-            }
-
-        case .toFull:
-            if percent < 100 {
-                _ = BTPowerState.enableCharging(percent: percent)
-            }
-
-        case .standard:
+        switch BTPowerEventStateMachine.pendingModeEffect(
+            percent: percent,
+            chargingMode: self.chargingMode,
+            maxCharge: BTSettings.maxCharge
+        ) {
+        case .enableCharging:
+            _ = BTPowerState.enableCharging(percent: percent)
+        case .disableCharging, .none:
             break
         }
 
@@ -240,25 +225,21 @@ internal enum BTPowerEvents {
         guard let (percent, _, _) = IOPSPrivate.GetPercentRemaining() else {
             return 100
         }
-        //
-        // The hysteresis does not apply when starting the daemon, as
-        // micro-charges will already happen pre-boot and there is no point to
-        // not just charge all the way to the limit then.
-        //
-        if percent >= BTSettings.maxCharge {
+        switch BTPowerEventStateMachine.hysteresisEffect(
+            percent: percent,
+            minCharge: BTSettings.minCharge,
+            maxCharge: BTSettings.maxCharge,
+            chargingMode: self.chargingMode
+        ) {
+        case .disableCharging:
             //
-            // Do not disable charging till 100 percent are reached when
-            // charging to full was requested. Charging to limit is handled
-            // implicitly, as it only forces charging in [min, max).
+            // Charging modes are reset once we disable charging.
             //
-            if self.chargingMode != .toFull || percent >= 100 {
-                //
-                // Charging modes are reset once we disable charging.
-                //
-                _ = BTPowerEvents.disableCharging(percent: percent)
-            }
-        } else if percent < BTSettings.minCharge {
+            _ = BTPowerEvents.disableCharging(percent: percent)
+        case .enableCharging:
             _ = BTPowerState.enableCharging(percent: percent)
+        case .none:
+            break
         }
 
         return percent
@@ -308,6 +289,27 @@ internal enum BTPowerEvents {
         GlobalSleep.restore()
     }
 
+    private static func apply(wakeEffect: BTPowerEventStateMachine.WakeEffect) {
+        switch wakeEffect {
+        case .disableSleep:
+            //
+            // Immediately disable sleep to not interrupt the setup phase.
+            //
+            GlobalSleep.disable()
+        case .refreshPowerState:
+            BTPowerState.refreshState()
+        case .handleChargeHysteresis:
+            _ = self.handleChargeHysteresis()
+        case .handleLimitedPower:
+            self.handleLimitedPowerGuarded()
+        case .restoreSleep:
+            //
+            // Restore sleep from the setup phase.
+            //
+            GlobalSleep.restore()
+        }
+    }
+
     private static func restoreDefaults() {
         //
         // Do not reset to defaults when debugging to not stress the batteries
@@ -338,7 +340,10 @@ internal enum BTPowerEvents {
             return false
         }
 
-        if percent < limit {
+        if BTPowerEventStateMachine.belowLimitModeEffect(
+            percent: percent,
+            limit: limit
+        ) == .enableCharging {
             return BTPowerState.enableCharging(percent: percent)
         }
 

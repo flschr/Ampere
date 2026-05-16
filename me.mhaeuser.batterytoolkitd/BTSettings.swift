@@ -60,58 +60,45 @@ internal enum BTSettings {
     }
 
     static func getSettings() -> [String: NSObject & Sendable] {
-        let minCharge = NSNumber(value: self.minCharge)
-        let maxCharge = NSNumber(value: self.maxCharge)
-        let adapterSleep = NSNumber(value: self.adapterSleep)
-        let magSafeSync = NSNumber(value: self.magSafeSync)
-        var settings: [String: NSObject & Sendable] = [
-            BTSettingsInfo.Keys.minCharge: minCharge,
-            BTSettingsInfo.Keys.maxCharge: maxCharge,
-            BTSettingsInfo.Keys.adapterSleep: adapterSleep,
-        ]
-
-        if SMCComm.MagSafe.supported {
-            settings.updateValue(magSafeSync,
-                forKey: BTSettingsInfo.Keys.magSafeSync)
+        guard let settings = try? BTBatterySettings(
+            minCharge: Int(self.minCharge),
+            maxCharge: Int(self.maxCharge),
+            adapterSleep: self.adapterSleep,
+            magSafeSync: SMCComm.MagSafe.supported ? self.magSafeSync : nil
+        ) else {
+            assertionFailure("Stored battery settings are invalid")
+            return [:]
         }
 
-        return settings
+        return settings.payload
     }
 
     static func setSettings(
         settings: [String: NSObject & Sendable],
         reply: @Sendable @escaping (BTError.RawValue) -> Void
     ) {
-        let minChargeNum = settings[BTSettingsInfo.Keys.minCharge] as? NSNumber
-        let minCharge = minChargeNum?.intValue ??
-            Int(BTSettingsInfo.Defaults.minCharge)
-
-        let maxChargeNum = settings[BTSettingsInfo.Keys.maxCharge] as? NSNumber
-        let maxCharge = maxChargeNum?.intValue ??
-            Int(BTSettingsInfo.Defaults.maxCharge)
+        let parsedSettings: BTBatterySettings
+        do {
+            parsedSettings = try BTBatterySettings(payload: settings)
+        } catch {
+            reply(BTError.malformedData.rawValue)
+            return
+        }
 
         let success = self.setChargeLimits(
-            minCharge: minCharge,
-            maxCharge: maxCharge
+            minCharge: parsedSettings.minCharge,
+            maxCharge: parsedSettings.maxCharge
         )
         guard success else {
             reply(BTError.malformedData.rawValue)
             return
         }
 
-        let adapterSleepNum =
-            settings[BTSettingsInfo.Keys.adapterSleep] as? NSNumber
-        let adapterSleep = adapterSleepNum?.boolValue ??
-            BTSettingsInfo.Defaults.adapterSleep
+        self.setAdapterSleep(enabled: parsedSettings.adapterSleep)
 
-        self.setAdapterSleep(enabled: adapterSleep)
-
-        let magSafeSyncNum =
-            settings[BTSettingsInfo.Keys.magSafeSync] as? NSNumber
-        let magSafeSync = magSafeSyncNum?.boolValue ??
-            BTSettingsInfo.Defaults.magSafeSync
-
-        self.setMagSafeSync(enabled: magSafeSync)
+        if let magSafeSync = parsedSettings.magSafeSync {
+            self.setMagSafeSync(enabled: magSafeSync)
+        }
 
         self.writeDefaults()
 

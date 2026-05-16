@@ -10,43 +10,6 @@ import os.log
 internal final class BTSettingsViewController: NSViewController {
     private static let contentSize = NSSize(width: 520, height: 520)
 
-    private enum ChargePreset: Int, CaseIterable {
-        case everyday
-        case desk
-        case travel
-
-        var title: String {
-            switch self {
-            case .everyday:
-                return BTLocalization.Settings.Presets.everyday
-            case .desk:
-                return BTLocalization.Settings.Presets.desk
-            case .travel:
-                return BTLocalization.Settings.Presets.travel
-            }
-        }
-
-        var minCharge: Int {
-            switch self {
-            case .everyday:
-                return 70
-            case .desk:
-                return 50
-            case .travel:
-                return 80
-            }
-        }
-
-        var maxCharge: Int {
-            switch self {
-            case .everyday, .desk:
-                return 80
-            case .travel:
-                return 90
-            }
-        }
-    }
-
     private let autostartSetting = "autostart"
     
     private var currentSettings: [String: NSObject & Sendable]? = nil
@@ -185,20 +148,30 @@ internal final class BTSettingsViewController: NSViewController {
             )
         }
 
-        let settings: [String: NSObject & Sendable] = [
-            BTSettingsInfo.Keys.minCharge: self.minChargeNum,
-            BTSettingsInfo.Keys.maxCharge: self.maxChargeNum,
-            BTSettingsInfo.Keys.adapterSleep: NSNumber(
-                value: self.adapterSleepSwitch.state == .off
-            ),
-            BTSettingsInfo.Keys.magSafeSync: NSNumber(
-                value: self.magSafeSyncSwitch.state == .on
-            ),
-        ]
+        let settings: [String: NSObject & Sendable]
+        do {
+            settings = try BTSettingsPayloadFactory.make(
+                minCharge: self.minChargeNum.intValue,
+                maxCharge: self.maxChargeNum.intValue,
+                adapterSleep: self.adapterSleepSwitch.state == .off,
+                magSafeSync: self.magSafeSyncSwitch.isEnabled ?
+                    self.magSafeSyncSwitch.state == .on :
+                    nil
+            )
+        } catch {
+            BTErrorHandler.errorHandler(
+                error: error,
+                window: self.view.window
+            )
+            return
+        }
         //
         // Submit the settings to the daemon only when they changed.
         //
-        guard !(settings as NSDictionary).isEqual(to: self.currentSettings)
+        guard BTSettingsPayloadFactory.changed(
+            settings,
+            from: self.currentSettings
+        )
         else {
             os_log("Power settings have not changed, ignoring")
             //
@@ -370,7 +343,7 @@ internal final class BTSettingsViewController: NSViewController {
         label.translatesAutoresizingMaskIntoConstraints = false
 
         let presetControl = NSSegmentedControl(
-            labels: ChargePreset.allCases.map(\.title),
+            labels: BTChargePreset.allCases.map(\.title),
             trackingMode: .selectOne,
             target: self,
             action: #selector(self.presetChanged(_:))
@@ -439,7 +412,7 @@ internal final class BTSettingsViewController: NSViewController {
 
     @objc private func presetChanged(_ sender: NSSegmentedControl) {
         guard
-            let preset = ChargePreset(rawValue: sender.selectedSegment)
+            let preset = BTChargePreset(rawValue: sender.selectedSegment)
         else {
             return
         }
@@ -449,10 +422,10 @@ internal final class BTSettingsViewController: NSViewController {
     }
 
     private func updatePresetSelection() {
-        let matchingPreset = ChargePreset.allCases.first { preset in
-            preset.minCharge == Int(self.minChargeVal) &&
-                preset.maxCharge == Int(self.maxChargeVal)
-        }
+        let matchingPreset = BTChargePreset.matching(
+            minCharge: Int(self.minChargeVal),
+            maxCharge: Int(self.maxChargeVal)
+        )
 
         self.presetControl?.selectedSegment = matchingPreset?.rawValue ?? -1
     }

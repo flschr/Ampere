@@ -1,0 +1,184 @@
+//
+// Copyright (C) 2026 Marvin Häuser. All rights reserved.
+// SPDX-License-Identifier: BSD-3-Clause
+//
+
+import Foundation
+
+internal struct BTBatteryState: Equatable, Sendable {
+    let enabled: Bool
+    let powerDisabled: Bool
+    let connected: Bool
+    let chargingDisabled: Bool
+    let batteryPercent: Int
+    let progress: BTStateInfo.ChargingProgress
+    let chargingMode: BTStateInfo.ChargingMode
+    let maxCharge: Int
+
+    init(
+        enabled: Bool,
+        powerDisabled: Bool = false,
+        connected: Bool = false,
+        chargingDisabled: Bool = false,
+        batteryPercent: Int = 100,
+        progress: BTStateInfo.ChargingProgress = .full,
+        chargingMode: BTStateInfo.ChargingMode = .standard,
+        maxCharge: Int = Int(BTSettingsInfo.Defaults.maxCharge)
+    ) {
+        self.enabled = enabled
+        self.powerDisabled = powerDisabled
+        self.connected = connected
+        self.chargingDisabled = chargingDisabled
+        self.batteryPercent = batteryPercent
+        self.progress = progress
+        self.chargingMode = chargingMode
+        self.maxCharge = maxCharge
+    }
+
+    init(payload: [String: NSObject & Sendable]) throws {
+        guard
+            let enabled = (payload[BTStateInfo.Keys.enabled] as? NSNumber)?
+                .boolValue
+        else {
+            throw BTError.malformedData
+        }
+
+        guard enabled else {
+            self.init(enabled: false)
+            return
+        }
+
+        guard
+            let powerDisabled =
+                (payload[BTStateInfo.Keys.powerDisabled] as? NSNumber)?
+                    .boolValue,
+            let connected = (payload[BTStateInfo.Keys.connected] as? NSNumber)?
+                .boolValue,
+            let chargingDisabled =
+                (payload[BTStateInfo.Keys.chargingDisabled] as? NSNumber)?
+                    .boolValue,
+            let batteryPercent =
+                (payload[BTStateInfo.Keys.batteryPercent] as? NSNumber)?
+                    .intValue,
+            let progressValue =
+                (payload[BTStateInfo.Keys.progress] as? NSNumber)?
+                    .uint8Value,
+            let progress = BTStateInfo.ChargingProgress(rawValue: progressValue),
+            let chargingModeValue =
+                (payload[BTStateInfo.Keys.chargingMode] as? NSNumber)?
+                    .uint8Value,
+            let chargingMode =
+                BTStateInfo.ChargingMode(rawValue: chargingModeValue),
+            let maxCharge = (payload[BTStateInfo.Keys.maxCharge] as? NSNumber)?
+                .intValue
+        else {
+            throw BTError.malformedData
+        }
+
+        self.init(
+            enabled: enabled,
+            powerDisabled: powerDisabled,
+            connected: connected,
+            chargingDisabled: chargingDisabled,
+            batteryPercent: batteryPercent,
+            progress: progress,
+            chargingMode: chargingMode,
+            maxCharge: maxCharge
+        )
+    }
+
+    var payload: [String: NSObject & Sendable] {
+        guard self.enabled else {
+            return [BTStateInfo.Keys.enabled: NSNumber(value: false)]
+        }
+
+        return [
+            BTStateInfo.Keys.enabled: NSNumber(value: self.enabled),
+            BTStateInfo.Keys.powerDisabled: NSNumber(
+                value: self.powerDisabled
+            ),
+            BTStateInfo.Keys.connected: NSNumber(value: self.connected),
+            BTStateInfo.Keys.chargingDisabled: NSNumber(
+                value: self.chargingDisabled
+            ),
+            BTStateInfo.Keys.batteryPercent: NSNumber(
+                value: self.batteryPercent
+            ),
+            BTStateInfo.Keys.progress: NSNumber(
+                value: self.progress.rawValue
+            ),
+            BTStateInfo.Keys.chargingMode: NSNumber(
+                value: self.chargingMode.rawValue
+            ),
+            BTStateInfo.Keys.maxCharge: NSNumber(value: self.maxCharge),
+        ]
+    }
+}
+
+internal struct BTBatterySettings: Equatable, Sendable {
+    let minCharge: Int
+    let maxCharge: Int
+    let adapterSleep: Bool
+    let magSafeSync: Bool?
+
+    init(
+        minCharge: Int,
+        maxCharge: Int,
+        adapterSleep: Bool,
+        magSafeSync: Bool?
+    ) throws {
+        guard BTSettingsInfo.chargeLimitsValid(
+            minCharge: minCharge,
+            maxCharge: maxCharge
+        ) else {
+            throw BTError.malformedData
+        }
+
+        self.minCharge = minCharge
+        self.maxCharge = maxCharge
+        self.adapterSleep = adapterSleep
+        self.magSafeSync = magSafeSync
+    }
+
+    init(payload: [String: NSObject & Sendable]) throws {
+        guard
+            let minCharge = (payload[BTSettingsInfo.Keys.minCharge] as? NSNumber)?
+                .intValue,
+            let maxCharge = (payload[BTSettingsInfo.Keys.maxCharge] as? NSNumber)?
+                .intValue,
+            let adapterSleep =
+                (payload[BTSettingsInfo.Keys.adapterSleep] as? NSNumber)?
+                    .boolValue
+        else {
+            throw BTError.malformedData
+        }
+
+        let magSafeSync =
+            (payload[BTSettingsInfo.Keys.magSafeSync] as? NSNumber)?
+                .boolValue
+        try self.init(
+            minCharge: minCharge,
+            maxCharge: maxCharge,
+            adapterSleep: adapterSleep,
+            magSafeSync: magSafeSync
+        )
+    }
+
+    var payload: [String: NSObject & Sendable] {
+        var payload: [String: NSObject & Sendable] = [
+            BTSettingsInfo.Keys.minCharge: NSNumber(value: self.minCharge),
+            BTSettingsInfo.Keys.maxCharge: NSNumber(value: self.maxCharge),
+            BTSettingsInfo.Keys.adapterSleep: NSNumber(
+                value: self.adapterSleep
+            ),
+        ]
+
+        if let magSafeSync {
+            payload[BTSettingsInfo.Keys.magSafeSync] = NSNumber(
+                value: magSafeSync
+            )
+        }
+
+        return payload
+    }
+}

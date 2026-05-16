@@ -18,6 +18,7 @@ internal final class BTSettingsViewController: NSViewController {
     private weak var cancelButton: NSButton? = nil
     private var optimizedChargingWarning: NSTextField? = nil
     private var userSettingsView: BTSettingsUserView? = nil
+    private let initialFocusView = BTSettingsInitialFocusView()
     
     @IBOutlet private var tabView: NSTabView!
     @IBOutlet private var userTab: NSTabViewItem!
@@ -114,6 +115,7 @@ internal final class BTSettingsViewController: NSViewController {
         ).isActive = true
         self.tabView.selectTabViewItem(self.powerTab)
         self.tabView.heightAnchor.constraint(equalToConstant: 320).isActive = true
+        self.addInitialFocusView()
         self.configurePowerTabTextFields()
         self.cancelButton = self.view.subviews.compactMap {
             $0 as? NSButton
@@ -217,6 +219,7 @@ internal final class BTSettingsViewController: NSViewController {
     override func viewWillAppear() {
         super.viewWillAppear()
         
+        self.view.window?.initialFirstResponder = self.initialFocusView
         self.initUserState()
         
         Task {
@@ -228,6 +231,28 @@ internal final class BTSettingsViewController: NSViewController {
             //
             NSApp.activate(ignoringOtherApps: true)
         }
+    }
+
+    override func viewDidAppear() {
+        super.viewDidAppear()
+
+        self.view.window?.makeFirstResponder(self.initialFocusView)
+    }
+
+    private func addInitialFocusView() {
+        self.initialFocusView.translatesAutoresizingMaskIntoConstraints = false
+        self.view.addSubview(self.initialFocusView)
+
+        NSLayoutConstraint.activate([
+            self.initialFocusView.leadingAnchor.constraint(
+                equalTo: self.view.leadingAnchor
+            ),
+            self.initialFocusView.topAnchor.constraint(
+                equalTo: self.view.topAnchor
+            ),
+            self.initialFocusView.widthAnchor.constraint(equalToConstant: 0),
+            self.initialFocusView.heightAnchor.constraint(equalToConstant: 0),
+        ])
     }
     
     private func configurePowerTabTextFields() {
@@ -486,6 +511,12 @@ internal final class BTSettingsViewController: NSViewController {
         } catch {
             BTErrorHandler.errorHandler(error: error)
         }
+    }
+}
+
+private final class BTSettingsInitialFocusView: NSView {
+    override var acceptsFirstResponder: Bool {
+        true
     }
 }
 

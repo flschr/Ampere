@@ -8,14 +8,11 @@ import AppKit
 internal final class BTSettingsUserView: NSView {
     let autostartSwitch = NSSwitch()
 
-    init(uninstallTarget: AnyObject, uninstallAction: Selector) {
+    init() {
         super.init(frame: .zero)
 
         self.translatesAutoresizingMaskIntoConstraints = false
-        self.buildView(
-            uninstallTarget: uninstallTarget,
-            uninstallAction: uninstallAction
-        )
+        self.buildView()
     }
 
     @available(*, unavailable)
@@ -23,10 +20,7 @@ internal final class BTSettingsUserView: NSView {
         fatalError("init(coder:) has not been implemented")
     }
 
-    private func buildView(
-        uninstallTarget: AnyObject,
-        uninstallAction: Selector
-    ) {
+    private func buildView() {
         let autostartLabel = NSTextField(
             labelWithString: BTLocalization.Settings.autostart
         )
@@ -51,53 +45,17 @@ internal final class BTSettingsUserView: NSView {
         self.autostartSwitch.translatesAutoresizingMaskIntoConstraints = false
         self.autostartSwitch.controlSize = .mini
 
-        let separator = NSBox()
-        separator.translatesAutoresizingMaskIntoConstraints = false
-        separator.boxType = .separator
-
-        let uninstallTitle = NSTextField(
-            labelWithString: BTLocalization.Settings.uninstall
-        )
-        uninstallTitle.translatesAutoresizingMaskIntoConstraints = false
-        uninstallTitle.setContentCompressionResistancePriority(
-            .defaultLow,
-            for: .horizontal
-        )
-
-        let uninstallInfo = NSTextField(
-            wrappingLabelWithString: BTLocalization.Settings.uninstallInfo
-        )
-        uninstallInfo.translatesAutoresizingMaskIntoConstraints = false
-        uninstallInfo.textColor = .secondaryLabelColor
-        uninstallInfo.setContentCompressionResistancePriority(
-            .defaultLow,
-            for: .horizontal
-        )
-
-        let uninstallButton = NSButton(
-            title: BTLocalization.Settings.uninstallBatteryToolkit,
-            target: uninstallTarget,
-            action: uninstallAction
-        )
-        uninstallButton.translatesAutoresizingMaskIntoConstraints = false
-        uninstallButton.bezelStyle = .rounded
-
         for subview in [
             autostartLabel,
             autostartInfo,
             self.autostartSwitch,
-            separator,
-            uninstallTitle,
-            uninstallInfo,
-            uninstallButton,
         ] {
             self.addSubview(subview)
         }
 
         NSLayoutConstraint.activate([
             autostartLabel.topAnchor.constraint(
-                equalTo: self.topAnchor,
-                constant: 20
+                equalTo: self.topAnchor
             ),
             autostartLabel.leadingAnchor.constraint(
                 equalTo: self.leadingAnchor,
@@ -127,52 +85,8 @@ internal final class BTSettingsUserView: NSView {
                 constant: -18
             ),
 
-            separator.topAnchor.constraint(
-                equalTo: autostartInfo.bottomAnchor,
-                constant: 20
-            ),
-            separator.leadingAnchor.constraint(
-                equalTo: self.leadingAnchor,
-                constant: 20
-            ),
-            separator.trailingAnchor.constraint(
-                equalTo: self.trailingAnchor,
-                constant: -20
-            ),
-
-            uninstallTitle.topAnchor.constraint(
-                equalTo: separator.bottomAnchor,
-                constant: 20
-            ),
-            uninstallTitle.leadingAnchor.constraint(
-                equalTo: autostartLabel.leadingAnchor
-            ),
-            uninstallTitle.trailingAnchor.constraint(
-                lessThanOrEqualTo: self.trailingAnchor,
-                constant: -20
-            ),
-
-            uninstallInfo.topAnchor.constraint(
-                equalTo: uninstallTitle.bottomAnchor,
-                constant: 3
-            ),
-            uninstallInfo.leadingAnchor.constraint(
-                equalTo: uninstallTitle.leadingAnchor
-            ),
-            uninstallInfo.trailingAnchor.constraint(
-                equalTo: self.trailingAnchor,
-                constant: -20
-            ),
-
-            uninstallButton.topAnchor.constraint(
-                equalTo: uninstallInfo.bottomAnchor,
-                constant: 12
-            ),
-            uninstallButton.leadingAnchor.constraint(
-                equalTo: uninstallTitle.leadingAnchor
-            ),
-            uninstallButton.bottomAnchor.constraint(
-                lessThanOrEqualTo: self.bottomAnchor,
+            autostartInfo.bottomAnchor.constraint(
+                equalTo: self.bottomAnchor,
                 constant: -20
             ),
         ])

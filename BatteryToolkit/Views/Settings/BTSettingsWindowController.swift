@@ -8,8 +8,7 @@ import Foundation
 
 @MainActor
 internal final class BTSettingsWindowController: NSWindowController {
-    private static let contentSize = NSSize(width: 520, height: 353)
-    private static var currentTab = NSToolbarItem.Identifier("power")
+    private static let contentSize = NSSize(width: 520, height: 520)
 
     @IBOutlet private var toolbar: NSToolbar!
 
@@ -18,58 +17,27 @@ internal final class BTSettingsWindowController: NSWindowController {
         self.window?.contentMinSize = Self.contentSize
         self.window?.contentMaxSize = Self.contentSize
         self.window?.setContentSize(Self.contentSize)
-        //
-        // Restore the previous tab for the Settings window.
-        //
-        self.toolbar.selectedItemIdentifier =
-            BTSettingsWindowController.currentTab
-        for item in self.toolbar.items {
-            if item.itemIdentifier == self.toolbar.selectedItemIdentifier {
-                guard let action = item.action else {
-                    assertionFailure()
-                    return
-                }
-
-                NSApp.sendAction(action, to: item.target, from: item)
-                break
-            }
-        }
+        self.window?.toolbar = nil
+        self.window?.title = Self.appName
     }
 
     override func close() {
-        //
-        // Preserve the current tab of the Settings window.
-        //
-        guard let currentTab = toolbar.selectedItemIdentifier else {
-            return
-        }
-
-        BTSettingsWindowController.currentTab = currentTab
-
         super.close()
     }
 
     @IBAction private func userAction(_ sender: NSToolbarItem) {
-        guard
-            let settingsViewControler =
-            self.contentViewController as? BTSettingsViewController
-        else {
-            return
-        }
-
-        settingsViewControler.selectUserTab()
-        self.window?.title = sender.label
+        self.window?.title = Self.appName
     }
 
     @IBAction private func powerAction(_ sender: NSToolbarItem) {
-        guard
-            let settingsViewControler =
-            self.contentViewController as? BTSettingsViewController
-        else {
-            return
-        }
+        self.window?.title = Self.appName
+    }
 
-        settingsViewControler.selectPowerTab()
-        self.window?.title = sender.label
+    private static var appName: String {
+        Bundle.main.object(forInfoDictionaryKey: "CFBundleDisplayName")
+            as? String ??
+            Bundle.main.object(forInfoDictionaryKey: "CFBundleName")
+            as? String ??
+            "Ampere"
     }
 }

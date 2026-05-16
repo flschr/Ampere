@@ -8,7 +8,7 @@ import os.log
 
 @MainActor
 internal final class BTSettingsViewController: NSViewController {
-    private static let contentSize = NSSize(width: 520, height: 389)
+    private static let contentSize = NSSize(width: 520, height: 520)
 
     private enum ChargePreset: Int, CaseIterable {
         case everyday
@@ -54,7 +54,7 @@ internal final class BTSettingsViewController: NSViewController {
     private var presetControl: NSSegmentedControl? = nil
     private weak var cancelButton: NSButton? = nil
     private var optimizedChargingWarning: NSTextField? = nil
-    private var isPowerFooterVisible = true
+    private var userSettingsView: BTSettingsUserView? = nil
     
     @IBOutlet private var tabView: NSTabView!
     @IBOutlet private var userTab: NSTabViewItem!
@@ -149,13 +149,16 @@ internal final class BTSettingsViewController: NSViewController {
         self.view.heightAnchor.constraint(
             equalToConstant: Self.contentSize.height
         ).isActive = true
+        self.tabView.selectTabViewItem(self.powerTab)
+        self.tabView.heightAnchor.constraint(equalToConstant: 320).isActive = true
         self.configurePowerTabTextFields()
         self.cancelButton = self.view.subviews.compactMap {
             $0 as? NSButton
         }.first {
             $0.action == #selector(self.cancelButtonAction(_:))
         }
-        self.configureUserTab()
+        self.addUserSettingsView()
+        self.addUninstallButton()
         self.addPresetControl()
         self.addOptimizedChargingWarning()
     }
@@ -254,51 +257,6 @@ internal final class BTSettingsViewController: NSViewController {
         }
     }
     
-    func selectUserTab() {
-        self.tabView.selectTabViewItem(self.userTab)
-        self.setPowerFooterVisible(false)
-    }
-    
-    func selectPowerTab() {
-        self.tabView.selectTabViewItem(self.powerTab)
-        self.setPowerFooterVisible(true)
-    }
-
-    private func configureUserTab() {
-        guard let userView = self.userTab.view else {
-            assertionFailure()
-            return
-        }
-
-        NSLayoutConstraint.deactivate(userView.constraints)
-        for subview in userView.subviews {
-            subview.removeFromSuperview()
-        }
-
-        let settingsUserView = BTSettingsUserView(
-            uninstallTarget: self,
-            uninstallAction: #selector(self.uninstallButtonAction(_:))
-        )
-        userView.addSubview(settingsUserView)
-
-        NSLayoutConstraint.activate([
-            settingsUserView.topAnchor.constraint(
-                equalTo: userView.topAnchor
-            ),
-            settingsUserView.leadingAnchor.constraint(
-                equalTo: userView.leadingAnchor
-            ),
-            settingsUserView.trailingAnchor.constraint(
-                equalTo: userView.trailingAnchor
-            ),
-            settingsUserView.bottomAnchor.constraint(
-                equalTo: userView.bottomAnchor
-            ),
-        ])
-
-        self.autostartSwitch = settingsUserView.autostartSwitch
-    }
-
     private func configurePowerTabTextFields() {
         guard let powerView = self.powerTab.view else {
             assertionFailure()
@@ -323,6 +281,71 @@ internal final class BTSettingsViewController: NSViewController {
                 textField.lineBreakMode = .byTruncatingTail
             }
         }
+    }
+
+    private func addUserSettingsView() {
+        guard let separator = self.view.footerSeparator else {
+            assertionFailure()
+            return
+        }
+
+        for constraint in self.view.constraints {
+            guard
+                (constraint.firstItem as? NSBox) === separator,
+                constraint.firstAttribute == .top,
+                (constraint.secondItem as? NSTabView) === self.tabView
+            else {
+                continue
+            }
+
+            constraint.isActive = false
+        }
+
+        let userSettingsView = BTSettingsUserView()
+        self.view.addSubview(userSettingsView)
+
+        NSLayoutConstraint.activate([
+            userSettingsView.topAnchor.constraint(
+                equalTo: self.tabView.bottomAnchor,
+                constant: 8
+            ),
+            userSettingsView.leadingAnchor.constraint(
+                equalTo: self.view.leadingAnchor
+            ),
+            userSettingsView.trailingAnchor.constraint(
+                equalTo: self.view.trailingAnchor
+            ),
+            separator.topAnchor.constraint(
+                equalTo: userSettingsView.bottomAnchor,
+                constant: 20
+            ),
+        ])
+
+        self.autostartSwitch = userSettingsView.autostartSwitch
+        self.userSettingsView = userSettingsView
+    }
+
+    private func addUninstallButton() {
+        let uninstallButton = NSButton(
+            title: BTLocalization.Settings.uninstallBatteryToolkit,
+            target: self,
+            action: #selector(self.uninstallButtonAction(_:))
+        )
+        uninstallButton.translatesAutoresizingMaskIntoConstraints = false
+        uninstallButton.bezelStyle = .rounded
+
+        self.view.addSubview(uninstallButton)
+
+        NSLayoutConstraint.activate([
+            uninstallButton.leadingAnchor.constraint(
+                equalTo: self.view.leadingAnchor,
+                constant: 20
+            ),
+            uninstallButton.bottomAnchor.constraint(
+                equalTo: self.view.bottomAnchor,
+                constant: -20
+            ),
+        ])
     }
     
     private func setMinCharge(value: Int) {
@@ -436,15 +459,7 @@ internal final class BTSettingsViewController: NSViewController {
 
     private func updateOptimizedChargingWarning() {
         self.optimizedChargingWarning?.isHidden =
-            !self.isPowerFooterVisible ||
-                !IOPSPrivate.OptimizedBatteryChargingEngaged()
-    }
-
-    private func setPowerFooterVisible(_ isVisible: Bool) {
-        self.isPowerFooterVisible = isVisible
-        self.presetLabel?.isHidden = !isVisible
-        self.presetControl?.isHidden = !isVisible
-        self.updateOptimizedChargingWarning()
+            !IOPSPrivate.OptimizedBatteryChargingEngaged()
     }
     
     private func setAdapterSleep(value: Bool) {
@@ -506,6 +521,12 @@ private extension NSView {
         self.subviews.flatMap { subview in
             ([subview as? NSTextField].compactMap { $0 }) +
                 subview.allTextFields
+        }
+    }
+
+    var footerSeparator: NSBox? {
+        self.subviews.compactMap { $0 as? NSBox }.first {
+            $0.boxType == .separator
         }
     }
 }

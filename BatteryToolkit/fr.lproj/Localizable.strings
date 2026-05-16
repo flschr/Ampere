@@ -29,9 +29,12 @@
 "Running on Battery" = "Sur batterie";
 "Using Power Adapter" = "Adaptateur secteur utilisé";
 "Charging until %d %%" = "Recharge jusqu'à %d %%";
+"Charging to %d %%" = "Recharge jusqu'à %d %%";
 "Charging to 100 %" = "Recharge jusqu'à 100 %";
 "Holding charge, resumes below %d %%" = "Charge maintenue ; reprend sous %d %%";
 "Holding charge; resumes below %d %%" = "Charge maintenue ; reprend sous %d %%";
+"Waiting, will charge to %d %%" = "En attente, rechargera jusqu'à %d %%";
+"Waiting, will charge to 100 %" = "En attente, rechargera jusqu'à 100 %";
 "Waiting; will charge to %d %%" = "En attente ; rechargera jusqu'à %d %%";
 "Waiting; will charge to 100 %" = "En attente ; rechargera jusqu'à 100 %";
 "Charge to %d %% Now" = "Recharger à %d %% maintenant";
@@ -56,8 +59,11 @@
 "Battery Percentage Only" = "Pourcentage de batterie uniquement";
 "Hidden" = "Masqué";
 "Battery status unavailable" = "État de la batterie indisponible";
+"Ampere status unavailable" = "État d'Ampere indisponible";
 "Battery: %d %%" = "Batterie : %d %%";
 "Background activity is paused" = "L'activité en arrière-plan est suspendue";
+"Ampere is paused" = "Ampere est suspendu";
 "Power adapter is disabled" = "L'adaptateur secteur est désactivé";
+"Power adapter disabled, running on battery" = "Adaptateur secteur désactivé, fonctionnement sur batterie";
 "Charging" = "Recharge en cours";
 "Holding charge" = "Charge maintenue";

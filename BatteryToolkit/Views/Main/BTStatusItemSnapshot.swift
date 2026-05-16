@@ -215,9 +215,9 @@ internal enum BTStatusItemSnapshotFactory {
                 image.withSymbolConfiguration(configuration) ?? image
             configuredImage.isTemplate = false
             return configuredImage
+        } else {
+            image.isTemplate = true
+            return image
         }
-
-        image.isTemplate = false
-        return image
     }
 }

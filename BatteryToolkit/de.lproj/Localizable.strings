@@ -29,9 +29,12 @@
 "Running on Battery" = "Auf Akku";
 "Using Power Adapter" = "Netzteil wird verwendet";
 "Charging until %d %%" = "Lädt bis %d %%";
+"Charging to %d %%" = "Lädt auf %d %%";
 "Charging to 100 %" = "Lädt auf 100 %";
 "Holding charge, resumes below %d %%" = "Ladestand wird gehalten; lädt unter %d %% weiter";
 "Holding charge; resumes below %d %%" = "Ladestand wird gehalten; lädt unter %d %% weiter";
+"Waiting, will charge to %d %%" = "Wartet, lädt auf %d %%";
+"Waiting, will charge to 100 %" = "Wartet, lädt auf 100 %";
 "Waiting; will charge to %d %%" = "Wartet; lädt bis %d %%";
 "Waiting; will charge to 100 %" = "Wartet; lädt auf 100 %";
 "Charge to %d %% Now" = "Jetzt auf %d %% laden";
@@ -56,8 +59,11 @@
 "Battery Percentage Only" = "Nur Batteriestand";
 "Hidden" = "Ausgeblendet";
 "Battery status unavailable" = "Batteriestatus nicht verfügbar";
+"Ampere status unavailable" = "Ampere-Status nicht verfügbar";
 "Battery: %d %%" = "Batterie: %d %%";
 "Background activity is paused" = "Ampere ist pausiert";
+"Ampere is paused" = "Ampere ist pausiert";
 "Power adapter is disabled" = "Netzteil ist deaktiviert";
+"Power adapter disabled, running on battery" = "Netzteil deaktiviert, läuft auf Akku";
 "Charging" = "Lädt";
 "Holding charge" = "Ladestand wird gehalten";

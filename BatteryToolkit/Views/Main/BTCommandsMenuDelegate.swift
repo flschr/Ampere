@@ -44,10 +44,10 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
     private var refreshTimer: DispatchSourceTimer? = nil
     private weak var remainingTimeItem: NSMenuItem?
 
-    private func passiveInfoItem(tag: Int) -> NSMenuItem {
+    private func disabledInfoItem(tag: Int) -> NSMenuItem {
         let item = NSMenuItem()
         item.tag = tag
-        item.isEnabled = true
+        item.isEnabled = false
         item.isHidden = true
         return item
     }
@@ -56,37 +56,10 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         if let item = menu.item(withTag: Self.remainingTimeItemTag) {
             self.remainingTimeItem = item
         } else {
-            let item = self.passiveInfoItem(tag: Self.remainingTimeItemTag)
+            let item = self.disabledInfoItem(tag: Self.remainingTimeItemTag)
             menu.insertItem(item, at: 0)
             self.remainingTimeItem = item
         }
-
-        self.configureStatusItems()
-    }
-
-    private func configureStatusItems() {
-        for item in self.statusItems {
-            item.isEnabled = true
-            item.target = nil
-            item.action = nil
-        }
-    }
-
-    private var statusItems: [NSMenuItem] {
-        [
-            self.remainingTimeItem,
-            self.infoUnknownStateItem,
-            self.infoPausedItem,
-            self.infoPowerAdapterEnabledItem,
-            self.infoPowerAdapterDisabledItem,
-            self.infoChargingToLimitItem,
-            self.infoChargingToFullItem,
-            self.infoChargingUnknownModeItem,
-            self.infoNotChargingItem,
-            self.infoRequestedChargingToLimitItem,
-            self.infoRequestedChargingToFullItem,
-            self.infoNotChargingUnknownModeItem,
-        ].compactMap { $0 }
     }
 
     private func hidePowerItems() {

@@ -33,15 +33,31 @@ internal struct BTLowPowerModeState: Equatable {
     let values: [BTLowPowerModeProfile: String]
 
     var isEnabled: Bool {
-        !self.values.isEmpty &&
-            self.values.values.allSatisfy { self.key.isEnabled(value: $0) }
+        guard let value = self.values[.battery] else {
+            return self.values.values.first.map {
+                self.key.isEnabled(value: $0)
+            } ?? false
+        }
+
+        return self.key.isEnabled(value: value)
+    }
+
+    var hasEnabledProfile: Bool {
+        self.values.values.contains { self.key.isEnabled(value: $0) }
     }
 
     func matches(enabled: Bool) -> Bool {
-        !self.values.isEmpty &&
-            self.values.values.allSatisfy {
-                self.key.isEnabled(value: $0) == enabled
-            }
+        if enabled {
+            return self.isEnabled && !self.isEnabled(profile: .ac)
+        }
+
+        return !self.hasEnabledProfile
+    }
+
+    private func isEnabled(profile: BTLowPowerModeProfile) -> Bool {
+        self.values[profile].map {
+            self.key.isEnabled(value: $0)
+        } ?? false
     }
 }
 

@@ -21,6 +21,22 @@ final class BTBatteryModelsTests: XCTestCase {
         XCTAssertEqual(try BTBatteryState(payload: state.payload), state)
     }
 
+    func testBatteryStateUsesPowerAdapterOnlyWhenConnectedAndEnabled() {
+        XCTAssertTrue(
+            BTBatteryState(enabled: true, connected: true).usesPowerAdapter
+        )
+        XCTAssertFalse(
+            BTBatteryState(enabled: true, powerDisabled: true, connected: true)
+                .usesPowerAdapter
+        )
+        XCTAssertFalse(
+            BTBatteryState(enabled: true, connected: false).usesPowerAdapter
+        )
+        XCTAssertFalse(
+            BTBatteryState(enabled: false, connected: true).usesPowerAdapter
+        )
+    }
+
     func testBatteryStateAllowsPausedPayloadWithoutPowerValues() throws {
         let payload: [String: NSObject & Sendable] = [
             BTStateInfo.Keys.enabled: NSNumber(value: false)

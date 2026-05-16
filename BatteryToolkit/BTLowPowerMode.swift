@@ -22,6 +22,42 @@ internal enum BTLowPowerMode {
         }
     }
 
+    @discardableResult static func disableIfEnabled() throws -> Bool {
+        let state = try self.readState()
+        guard state.hasEnabledProfile else {
+            return false
+        }
+
+        try self.set(key: state.key, enabled: false)
+
+        let updatedState = try self.readState()
+        guard updatedState.key == state.key,
+              updatedState.matches(enabled: false)
+        else {
+            throw BTError.commFailed
+        }
+
+        return true
+    }
+
+    @discardableResult static func normalizeForBatteryPower() throws -> Bool {
+        let state = try self.readState()
+        guard state.hasEnabledProfile else {
+            return false
+        }
+
+        try self.set(key: state.key, enabled: state.isEnabled)
+
+        let updatedState = try self.readState()
+        guard updatedState.key == state.key,
+              updatedState.matches(enabled: state.isEnabled)
+        else {
+            throw BTError.commFailed
+        }
+
+        return true
+    }
+
     internal static func state(
         customOutput: String,
         activeOutput: String?
@@ -66,14 +102,14 @@ internal enum BTLowPowerMode {
         enabled: Bool
     ) throws {
         let value = key.setValue(enabled: enabled)
-        switch key {
-        case .lowPowerMode:
-            try self.runPMSet(arguments: ["-a", key.rawValue, value])
-        case .powerMode:
+        if enabled {
             try self.runPMSet(arguments: ["-b", key.rawValue, value])
-            try self.runPMSet(arguments: ["-c", key.rawValue, value])
+            try self.runPMSet(
+                arguments: ["-c", key.rawValue, key.setValue(enabled: false)]
+            )
+        } else {
+            try self.runPMSet(arguments: ["-a", key.rawValue, value])
         }
-
         self.refreshPowerSettings()
     }
 

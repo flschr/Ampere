@@ -35,6 +35,10 @@ internal struct BTBatteryState: Equatable, Sendable {
         self.maxCharge = maxCharge
     }
 
+    var usesPowerAdapter: Bool {
+        self.enabled && self.connected && !self.powerDisabled
+    }
+
     init(payload: [String: NSObject & Sendable]) throws {
         guard
             let enabled = (payload[BTStateInfo.Keys.enabled] as? NSNumber)?

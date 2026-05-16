@@ -37,10 +37,11 @@ final class BTLowPowerModeTests: XCTestCase {
 
         XCTAssertEqual(state.key, .lowPowerMode)
         XCTAssertTrue(state.isEnabled)
-        XCTAssertTrue(state.matches(enabled: true))
+        XCTAssertTrue(state.hasEnabledProfile)
+        XCTAssertFalse(state.matches(enabled: true))
     }
 
-    func testMixedLowPowerProfilesAreNotFullyEnabledOrDisabled() throws {
+    func testBatteryOnlyLowPowerModeMatchesEnabled() throws {
         let state = try BTLowPowerMode.state(
             customOutput: """
             Battery Power:
@@ -51,8 +52,9 @@ final class BTLowPowerModeTests: XCTestCase {
             activeOutput: nil
         )
 
-        XCTAssertFalse(state.isEnabled)
-        XCTAssertFalse(state.matches(enabled: true))
+        XCTAssertTrue(state.isEnabled)
+        XCTAssertTrue(state.hasEnabledProfile)
+        XCTAssertTrue(state.matches(enabled: true))
         XCTAssertFalse(state.matches(enabled: false))
     }
 
@@ -69,7 +71,7 @@ final class BTLowPowerModeTests: XCTestCase {
 
         XCTAssertEqual(state.key, .powerMode)
         XCTAssertTrue(state.isEnabled)
-        XCTAssertTrue(state.matches(enabled: true))
+        XCTAssertFalse(state.matches(enabled: true))
     }
 
     func testActiveSettingsFallbackUsesLowPowerModeFirst() throws {

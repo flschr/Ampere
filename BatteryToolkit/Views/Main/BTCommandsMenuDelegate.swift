@@ -62,32 +62,39 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         }
     }
 
-    private func refreshLowPowerModeItem() async {
+    private func applyLowPowerModeItem(enabled: Bool, isEnabled: Bool) {
+        self.lowPowerModeItem.title = BTLocalization.Commands.lowPowerMode
+        self.lowPowerModeItem.state = enabled ? .on : .off
+        self.lowPowerModeItem.isEnabled = isEnabled
+        self.lowPowerModeItem.isHidden = false
+    }
+
+    private func refreshLowPowerModeItem(usingPowerAdapter: Bool) async {
+        guard !usingPowerAdapter else {
+            self.applyLowPowerModeItem(enabled: false, isEnabled: false)
+            return
+        }
+
         do {
             let enabled = try await BTActions.getLowPowerModeEnabled()
-            self.lowPowerModeItem.title = BTLocalization.Commands.lowPowerMode
-            self.lowPowerModeItem.state = enabled ? .on : .off
-            self.lowPowerModeItem.isEnabled = true
-            self.lowPowerModeItem.isHidden = false
+            self.applyLowPowerModeItem(enabled: enabled, isEnabled: true)
         } catch {
             os_log(
                 "Failed to refresh Low Power Mode: \(error, privacy: .public)"
             )
-            self.lowPowerModeItem.title = BTLocalization.Commands.lowPowerMode
-            self.lowPowerModeItem.state = .off
-            self.lowPowerModeItem.isEnabled = false
-            self.lowPowerModeItem.isHidden = false
+            self.applyLowPowerModeItem(enabled: false, isEnabled: false)
         }
     }
 
     private func refresh() async {
-        await self.refreshLowPowerModeItem()
-
         do {
             let state = try await BTActions.getState()
             let settings = try await BTActions.getSettings()
             let batteryState = try BTBatteryState(payload: state)
             let batterySettings = try BTBatterySettings(payload: settings)
+            await self.refreshLowPowerModeItem(
+                usingPowerAdapter: batteryState.usesPowerAdapter
+            )
             let snapshot = BTCommandsMenuSnapshotFactory.make(
                 state: batteryState,
                 settings: batterySettings,
@@ -97,9 +104,17 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
 
             self.apply(snapshot: snapshot)
         } catch {
+            self.applyLowPowerModeItem(enabled: false, isEnabled: false)
             self.apply(snapshot: .unknown)
             BTErrorHandler.errorHandler(error: error)
         }
+    }
+
+    private func refreshStatusItem() {
+        NotificationCenter.default.post(
+            name: .btStatusItemNeedsRefresh,
+            object: nil
+        )
     }
 
     func menuWillOpen(_ menu: NSMenu) {
@@ -197,6 +212,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         Task {
             do {
                 try await BTActions.disablePowerAdapter()
+                self.refreshStatusItem()
             } catch {
                 BTErrorHandler.errorHandler(error: error)
             }
@@ -207,6 +223,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         Task {
             do {
                 try await BTActions.enablePowerAdapter()
+                self.refreshStatusItem()
             } catch {
                 BTErrorHandler.errorHandler(error: error)
             }
@@ -217,6 +234,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         Task {
             do {
                 try await BTActions.chargeToLimit()
+                self.refreshStatusItem()
             } catch {
                 BTErrorHandler.errorHandler(error: error)
             }
@@ -227,6 +245,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         Task {
             do {
                 try await BTActions.chargeToFull()
+                self.refreshStatusItem()
             } catch {
                 BTErrorHandler.errorHandler(error: error)
             }
@@ -237,6 +256,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         Task {
             do {
                 try await BTActions.disableCharging()
+                self.refreshStatusItem()
             } catch {
                 BTErrorHandler.errorHandler(error: error)
             }
@@ -246,13 +266,18 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
     @IBAction private func toggleLowPowerModeHandler(sender _: NSMenuItem) {
         Task {
             do {
+                let state = try await BTActions.getState()
+                let batteryState = try BTBatteryState(payload: state)
+                guard !batteryState.usesPowerAdapter else {
+                    self.applyLowPowerModeItem(enabled: false, isEnabled: false)
+                    self.refreshStatusItem()
+                    return
+                }
+
                 let enabled = try await BTActions.getLowPowerModeEnabled()
                 try await BTActions.setLowPowerModeEnabled(!enabled)
-                await self.refreshLowPowerModeItem()
-                NotificationCenter.default.post(
-                    name: .btStatusItemNeedsRefresh,
-                    object: nil
-                )
+                await self.refreshLowPowerModeItem(usingPowerAdapter: false)
+                self.refreshStatusItem()
             } catch {
                 BTErrorHandler.errorHandler(error: error)
             }
@@ -263,6 +288,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         Task {
             do {
                 try await BTActions.pauseActivity()
+                self.refreshStatusItem()
             } catch {
                 BTErrorHandler.errorHandler(error: error)
             }
@@ -273,6 +299,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         Task {
             do {
                 try await BTActions.resumeActiivty()
+                self.refreshStatusItem()
             } catch {
                 BTErrorHandler.errorHandler(error: error)
             }

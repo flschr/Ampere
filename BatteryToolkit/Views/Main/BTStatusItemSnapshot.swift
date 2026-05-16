@@ -32,11 +32,15 @@ internal enum BTStatusItemSnapshotFactory {
             (state[BTStateInfo.Keys.batteryPercent] as? NSNumber)?.intValue
         let powerDisabled =
             (state[BTStateInfo.Keys.powerDisabled] as? NSNumber)?.boolValue
+        let connected =
+            (state[BTStateInfo.Keys.connected] as? NSNumber)?.boolValue
+        let effectiveLowPowerModeEnabled =
+            lowPowerModeEnabled && !(connected == true && powerDisabled != true)
         if powerDisabled == true {
             return self.batterySnapshot(
                 percent: batteryPercent,
                 isCharging: false,
-                lowPowerModeEnabled: lowPowerModeEnabled,
+                lowPowerModeEnabled: effectiveLowPowerModeEnabled,
                 toolTip: self.toolTip(
                     status: BTLocalization.StatusItem.adapterDisabled,
                     percent: batteryPercent
@@ -44,8 +48,6 @@ internal enum BTStatusItemSnapshotFactory {
             )
         }
 
-        let connected =
-            (state[BTStateInfo.Keys.connected] as? NSNumber)?.boolValue
         if connected == false {
             let toolTip = batteryPercent.map {
                 BTLocalization.StatusItem.batteryLevel(percent: $0)
@@ -53,7 +55,7 @@ internal enum BTStatusItemSnapshotFactory {
             return self.batterySnapshot(
                 percent: batteryPercent,
                 isCharging: false,
-                lowPowerModeEnabled: lowPowerModeEnabled,
+                lowPowerModeEnabled: effectiveLowPowerModeEnabled,
                 toolTip: toolTip
             )
         }
@@ -63,7 +65,7 @@ internal enum BTStatusItemSnapshotFactory {
         guard chargingDisabled == true else {
             return self.chargingSnapshot(
                 state: state,
-                lowPowerModeEnabled: lowPowerModeEnabled
+                lowPowerModeEnabled: effectiveLowPowerModeEnabled
             )
         }
 
@@ -75,7 +77,7 @@ internal enum BTStatusItemSnapshotFactory {
         return self.batterySnapshot(
             percent: batteryPercent,
             isCharging: false,
-            lowPowerModeEnabled: lowPowerModeEnabled,
+            lowPowerModeEnabled: effectiveLowPowerModeEnabled,
             toolTip: self.toolTip(status: toolTip, percent: batteryPercent)
         )
     }
@@ -129,14 +131,17 @@ internal enum BTStatusItemSnapshotFactory {
                 percent: percent,
                 isCharging: isCharging
             ),
-            image: lowPowerModeEnabled ? self.lowPowerBatteryImage(
-                percent: percent,
+            image: BTStatusItemBatteryImage.make(
                 isCharging: isCharging,
-                accessibilityDescription: toolTip
-            ) : nil,
-            title: percent.map { "\($0) %" } ?? "",
+                lowPowerModeEnabled: lowPowerModeEnabled
+            ),
+            title: self.percentTitle(percent),
             toolTip: toolTip
         )
+    }
+
+    private static func percentTitle(_ percent: Int?) -> String {
+        percent.map { "\($0) %" } ?? ""
     }
 
     private static func batterySymbol(
@@ -179,45 +184,14 @@ internal enum BTStatusItemSnapshotFactory {
         title: String,
         toolTip: String
     ) -> BTStatusItemSnapshot {
-        let image = customImage ?? NSImage(
-            systemSymbolName: symbol,
-            accessibilityDescription: toolTip
-        ) ?? NSImage(named: NSImage.Name("ExtraItemIcon"))
-        if customImage == nil {
-            image?.isTemplate = true
-        }
-
         return BTStatusItemSnapshot(
-            image: image,
+            image: customImage ?? BTStatusItemSymbolImage.make(
+                named: symbol,
+                accessibilityDescription: toolTip
+            ),
             title: title,
             toolTip: toolTip,
             contentTintColor: nil
         )
-    }
-
-    private static func lowPowerBatteryImage(
-        percent: Int?,
-        isCharging: Bool,
-        accessibilityDescription: String
-    ) -> NSImage {
-        let image = NSImage(
-            systemSymbolName: self.batterySymbol(
-                percent: percent,
-                isCharging: isCharging
-            ),
-            accessibilityDescription: accessibilityDescription
-        ) ?? NSImage(named: NSImage.Name("ExtraItemIcon")) ?? NSImage()
-        if #available(macOS 12.0, *) {
-            let configuration = NSImage.SymbolConfiguration(
-                paletteColors: [.systemYellow, .white]
-            )
-            let configuredImage =
-                image.withSymbolConfiguration(configuration) ?? image
-            configuredImage.isTemplate = false
-            return configuredImage
-        } else {
-            image.isTemplate = true
-            return image
-        }
     }
 }

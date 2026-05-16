@@ -99,6 +99,7 @@ internal final class BTStatusItemController {
         button.image = snapshot.image
         button.title = snapshot.title
         button.imagePosition = .imageLeading
+        button.imageScaling = .scaleNone
         button.contentTintColor = snapshot.contentTintColor
         button.toolTip = snapshot.toolTip
     }

@@ -89,7 +89,22 @@ internal enum BTPowerEvents {
 
     static func chargeToLimit() -> Bool {
         self.chargingMode = .toLimit
+        if self.unlimitedPower {
+            self.disableLowPowerModeForPowerAdapter()
+        }
         return self.enableBelowLimitMode(limit: BTSettings.maxCharge)
+    }
+
+    static func enablePowerAdapter() -> Bool {
+        let success = BTPowerState.enablePowerAdapter(force: true)
+        guard success else {
+            return false
+        }
+
+        self.disableLowPowerModeForPowerAdapter()
+        self.unlimitedPower = self.drawingUnlimitedPower()
+
+        return true
     }
 
     static func disableCharging(percent: UInt8) -> Bool {
@@ -104,6 +119,9 @@ internal enum BTPowerEvents {
 
     static func chargeToFull() -> Bool {
         self.chargingMode = .toFull
+        if self.unlimitedPower {
+            self.disableLowPowerModeForPowerAdapter()
+        }
         return self.enableBelowLimitMode(limit: 100)
     }
 
@@ -298,6 +316,7 @@ internal enum BTPowerEvents {
         )
         self.unlimitedPower = self.drawingUnlimitedPower()
         if self.unlimitedPower {
+            self.disableLowPowerModeForPowerAdapter()
             _ = BTPowerState.enableCharging(percent: percent, force: force)
         }
 
@@ -310,12 +329,14 @@ internal enum BTPowerEvents {
         self.unlimitedPower = self.drawingUnlimitedPower()
 
         if self.unlimitedPower {
+            self.disableLowPowerModeForPowerAdapter()
             let success = self.registerPercentChangedHandler()
             if !success {
                 os_log("Failed to register percent changed handler")
                 self.restoreDefaults()
             }
         } else {
+            self.normalizeLowPowerModeForBatteryPower()
             let (percent, _, _) = BTPowerState.getPercentRemaining()
             if BTPowerEventStateMachine.disconnectedRecoveryEffect(
                 percent: percent,
@@ -423,5 +444,31 @@ internal enum BTPowerEvents {
         }
 
         return true
+    }
+
+    private static func disableLowPowerModeForPowerAdapter() {
+        do {
+            let changed = try BTLowPowerMode.disableIfEnabled()
+            if changed {
+                os_log("Disabled Low Power Mode for power adapter")
+            }
+        } catch {
+            os_log(
+                "Failed to disable Low Power Mode for power adapter: \(error, privacy: .public)"
+            )
+        }
+    }
+
+    private static func normalizeLowPowerModeForBatteryPower() {
+        do {
+            let changed = try BTLowPowerMode.normalizeForBatteryPower()
+            if changed {
+                os_log("Normalized Low Power Mode for battery power")
+            }
+        } catch {
+            os_log(
+                "Failed to normalize Low Power Mode for battery power: \(error, privacy: .public)"
+            )
+        }
     }
 }

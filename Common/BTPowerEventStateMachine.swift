@@ -62,6 +62,26 @@ internal enum BTPowerEventStateMachine {
         return percent < limit ? .enableCharging : .none
     }
 
+    static func disconnectedRecoveryEffect(
+        percent: UInt8,
+        minCharge: UInt8,
+        chargingDisabled: Bool,
+        chargingMode: BTStateInfo.ChargingMode
+    ) -> ChargingEffect {
+        guard chargingDisabled, chargingMode == .standard else {
+            return .none
+        }
+
+        return percent < minCharge ? .enableCharging : .none
+    }
+
+    static func shouldMonitorDisconnectedBattery(
+        chargingDisabled: Bool,
+        chargingMode: BTStateInfo.ChargingMode
+    ) -> Bool {
+        return chargingDisabled && chargingMode == .standard
+    }
+
     static func chargingSleepEffect(chargingDisabled: Bool) -> SleepEffect {
         return chargingDisabled ? .restoreSleep : .disableSleep
     }

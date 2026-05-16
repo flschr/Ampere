@@ -51,6 +51,34 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
         XCTAssertFalse(snapshot.remainingTime.isHidden)
     }
 
+    func testConnectedHoldingChargeShowsOnlyImmediateLimitAction() {
+        let snapshot = BTCommandsMenuSnapshotFactory.make(
+            state: BTBatteryState(
+                enabled: true,
+                connected: true,
+                chargingDisabled: true,
+                batteryPercent: 43,
+                progress: .belowMax,
+                chargingMode: .standard,
+                maxCharge: 80
+            ),
+            settings: try! BTBatterySettings(
+                minCharge: 50,
+                maxCharge: 80,
+                adapterSleep: false,
+                magSafeSync: nil
+            ),
+            timeToEmptyEstimate: nil,
+            timeToFullEstimate: nil
+        )
+
+        XCTAssertFalse(snapshot.powerAdapterEnabled.isHidden)
+        XCTAssertFalse(snapshot.notCharging.isHidden)
+        XCTAssertFalse(snapshot.chargeToLimitNow.isHidden)
+        XCTAssertTrue(snapshot.requestChargingToFull.isHidden)
+        XCTAssertTrue(snapshot.requestChargingToLimit.isHidden)
+    }
+
     func testOnBatteryStandardModeShowsRequestActions() {
         let snapshot = BTCommandsMenuSnapshotFactory.make(
             state: BTBatteryState(
@@ -72,6 +100,36 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
         XCTAssertTrue(snapshot.requestChargingToLimit.isHidden)
         XCTAssertTrue(snapshot.cancelChargingRequest.isHidden)
         XCTAssertFalse(snapshot.remainingTime.isHidden)
+    }
+
+    func testDisconnectedPowerDoesNotShowUsingPowerAdapter() {
+        let snapshot = BTCommandsMenuSnapshotFactory.make(
+            state: BTBatteryState(
+                enabled: true,
+                powerDisabled: false,
+                connected: false,
+                chargingDisabled: true,
+                batteryPercent: 47,
+                progress: .belowMax,
+                chargingMode: .standard,
+                maxCharge: 80
+            ),
+            settings: try! BTBatterySettings(
+                minCharge: 50,
+                maxCharge: 80,
+                adapterSleep: false,
+                magSafeSync: nil
+            ),
+            timeToEmptyEstimate: 7200,
+            timeToFullEstimate: nil
+        )
+
+        XCTAssertTrue(snapshot.powerAdapterEnabled.isHidden)
+        XCTAssertFalse(snapshot.powerAdapterDisabled.isHidden)
+        XCTAssertFalse(snapshot.requestChargingToFull.isHidden)
+        XCTAssertFalse(snapshot.requestChargingToLimit.isHidden)
+        XCTAssertTrue(snapshot.chargeToFullNow.isHidden)
+        XCTAssertTrue(snapshot.chargeToLimitNow.isHidden)
     }
 
     func testOnBatteryRequestedFullShowsCancelAndLimitRequest() {

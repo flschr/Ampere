@@ -89,6 +89,66 @@ final class BTPowerEventStateMachineTests: XCTestCase {
         )
     }
 
+    func testDisconnectedRecoveryEnablesBelowMinOnlyForStandardHold() {
+        XCTAssertEqual(
+            BTPowerEventStateMachine.disconnectedRecoveryEffect(
+                percent: 49,
+                minCharge: 50,
+                chargingDisabled: true,
+                chargingMode: .standard
+            ),
+            .enableCharging
+        )
+        XCTAssertEqual(
+            BTPowerEventStateMachine.disconnectedRecoveryEffect(
+                percent: 50,
+                minCharge: 50,
+                chargingDisabled: true,
+                chargingMode: .standard
+            ),
+            .none
+        )
+        XCTAssertEqual(
+            BTPowerEventStateMachine.disconnectedRecoveryEffect(
+                percent: 49,
+                minCharge: 50,
+                chargingDisabled: false,
+                chargingMode: .standard
+            ),
+            .none
+        )
+        XCTAssertEqual(
+            BTPowerEventStateMachine.disconnectedRecoveryEffect(
+                percent: 49,
+                minCharge: 50,
+                chargingDisabled: true,
+                chargingMode: .toFull
+            ),
+            .none
+        )
+    }
+
+    func testDisconnectedBatteryMonitoringOnlyForStandardHold() {
+        XCTAssertTrue(
+            BTPowerEventStateMachine.shouldMonitorDisconnectedBattery(
+                chargingDisabled: true,
+                chargingMode: .standard
+            )
+        )
+        XCTAssertFalse(
+            BTPowerEventStateMachine.shouldMonitorDisconnectedBattery(
+                chargingDisabled: false,
+                chargingMode: .standard
+            )
+        )
+        XCTAssertFalse(
+            BTPowerEventStateMachine.shouldMonitorDisconnectedBattery(
+                chargingDisabled: true,
+                chargingMode: .toLimit
+            )
+        )
+    }
+
     func testChargingSleepEffectBalancesSleepWithChargingState() {
         XCTAssertEqual(
             BTPowerEventStateMachine.chargingSleepEffect(chargingDisabled: true),

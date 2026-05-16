@@ -9,16 +9,19 @@ import os.log
 @MainActor
 internal enum BTPowerState {
     private static var chargingDisabled = false
+    private static var chargingSleepDisabled = false
     private static var powerDisabled = false
 
     static func initState() {
+        self.chargingSleepDisabled = false
+
         let chargingDisabled = SMCComm.Power.isChargingDisabled()
         self.chargingDisabled = chargingDisabled
         if !chargingDisabled {
             //
             // Sleep must always be disabled when charging is enabled.
             //
-            GlobalSleep.disable()
+            self.disableChargingSleep()
         }
 
         let powerDisabled = SMCComm.Power.isPowerAdapterDisabled()
@@ -46,7 +49,7 @@ internal enum BTPowerState {
         if chargingDisabled != self.chargingDisabled {
             self.chargingDisabled = chargingDisabled
 
-            self.apply(
+            self.applyChargingSleepEffect(
                 sleepEffect: BTPowerEventStateMachine.chargingSleepEffect(
                     chargingDisabled: chargingDisabled
                 )
@@ -129,13 +132,19 @@ internal enum BTPowerState {
             BTPowerState.syncMagSafeStatePowerEnabled(percent: percent)
         }
 
-        GlobalSleep.restore()
+        self.restoreChargingSleep()
 
         return true
     }
 
-    static func enableCharging(percent: UInt8) -> Bool {
+    static func enableCharging(
+        percent: UInt8,
+        disablesSleep: Bool = true
+    ) -> Bool {
         guard self.chargingDisabled else {
+            if disablesSleep {
+                self.disableChargingSleep()
+            }
             return true
         }
 
@@ -145,7 +154,9 @@ internal enum BTPowerState {
             return false
         }
 
-        GlobalSleep.disable()
+        if disablesSleep {
+            self.disableChargingSleep()
+        }
 
         self.chargingDisabled = false
 
@@ -215,6 +226,37 @@ internal enum BTPowerState {
 
     private static func restoreAdapterSleep() {
         self.applyPowerAdapterSleepEffect(powerDisabled: false)
+    }
+
+    private static func disableChargingSleep() {
+        guard !self.chargingSleepDisabled else {
+            return
+        }
+
+        GlobalSleep.disable()
+        self.chargingSleepDisabled = true
+    }
+
+    private static func restoreChargingSleep() {
+        guard self.chargingSleepDisabled else {
+            return
+        }
+
+        GlobalSleep.restore()
+        self.chargingSleepDisabled = false
+    }
+
+    private static func applyChargingSleepEffect(
+        sleepEffect: BTPowerEventStateMachine.SleepEffect
+    ) {
+        switch sleepEffect {
+        case .disableSleep:
+            self.disableChargingSleep()
+        case .restoreSleep:
+            self.restoreChargingSleep()
+        case .none:
+            break
+        }
     }
 
     private static func applyPowerAdapterSleepEffect(powerDisabled: Bool) {

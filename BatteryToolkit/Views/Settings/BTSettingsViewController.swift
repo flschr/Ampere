@@ -8,7 +8,7 @@ import os.log
 
 @MainActor
 internal final class BTSettingsViewController: NSViewController {
-    private static let contentSize = NSSize(width: 520, height: 520)
+    private static let contentSize = NSSize(width: 520, height: 389)
 
     private var currentSettings: [String: NSObject & Sendable]? = nil
     private var presetLabel: NSTextField? = nil

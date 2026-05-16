@@ -8,7 +8,7 @@ import Foundation
 
 @MainActor
 internal final class BTSettingsWindowController: NSWindowController {
-    private static let contentSize = NSSize(width: 520, height: 520)
+    private static let contentSize = NSSize(width: 520, height: 389)
 
     @IBOutlet private var toolbar: NSToolbar!
 

@@ -160,6 +160,10 @@ internal enum BTXPCValidation {
         #if DEBUG
             return debugText
         #else
+            if BT_CODESIGN_CN.hasPrefix("Apple Development:") {
+                return debugText
+            }
+
             return debugText +
                 " and !(entitlement[\"com.apple.security.get-task-allow\"] /* exists */)"
         #endif

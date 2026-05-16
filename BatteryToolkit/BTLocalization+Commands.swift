@@ -77,14 +77,9 @@ extension BTLocalization {
             )
         }
 
-        static let runOnBattery = NSLocalizedString(
-            "Disable Power Adapter",
-            comment: "Menu command to disable the power adapter and run from battery"
-        )
-
         static let usePowerAdapter = NSLocalizedString(
-            "Enable Power Adapter",
-            comment: "Menu command to enable the power adapter"
+            "Use Power Adapter",
+            comment: "Menu command to toggle whether the Mac uses the power adapter"
         )
 
         static let lowPowerMode = NSLocalizedString(

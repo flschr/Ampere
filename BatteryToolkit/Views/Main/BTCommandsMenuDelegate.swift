@@ -181,7 +181,8 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
                 self.enablePowerAdapterItem.isHidden = true
                 self.disablePowerAdapterItem.isHidden = false
                 self.disablePowerAdapterItem.title =
-                    BTLocalization.Commands.runOnBattery
+                    BTLocalization.Commands.usePowerAdapter
+                self.disablePowerAdapterItem.state = .on
             } else {
                 self.infoPowerAdapterEnabledItem.isHidden = true
                 self.infoPowerAdapterDisabledItem.isHidden = false
@@ -192,6 +193,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
                 self.enablePowerAdapterItem.isHidden = false
                 self.enablePowerAdapterItem.title =
                     BTLocalization.Commands.usePowerAdapter
+                self.enablePowerAdapterItem.state = .off
             }
             
             if !chargingDisabled {

@@ -42,7 +42,7 @@
 "Y6Y-O7-JEX.title" = "Comandi";
 "Ynk-f8-cLZ.title" = "Avvia lettura";
 "Z4m-k5-YnW.title" = "File";
-"aEW-fU-9yN.title" = "Attiva alimentatore";
+"aEW-fU-9yN.title" = "Usa alimentatore";
 "dRJ-4n-Yzg.title" = "Annulla";
 "dpS-hD-AaI.title" = "Annulla richiesta di ricarica";
 "dq4-4h-B2m.title" = "Ricarica al limite richiesta";
@@ -62,14 +62,14 @@
 "ptj-AT-ybP.title" = "Ricarica in pausa (modalità sconosciuta)";
 "sMO-Ij-34k.title" = "Alimentatore: disattivato";
 "tXk-Dr-ZCO.title" = "Ricarica (modalità sconosciuta)";
-"ter-ZE-C7E.title" = "Disattiva alimentatore";
+"ter-ZE-C7E.title" = "Usa alimentatore";
 "u4J-Rf-19m.title" = "Richiedi ricarica al 100 %";
 "uQy-DD-JDr.title" = "Ampere";
 "uRl-iY-unG.title" = "Taglia";
 "usR-Tg-EZv.title" = "File";
-"v10-VJ-vXg.title" = "Attiva alimentatore";
+"v10-VJ-vXg.title" = "Usa alimentatore";
 "vc5-Ja-Aou.title" = "Finestra";
-"wQc-iH-a0U.title" = "Disattiva alimentatore";
+"wQc-iH-a0U.title" = "Usa alimentatore";
 "wpr-3q-Mcd.title" = "Aiuto";
 "x3v-GG-iWU.title" = "Copia";
 "xbN-4R-0nt.title" = "Richiedi ricarica al limite";

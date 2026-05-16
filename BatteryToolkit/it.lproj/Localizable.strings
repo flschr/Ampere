@@ -36,8 +36,7 @@
 "Waiting; will charge to 100 %" = "In attesa; ricaricherà fino al 100 %";
 "Charge to %d %% Now" = "Ricarica al %d %% ora";
 "Request Charging to %d %% Now" = "Richiedi ricarica al %d %% ora";
-"Disable Power Adapter" = "Disattiva alimentatore";
-"Enable Power Adapter" = "Attiva alimentatore";
+"Use Power Adapter" = "Usa alimentatore";
 "Low Power Mode" = "Modalità risparmio energetico";
 "Until Empty: %@" = "Fino a scarica: %@";
 "Until %d %%: %@" = "Fino al %d %%: %@";

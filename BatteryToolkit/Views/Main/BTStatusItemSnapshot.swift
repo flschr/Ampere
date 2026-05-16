@@ -200,59 +200,21 @@ internal enum BTStatusItemSnapshotFactory {
         isCharging: Bool,
         accessibilityDescription: String
     ) -> NSImage {
-        let image = NSImage(size: NSSize(width: 23, height: 13))
-        image.accessibilityDescription = accessibilityDescription
-        image.lockFocus()
-        defer {
-            image.unlockFocus()
-        }
-
-        let bodyRect = NSRect(x: 0.8, y: 2.4, width: 18.5, height: 8.2)
-        let terminalRect = NSRect(x: 19.5, y: 5.0, width: 2.4, height: 3.0)
-        let bodyPath = NSBezierPath(
-            roundedRect: bodyRect,
-            xRadius: 2.2,
-            yRadius: 2.2
-        )
-        let terminalPath = NSBezierPath(
-            roundedRect: terminalRect,
-            xRadius: 1.0,
-            yRadius: 1.0
-        )
-
-        NSColor.white.setStroke()
-        bodyPath.lineWidth = 1.25
-        bodyPath.stroke()
-        NSColor.white.setFill()
-        terminalPath.fill()
-
-        let fillPercent = CGFloat(min(max(percent ?? 100, 0), 100)) / 100.0
-        let fillWidth = max(1.4, (bodyRect.width - 3.0) * fillPercent)
-        let fillRect = NSRect(
-            x: bodyRect.minX + 1.5,
-            y: bodyRect.minY + 1.5,
-            width: fillWidth,
-            height: bodyRect.height - 3.0
-        )
-        let fillPath = NSBezierPath(
-            roundedRect: fillRect,
-            xRadius: 1.2,
-            yRadius: 1.2
-        )
-        NSColor.systemYellow.setFill()
-        fillPath.fill()
-
-        if isCharging {
-            let bolt = NSBezierPath()
-            bolt.move(to: NSPoint(x: 11.4, y: 10.8))
-            bolt.line(to: NSPoint(x: 7.9, y: 5.9))
-            bolt.line(to: NSPoint(x: 10.4, y: 5.9))
-            bolt.line(to: NSPoint(x: 8.8, y: 1.4))
-            bolt.line(to: NSPoint(x: 14.0, y: 7.2))
-            bolt.line(to: NSPoint(x: 11.3, y: 7.2))
-            bolt.close()
-            NSColor.white.setFill()
-            bolt.fill()
+        let image = NSImage(
+            systemSymbolName: self.batterySymbol(
+                percent: percent,
+                isCharging: isCharging
+            ),
+            accessibilityDescription: accessibilityDescription
+        ) ?? NSImage(named: NSImage.Name("ExtraItemIcon")) ?? NSImage()
+        if #available(macOS 12.0, *) {
+            let configuration = NSImage.SymbolConfiguration(
+                paletteColors: [.white, .systemYellow]
+            )
+            let configuredImage =
+                image.withSymbolConfiguration(configuration) ?? image
+            configuredImage.isTemplate = false
+            return configuredImage
         }
 
         image.isTemplate = false

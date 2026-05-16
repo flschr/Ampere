@@ -220,9 +220,10 @@ internal enum BTStatusItemSnapshotFactory {
             yRadius: 1.0
         )
 
-        NSColor.labelColor.setStroke()
+        NSColor.white.setStroke()
         bodyPath.lineWidth = 1.25
         bodyPath.stroke()
+        NSColor.white.setFill()
         terminalPath.fill()
 
         let fillPercent = CGFloat(min(max(percent ?? 100, 0), 100)) / 100.0
@@ -250,7 +251,7 @@ internal enum BTStatusItemSnapshotFactory {
             bolt.line(to: NSPoint(x: 14.0, y: 7.2))
             bolt.line(to: NSPoint(x: 11.3, y: 7.2))
             bolt.close()
-            NSColor.labelColor.setFill()
+            NSColor.white.setFill()
             bolt.fill()
         }
 

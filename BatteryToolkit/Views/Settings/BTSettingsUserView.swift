@@ -7,7 +7,6 @@ import AppKit
 
 internal final class BTSettingsUserView: NSView {
     let autostartSwitch = NSSwitch()
-    let statusItemDisplayModePopUpButton = NSPopUpButton()
 
     init(uninstallTarget: AnyObject, uninstallAction: Selector) {
         super.init(frame: .zero)
@@ -52,22 +51,6 @@ internal final class BTSettingsUserView: NSView {
         self.autostartSwitch.translatesAutoresizingMaskIntoConstraints = false
         self.autostartSwitch.controlSize = .mini
 
-        let statusItemLabel = NSTextField(
-            labelWithString: BTLocalization.Settings.StatusItem.displayMode
-        )
-        statusItemLabel.translatesAutoresizingMaskIntoConstraints = false
-        statusItemLabel.setContentCompressionResistancePriority(
-            .defaultLow,
-            for: .horizontal
-        )
-
-        self.statusItemDisplayModePopUpButton.translatesAutoresizingMaskIntoConstraints = false
-        self.statusItemDisplayModePopUpButton.controlSize = .small
-        for mode in BTStatusItemDisplayMode.allCases {
-            self.statusItemDisplayModePopUpButton.addItem(withTitle: mode.title)
-            self.statusItemDisplayModePopUpButton.lastItem?.tag = mode.rawValue
-        }
-
         let separator = NSBox()
         separator.translatesAutoresizingMaskIntoConstraints = false
         separator.boxType = .separator
@@ -103,8 +86,6 @@ internal final class BTSettingsUserView: NSView {
             autostartLabel,
             autostartInfo,
             self.autostartSwitch,
-            statusItemLabel,
-            self.statusItemDisplayModePopUpButton,
             separator,
             uninstallTitle,
             uninstallInfo,
@@ -146,28 +127,8 @@ internal final class BTSettingsUserView: NSView {
                 constant: -18
             ),
 
-            statusItemLabel.topAnchor.constraint(
-                equalTo: autostartInfo.bottomAnchor,
-                constant: 16
-            ),
-            statusItemLabel.leadingAnchor.constraint(
-                equalTo: autostartLabel.leadingAnchor
-            ),
-
-            self.statusItemDisplayModePopUpButton.leadingAnchor.constraint(
-                equalTo: statusItemLabel.trailingAnchor,
-                constant: 18
-            ),
-            self.statusItemDisplayModePopUpButton.trailingAnchor.constraint(
-                lessThanOrEqualTo: self.trailingAnchor,
-                constant: -20
-            ),
-            self.statusItemDisplayModePopUpButton.centerYAnchor.constraint(
-                equalTo: statusItemLabel.centerYAnchor
-            ),
-
             separator.topAnchor.constraint(
-                equalTo: statusItemLabel.bottomAnchor,
+                equalTo: autostartInfo.bottomAnchor,
                 constant: 20
             ),
             separator.leadingAnchor.constraint(

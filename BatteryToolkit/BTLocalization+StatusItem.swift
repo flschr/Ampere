@@ -27,6 +27,16 @@ extension BTLocalization {
             comment: "Menu bar tooltip when charging is active"
         )
 
+        static func batteryLevel(percent: Int) -> String {
+            String.localizedStringWithFormat(
+                NSLocalizedString(
+                    "Battery: %d %%",
+                    comment: "Menu status indicating the current battery level"
+                ),
+                percent
+            )
+        }
+
         static let chargingToFull = NSLocalizedString(
             "Charging to 100 %",
             comment: "Menu bar tooltip when charging to full battery"

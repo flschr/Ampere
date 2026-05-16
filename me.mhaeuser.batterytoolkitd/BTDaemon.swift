@@ -31,6 +31,7 @@ internal enum BTDaemon {
         let chargingDisabled = BTPowerState.isChargingDisabled()
         let connected = BTPowerEvents.unlimitedPower
         let powerDisabled = BTPowerState.isPowerAdapterDisabled()
+        let batteryPercent = BTPowerState.getPercentRemaining().0
         let progress = BTPowerEvents.getChargingProgress()
         let mode = BTPowerEvents.chargingMode
         let maxCharge = BTSettings.maxCharge
@@ -41,6 +42,8 @@ internal enum BTDaemon {
             BTStateInfo.Keys.connected: NSNumber(value: connected),
             BTStateInfo.Keys
                 .chargingDisabled: NSNumber(value: chargingDisabled),
+            BTStateInfo.Keys
+                .batteryPercent: NSNumber(value: batteryPercent),
             BTStateInfo.Keys.progress: NSNumber(value: progress.rawValue),
             BTStateInfo.Keys.chargingMode: NSNumber(value: mode.rawValue),
             BTStateInfo.Keys.maxCharge: NSNumber(value: maxCharge)

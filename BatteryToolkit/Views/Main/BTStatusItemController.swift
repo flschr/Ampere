@@ -8,26 +8,18 @@ import os.log
 
 @MainActor
 internal final class BTStatusItemController {
+    private static let statusItemAutosaveName =
+        NSStatusItem.AutosaveName("app.justasimple.battertoolkit.statusItem")
+
     private let menu: NSMenu
     private var statusItem: NSStatusItem?
     private var refreshTimer: DispatchSourceTimer?
-    private var displayModeObserver: NSObjectProtocol?
 
     init(menu: NSMenu) {
         self.menu = menu
     }
 
     func start() {
-        self.displayModeObserver = NotificationCenter.default.addObserver(
-            forName: BTStatusItemDisplayMode.didChangeNotification,
-            object: nil,
-            queue: .main
-        ) { [weak self] _ in
-            Task { @MainActor in
-                self?.rebuildStatusItem()
-            }
-        }
-
         self.rebuildStatusItem()
         self.startRefreshTimer()
     }
@@ -35,8 +27,6 @@ internal final class BTStatusItemController {
     func stop() {
         self.refreshTimer?.cancel()
         self.refreshTimer = nil
-        self.displayModeObserver.map(NotificationCenter.default.removeObserver)
-        self.displayModeObserver = nil
         self.removeStatusItem()
     }
 
@@ -55,13 +45,11 @@ internal final class BTStatusItemController {
     private func rebuildStatusItem() {
         self.removeStatusItem()
 
-        guard BTStatusItemDisplayMode.current != .hidden else {
-            return
-        }
-
         let statusItem = NSStatusBar.system.statusItem(
             withLength: NSStatusItem.variableLength
         )
+        statusItem.autosaveName = Self.statusItemAutosaveName
+        statusItem.isVisible = true
         statusItem.menu = self.menu
         self.statusItem = statusItem
 
@@ -85,46 +73,23 @@ internal final class BTStatusItemController {
         }
 
         let snapshot = await self.statusSnapshot()
-        let mode = BTStatusItemDisplayMode.current
-
-        switch mode {
-        case .iconOnly:
-            button.image = snapshot.image
-            button.title = ""
-
-        case .percentInIcon:
-            button.image = BTStatusItemIconFactory.percentImage(
-                percent: snapshot.percent,
-                fallback: snapshot.image
-            )
-            button.title = ""
-
-        case .percentOnly:
-            button.image = nil
-            button.title = snapshot.title
-
-        case .hidden:
-            button.image = nil
-            button.title = ""
-        }
-
+        button.image = snapshot.image
+        button.title = snapshot.title
+        button.imagePosition = .imageLeading
         button.toolTip = snapshot.toolTip
     }
 
     private func statusSnapshot() async -> BTStatusItemSnapshot {
-        let percent = IOPSPrivate.GetPercentRemaining()?.0
-
         do {
             let state = try await BTActions.getState()
             let settings = try await BTActions.getSettings()
             return BTStatusItemSnapshotFactory.make(
                 state: state,
-                settings: settings,
-                percent: percent
+                settings: settings
             )
         } catch {
             os_log("Failed to refresh status item: \(error, privacy: .public)")
-            return BTStatusItemSnapshotFactory.unknown(percent: percent)
+            return BTStatusItemSnapshotFactory.unknown()
         }
     }
 }

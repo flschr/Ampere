@@ -6,9 +6,8 @@
 import AppKit
 
 internal struct BTStatusItemSnapshot {
-    let title: String
     let image: NSImage?
-    let percent: UInt8?
+    let title: String
     let toolTip: String
 }
 
@@ -16,28 +15,42 @@ internal struct BTStatusItemSnapshot {
 internal enum BTStatusItemSnapshotFactory {
     static func make(
         state: [String: NSObject & Sendable],
-        settings: [String: NSObject & Sendable],
-        percent: UInt8?
+        settings: [String: NSObject & Sendable]
     ) -> BTStatusItemSnapshot {
-        let title = percent.map { "\($0)%" } ?? ""
         let enabled = (state[BTStateInfo.Keys.enabled] as? NSNumber)?.boolValue
         guard enabled == true else {
             return self.snapshot(
-                title: title,
-                percent: percent,
                 symbol: "pause.circle",
+                title: "",
                 toolTip: BTLocalization.StatusItem.paused
             )
         }
 
+        let batteryPercent =
+            (state[BTStateInfo.Keys.batteryPercent] as? NSNumber)?.intValue
         let powerDisabled =
             (state[BTStateInfo.Keys.powerDisabled] as? NSNumber)?.boolValue
         if powerDisabled == true {
-            return self.snapshot(
-                title: title,
-                percent: percent,
-                symbol: "battery.0",
-                toolTip: BTLocalization.StatusItem.adapterDisabled
+            return self.batterySnapshot(
+                percent: batteryPercent,
+                isCharging: false,
+                toolTip: self.toolTip(
+                    status: BTLocalization.StatusItem.adapterDisabled,
+                    percent: batteryPercent
+                )
+            )
+        }
+
+        let connected =
+            (state[BTStateInfo.Keys.connected] as? NSNumber)?.boolValue
+        if connected == false {
+            let toolTip = batteryPercent.map {
+                BTLocalization.StatusItem.batteryLevel(percent: $0)
+            } ?? BTLocalization.StatusItem.unknown
+            return self.batterySnapshot(
+                percent: batteryPercent,
+                isCharging: false,
+                toolTip: toolTip
             )
         }
 
@@ -45,8 +58,6 @@ internal enum BTStatusItemSnapshotFactory {
             (state[BTStateInfo.Keys.chargingDisabled] as? NSNumber)?.boolValue
         guard chargingDisabled == true else {
             return self.chargingSnapshot(
-                title: title,
-                percent: percent,
                 state: state
             )
         }
@@ -56,26 +67,22 @@ internal enum BTStatusItemSnapshotFactory {
         let toolTip = minCharge.map {
             BTLocalization.StatusItem.holding(minCharge: $0)
         } ?? BTLocalization.StatusItem.holdingUnknown
-        return self.snapshot(
-            title: title,
-            percent: percent,
-            symbol: "battery.75",
-            toolTip: toolTip
+        return self.batterySnapshot(
+            percent: batteryPercent,
+            isCharging: false,
+            toolTip: self.toolTip(status: toolTip, percent: batteryPercent)
         )
     }
 
-    static func unknown(percent: UInt8?) -> BTStatusItemSnapshot {
+    static func unknown() -> BTStatusItemSnapshot {
         self.snapshot(
-            title: percent.map { "\($0)%" } ?? "",
-            percent: percent,
             symbol: "exclamationmark.triangle",
+            title: "",
             toolTip: BTLocalization.StatusItem.unknown
         )
     }
 
     private static func chargingSnapshot(
-        title: String,
-        percent: UInt8?,
         state: [String: NSObject & Sendable]
     ) -> BTStatusItemSnapshot {
         let chargingMode =
@@ -94,18 +101,67 @@ internal enum BTStatusItemSnapshotFactory {
             } ?? BTLocalization.StatusItem.charging
         }
 
-        return self.snapshot(
-            title: title,
-            percent: percent,
-            symbol: "battery.100.bolt",
+        let batteryPercent =
+            (state[BTStateInfo.Keys.batteryPercent] as? NSNumber)?.intValue
+        return self.batterySnapshot(
+            percent: batteryPercent,
+            isCharging: true,
+            toolTip: self.toolTip(status: toolTip, percent: batteryPercent)
+        )
+    }
+
+    private static func batterySnapshot(
+        percent: Int?,
+        isCharging: Bool,
+        toolTip: String
+    ) -> BTStatusItemSnapshot {
+        self.snapshot(
+            symbol: self.batterySymbol(
+                percent: percent,
+                isCharging: isCharging
+            ),
+            title: percent.map { "\($0) %" } ?? "",
             toolTip: toolTip
         )
     }
 
+    private static func batterySymbol(
+        percent: Int?,
+        isCharging: Bool
+    ) -> String {
+        if isCharging {
+            return "battery.100.bolt"
+        }
+
+        guard let percent else {
+            return "battery.0"
+        }
+
+        switch percent {
+        case ..<13:
+            return "battery.0"
+        case ..<38:
+            return "battery.25"
+        case ..<63:
+            return "battery.50"
+        case ..<88:
+            return "battery.75"
+        default:
+            return "battery.100"
+        }
+    }
+
+    private static func toolTip(status: String, percent: Int?) -> String {
+        guard let percent else {
+            return status
+        }
+
+        return "\(status), \(BTLocalization.StatusItem.batteryLevel(percent: percent))"
+    }
+
     private static func snapshot(
-        title: String,
-        percent: UInt8?,
         symbol: String,
+        title: String,
         toolTip: String
     ) -> BTStatusItemSnapshot {
         let image = NSImage(
@@ -115,9 +171,8 @@ internal enum BTStatusItemSnapshotFactory {
         image?.isTemplate = true
 
         return BTStatusItemSnapshot(
-            title: title,
             image: image,
-            percent: percent,
+            title: title,
             toolTip: toolTip
         )
     }

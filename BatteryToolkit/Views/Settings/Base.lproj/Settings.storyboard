@@ -59,15 +59,15 @@
             <objects>
                 <viewController storyboardIdentifier="SettingsViewController" showSeguePresentationStyle="single" id="qK6-EM-YZH" userLabel="SettingsViewController" customClass="BTSettingsViewController" customModule="Battery_Toolkit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" translatesAutoresizingMaskIntoConstraints="NO" id="IvC-q3-fvl" userLabel="Settings View">
-                        <rect key="frame" x="0.0" y="0.0" width="495" height="353"/>
+                        <rect key="frame" x="0.0" y="0.0" width="495" height="389"/>
                         <subviews>
                             <tabView allowsTruncatedLabels="NO" type="noTabsNoBorder" translatesAutoresizingMaskIntoConstraints="NO" id="NXG-fh-uCo">
-                                <rect key="frame" x="0.0" y="69" width="495" height="284"/>
+                                <rect key="frame" x="0.0" y="69" width="495" height="320"/>
                                 <font key="font" metaFont="system"/>
                                 <tabViewItems>
                                     <tabViewItem label="Power" identifier="" id="IMi-pw-cwy" userLabel="Power">
                                         <view key="view" id="Blc-dd-9Qv">
-                                            <rect key="frame" x="0.0" y="0.0" width="495" height="284"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="495" height="320"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nq7-TF-yL4" userLabel="Max Stepper">
@@ -263,7 +263,7 @@
                                                 <constraint firstItem="eKL-lO-rZG" firstAttribute="leading" secondItem="9gz-yn-SNi" secondAttribute="leading" id="BY0-uc-RVE"/>
                                                 <constraint firstAttribute="trailing" secondItem="Sq5-KE-c3T" secondAttribute="trailing" constant="20" symbolic="YES" id="Cto-Ja-rGl"/>
                                                 <constraint firstItem="UVz-So-HqI" firstAttribute="leading" secondItem="GpU-47-1gg" secondAttribute="trailing" constant="8" symbolic="YES" id="GGc-ca-f1c"/>
-                                                <constraint firstItem="xbB-Gg-5TD" firstAttribute="top" secondItem="Blc-dd-9Qv" secondAttribute="top" constant="20" symbolic="YES" id="GUv-KX-cgU"/>
+                                                <constraint firstItem="xbB-Gg-5TD" firstAttribute="top" secondItem="Blc-dd-9Qv" secondAttribute="top" constant="56" id="GUv-KX-cgU"/>
                                                 <constraint firstItem="GpU-47-1gg" firstAttribute="top" secondItem="xbB-Gg-5TD" secondAttribute="bottom" constant="8" symbolic="YES" id="HJY-El-CV7"/>
                                                 <constraint firstItem="Kei-Vw-B1H" firstAttribute="top" secondItem="gVg-BR-NcJ" secondAttribute="bottom" constant="3" id="HN7-MJ-nQS"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="zNI-F1-3zH" secondAttribute="trailing" constant="20" symbolic="YES" id="Hq4-Jc-hce"/>
@@ -310,7 +310,7 @@
                                     </tabViewItem>
                                     <tabViewItem label="User" identifier="" id="r6x-U7-0zu" userLabel="User">
                                         <view key="view" id="j3z-8d-YbE">
-                                            <rect key="frame" x="0.0" y="0.0" width="495" height="284"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="495" height="320"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="WLE-5m-DuI" userLabel="Autostart Label">

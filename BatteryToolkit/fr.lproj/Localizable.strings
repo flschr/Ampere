@@ -49,6 +49,7 @@
 "Battery Percentage Only" = "Pourcentage de batterie uniquement";
 "Hidden" = "Masqué";
 "Battery status unavailable" = "État de la batterie indisponible";
+"Battery: %d %%" = "Batterie : %d %%";
 "Background activity is paused" = "L'activité en arrière-plan est suspendue";
 "Power adapter is disabled" = "L'adaptateur secteur est désactivé";
 "Charging" = "Recharge en cours";

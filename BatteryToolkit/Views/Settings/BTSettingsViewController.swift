@@ -8,7 +8,7 @@ import os.log
 
 @MainActor
 internal final class BTSettingsViewController: NSViewController {
-    private static let contentSize = NSSize(width: 520, height: 353)
+    private static let contentSize = NSSize(width: 520, height: 389)
 
     private enum ChargePreset: Int, CaseIterable {
         case everyday
@@ -61,7 +61,6 @@ internal final class BTSettingsViewController: NSViewController {
     @IBOutlet private var powerTab: NSTabViewItem!
     
     @IBOutlet private var autostartSwitch: NSSwitch!
-    private var statusItemDisplayModePopUpButton: NSPopUpButton!
     
     @IBOutlet private var minChargeTextField: NSTextField!
     @IBOutlet private var minChargeSlider: NSSlider!
@@ -183,8 +182,6 @@ internal final class BTSettingsViewController: NSViewController {
             )
         }
 
-        self.saveStatusItemDisplayMode()
-        
         let settings: [String: NSObject & Sendable] = [
             BTSettingsInfo.Keys.minCharge: self.minChargeNum,
             BTSettingsInfo.Keys.maxCharge: self.maxChargeNum,
@@ -300,8 +297,6 @@ internal final class BTSettingsViewController: NSViewController {
         ])
 
         self.autostartSwitch = settingsUserView.autostartSwitch
-        self.statusItemDisplayModePopUpButton =
-            settingsUserView.statusItemDisplayModePopUpButton
     }
 
     private func configurePowerTabTextFields() {
@@ -341,6 +336,11 @@ internal final class BTSettingsViewController: NSViewController {
     }
 
     private func addPresetControl() {
+        guard let powerView = self.powerTab.view else {
+            assertionFailure()
+            return
+        }
+
         let label = NSTextField(
             labelWithString: BTLocalization.Settings.preset
         )
@@ -355,12 +355,12 @@ internal final class BTSettingsViewController: NSViewController {
         presetControl.translatesAutoresizingMaskIntoConstraints = false
         presetControl.segmentStyle = .rounded
 
-        self.view.addSubview(label)
-        self.view.addSubview(presetControl)
+        powerView.addSubview(label)
+        powerView.addSubview(presetControl)
 
         NSLayoutConstraint.activate([
             label.leadingAnchor.constraint(
-                equalTo: self.view.leadingAnchor,
+                equalTo: powerView.leadingAnchor,
                 constant: 20
             ),
             label.centerYAnchor.constraint(equalTo: presetControl.centerYAnchor),
@@ -369,22 +369,15 @@ internal final class BTSettingsViewController: NSViewController {
                 equalTo: label.trailingAnchor,
                 constant: 8
             ),
-            presetControl.bottomAnchor.constraint(
-                equalTo: self.view.bottomAnchor,
-                constant: -18
+            presetControl.topAnchor.constraint(
+                equalTo: powerView.topAnchor,
+                constant: 20
+            ),
+            presetControl.trailingAnchor.constraint(
+                lessThanOrEqualTo: powerView.trailingAnchor,
+                constant: -20
             ),
         ])
-        if let cancelButton {
-            presetControl.trailingAnchor.constraint(
-                lessThanOrEqualTo: cancelButton.leadingAnchor,
-                constant: -12
-            ).isActive = true
-        } else {
-            presetControl.trailingAnchor.constraint(
-                lessThanOrEqualTo: self.view.trailingAnchor,
-                constant: -20
-            ).isActive = true
-        }
 
         self.presetControl = presetControl
         self.presetLabel = label
@@ -403,8 +396,6 @@ internal final class BTSettingsViewController: NSViewController {
 
         self.view.addSubview(warning)
 
-        let bottomAnchor = self.presetControl?.topAnchor ??
-            self.view.bottomAnchor
         NSLayoutConstraint.activate([
             warning.leadingAnchor.constraint(
                 equalTo: self.view.leadingAnchor,
@@ -415,8 +406,8 @@ internal final class BTSettingsViewController: NSViewController {
                 constant: -20
             ),
             warning.bottomAnchor.constraint(
-                equalTo: bottomAnchor,
-                constant: -6
+                equalTo: self.view.bottomAnchor,
+                constant: -52
             ),
         ])
 
@@ -469,23 +460,6 @@ internal final class BTSettingsViewController: NSViewController {
             forKey: self.autostartSetting
         )
         self.autostartSwitch.state = autostart ? .on : .off
-        self.statusItemDisplayModePopUpButton.selectItem(
-            withTag: BTStatusItemDisplayMode.current.rawValue
-        )
-    }
-
-    private func saveStatusItemDisplayMode() {
-        let selectedTag = self.statusItemDisplayModePopUpButton.selectedTag()
-        guard
-            selectedTag >= 0,
-            let displayMode = BTStatusItemDisplayMode(
-                rawValue: selectedTag
-            )
-        else {
-            return
-        }
-
-        BTStatusItemDisplayMode.current = displayMode
     }
     
     private func initPowerState() async {

@@ -58,32 +58,5 @@ extension BTLocalization {
             "Uninstall Ampere…",
             comment: "Settings button to remove the background service, delete app data, and move the app to the Trash"
         )
-
-        enum StatusItem {
-            static let displayMode = NSLocalizedString(
-                "Menu bar display:",
-                comment: "Settings label for choosing how the menu bar item appears"
-            )
-
-            static let iconOnly = NSLocalizedString(
-                "Icon only",
-                comment: "Menu bar display mode showing only the battery icon"
-            )
-
-            static let percentInIcon = NSLocalizedString(
-                "Percentage inside icon",
-                comment: "Menu bar display mode showing the charge percentage inside the battery icon"
-            )
-
-            static let percentOnly = NSLocalizedString(
-                "Percentage only",
-                comment: "Menu bar display mode showing only the charge percentage"
-            )
-
-            static let hidden = NSLocalizedString(
-                "Hidden",
-                comment: "Menu bar display mode hiding the status item"
-            )
-        }
     }
 }

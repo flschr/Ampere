@@ -8,6 +8,8 @@ import os.log
 
 @MainActor
 internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
+    private static let batteryLevelItemTag = 23_042
+
     @IBOutlet private var infoUnknownStateItem: NSMenuItem!
     @IBOutlet private var infoPausedItem: NSMenuItem!
 
@@ -38,6 +40,21 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
     @IBOutlet private var resumeActivityItem: NSMenuItem!
 
     private var refreshTimer: DispatchSourceTimer? = nil
+    private weak var batteryLevelItem: NSMenuItem?
+
+    private func ensureBatteryLevelItem(in menu: NSMenu) {
+        if let item = menu.item(withTag: Self.batteryLevelItemTag) {
+            self.batteryLevelItem = item
+            return
+        }
+
+        let item = NSMenuItem()
+        item.tag = Self.batteryLevelItemTag
+        item.isEnabled = false
+        item.isHidden = true
+        menu.insertItem(item, at: 0)
+        self.batteryLevelItem = item
+    }
 
     private func hidePowerItems() {
         self.disablePowerAdapterItem.isHidden = true
@@ -61,6 +78,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
             }
 
             guard enabled else {
+                self.batteryLevelItem?.isHidden = true
                 self.infoUnknownStateItem.isHidden = true
                 self.infoPowerAdapterEnabledItem.isHidden = true
                 self.infoPowerAdapterDisabledItem.isHidden = true
@@ -93,6 +111,8 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
             state[BTStateInfo.Keys.connected] as? NSNumber
             let chargingDisabledNum =
             state[BTStateInfo.Keys.chargingDisabled] as? NSNumber
+            let batteryPercentNum =
+            state[BTStateInfo.Keys.batteryPercent] as? NSNumber
             let progressNum = state[BTStateInfo.Keys.progress] as? NSNumber
             let chargingModeNum =
             state[BTStateInfo.Keys.chargingMode] as? NSNumber
@@ -105,6 +125,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
                 let powerDisabled = powerDisabledNum?.boolValue,
                 let connected = connectedNum?.boolValue,
                 let chargingDisabled = chargingDisabledNum?.boolValue,
+                let batteryPercent = batteryPercentNum?.intValue,
                 let progress = progressNum?.intValue,
                 let chargingMode = chargingModeNum?.intValue,
                 let maxCharge = maxChargeNum?.intValue,
@@ -112,6 +133,10 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
             else {
                 throw BTError.commFailed
             }
+
+            self.batteryLevelItem?.title =
+                BTLocalization.StatusItem.batteryLevel(percent: batteryPercent)
+            self.batteryLevelItem?.isHidden = false
             
             self.infoUnknownStateItem.isHidden = true
             
@@ -269,6 +294,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
                 }
             }
         } catch {
+            self.batteryLevelItem?.isHidden = true
             self.infoPowerAdapterEnabledItem.isHidden = true
             self.infoPowerAdapterDisabledItem.isHidden = true
             self.infoChargingToLimitItem.isHidden = true
@@ -287,8 +313,9 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         }
     }
 
-    func menuWillOpen(_: NSMenu) {
+    func menuWillOpen(_ menu: NSMenu) {
         assert(self.refreshTimer == nil)
+        self.ensureBatteryLevelItem(in: menu)
 
         let timer = DispatchSource.makeTimerSource(queue: DispatchQueue.main)
         timer.setEventHandler {

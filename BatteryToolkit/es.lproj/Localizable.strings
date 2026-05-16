@@ -30,6 +30,7 @@
 "Using Power Adapter" = "Usando adaptador de corriente";
 "Charging until %d %%" = "Cargando hasta el %d %%";
 "Charging to 100 %" = "Cargando hasta el 100 %";
+"Holding charge, resumes below %d %%" = "Carga en pausa; se reanuda por debajo del %d %%";
 "Holding charge; resumes below %d %%" = "Carga en pausa; se reanuda por debajo del %d %%";
 "Waiting; will charge to %d %%" = "En espera; cargará hasta el %d %%";
 "Waiting; will charge to 100 %" = "En espera; cargará hasta el 100 %";

@@ -8,7 +8,6 @@ import os.log
 
 @MainActor
 internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
-    private static let batteryLevelItemTag = 23_042
     private static let remainingTimeItemTag = 23_043
 
     @IBOutlet private var infoUnknownStateItem: NSMenuItem!
@@ -43,33 +42,51 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
     @IBOutlet private var resumeActivityItem: NSMenuItem!
 
     private var refreshTimer: DispatchSourceTimer? = nil
-    private weak var batteryLevelItem: NSMenuItem?
     private weak var remainingTimeItem: NSMenuItem?
 
-    private func disabledInfoItem(tag: Int) -> NSMenuItem {
+    private func passiveInfoItem(tag: Int) -> NSMenuItem {
         let item = NSMenuItem()
         item.tag = tag
-        item.isEnabled = false
+        item.isEnabled = true
         item.isHidden = true
         return item
     }
 
     private func ensureDynamicInfoItems(in menu: NSMenu) {
-        if let item = menu.item(withTag: Self.batteryLevelItemTag) {
-            self.batteryLevelItem = item
-        } else {
-            let item = self.disabledInfoItem(tag: Self.batteryLevelItemTag)
-            menu.insertItem(item, at: 0)
-            self.batteryLevelItem = item
-        }
-
         if let item = menu.item(withTag: Self.remainingTimeItemTag) {
             self.remainingTimeItem = item
         } else {
-            let item = self.disabledInfoItem(tag: Self.remainingTimeItemTag)
-            menu.insertItem(item, at: 1)
+            let item = self.passiveInfoItem(tag: Self.remainingTimeItemTag)
+            menu.insertItem(item, at: 0)
             self.remainingTimeItem = item
         }
+
+        self.configureStatusItems()
+    }
+
+    private func configureStatusItems() {
+        for item in self.statusItems {
+            item.isEnabled = true
+            item.target = nil
+            item.action = nil
+        }
+    }
+
+    private var statusItems: [NSMenuItem] {
+        [
+            self.remainingTimeItem,
+            self.infoUnknownStateItem,
+            self.infoPausedItem,
+            self.infoPowerAdapterEnabledItem,
+            self.infoPowerAdapterDisabledItem,
+            self.infoChargingToLimitItem,
+            self.infoChargingToFullItem,
+            self.infoChargingUnknownModeItem,
+            self.infoNotChargingItem,
+            self.infoRequestedChargingToLimitItem,
+            self.infoRequestedChargingToFullItem,
+            self.infoNotChargingUnknownModeItem,
+        ].compactMap { $0 }
     }
 
     private func hidePowerItems() {
@@ -114,7 +131,6 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
             }
 
             guard enabled else {
-                self.batteryLevelItem?.isHidden = true
                 self.remainingTimeItem?.isHidden = true
                 self.infoUnknownStateItem.isHidden = true
                 self.infoPowerAdapterEnabledItem.isHidden = true
@@ -171,9 +187,6 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
                 throw BTError.commFailed
             }
 
-            self.batteryLevelItem?.title =
-                BTLocalization.StatusItem.batteryLevel(percent: batteryPercent)
-            self.batteryLevelItem?.isHidden = false
             self.updateRemainingTimeItem(
                 powerDisabled: powerDisabled,
                 connected: connected,
@@ -348,7 +361,6 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
                 }
             }
         } catch {
-            self.batteryLevelItem?.isHidden = true
             self.remainingTimeItem?.isHidden = true
             self.infoPowerAdapterEnabledItem.isHidden = true
             self.infoPowerAdapterDisabledItem.isHidden = true

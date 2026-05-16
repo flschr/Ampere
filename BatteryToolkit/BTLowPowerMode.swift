@@ -40,6 +40,7 @@ internal enum BTLowPowerMode {
     private static func setPowerMode(_ value: String) throws {
         try self.runPMSet(arguments: ["-b", "powermode", value])
         try self.runPMSet(arguments: ["-c", "powermode", value])
+        self.refreshPowerSettings()
     }
 
     private static func setLowPowerMode(_ enabled: Bool) throws {
@@ -48,6 +49,11 @@ internal enum BTLowPowerMode {
             "lowpowermode",
             enabled ? "1" : "0",
         ])
+        self.refreshPowerSettings()
+    }
+
+    private static func refreshPowerSettings() {
+        _ = try? self.runPMSet(arguments: ["touch"])
     }
 
     private static func powerSettings(arguments: [String]) throws -> [String: [String]] {

@@ -36,8 +36,8 @@
 "Waiting; will charge to 100 %" = "En attente ; rechargera jusqu'à 100 %";
 "Charge to %d %% Now" = "Recharger à %d %% maintenant";
 "Request Charging to %d %% Now" = "Demander la recharge à %d %% maintenant";
-"Run on Battery" = "Utiliser la batterie";
-"Use Power Adapter" = "Utiliser l'adaptateur secteur";
+"Disable Power Adapter" = "Désactiver l'adaptateur secteur";
+"Enable Power Adapter" = "Activer l'adaptateur secteur";
 "Low Power Mode" = "Mode économie d'énergie";
 "Until Empty: %@" = "Jusqu'à vide : %@";
 "Until %d %%: %@" = "Jusqu'à %d %% : %@";

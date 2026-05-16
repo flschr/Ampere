@@ -78,12 +78,12 @@ extension BTLocalization {
         }
 
         static let runOnBattery = NSLocalizedString(
-            "Run on Battery",
+            "Disable Power Adapter",
             comment: "Menu command to disable the power adapter and run from battery"
         )
 
         static let usePowerAdapter = NSLocalizedString(
-            "Use Power Adapter",
+            "Enable Power Adapter",
             comment: "Menu command to enable the power adapter"
         )
 

@@ -356,17 +356,6 @@
                             <modifierMask key="keyEquivalentModifierMask"/>
                         </menuItem>
                         <menuItem isSeparatorItem="YES" id="VJd-te-iRz"/>
-                        <menuItem title="Disable Power Adapter" hidden="YES" keyEquivalent="p" id="ter-ZE-C7E">
-                            <connections>
-                                <action selector="disablePowerAdapterHandlerWithSender:" target="Yoz-Et-jXW" id="dbn-vT-If5"/>
-                            </connections>
-                        </menuItem>
-                        <menuItem title="Enable Power Adapter" hidden="YES" keyEquivalent="p" id="aEW-fU-9yN">
-                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
-                            <connections>
-                                <action selector="enablePowerAdapterHandlerWithSender:" target="Yoz-Et-jXW" id="PCx-sG-EOc"/>
-                            </connections>
-                        </menuItem>
                         <menuItem title="Charge to Full Now" hidden="YES" keyEquivalent="f" id="llC-Rh-DUh">
                             <connections>
                                 <action selector="chargeToFullHandlerWithSender:" target="Yoz-Et-jXW" id="i2a-gy-Hp6"/>
@@ -397,7 +386,29 @@
                                 <action selector="disableChargingHandlerWithSender:" target="Yoz-Et-jXW" id="LUb-fi-hvv"/>
                             </connections>
                         </menuItem>
+                        <menuItem title="Low Power Mode" id="LPM-MB-TGL">
+                            <modifierMask key="keyEquivalentModifierMask"/>
+                            <connections>
+                                <action selector="toggleLowPowerModeHandlerWithSender:" target="Yoz-Et-jXW" id="LPM-MB-ACT"/>
+                            </connections>
+                        </menuItem>
+                        <menuItem title="Disable Power Adapter" hidden="YES" keyEquivalent="p" id="ter-ZE-C7E">
+                            <connections>
+                                <action selector="disablePowerAdapterHandlerWithSender:" target="Yoz-Et-jXW" id="dbn-vT-If5"/>
+                            </connections>
+                        </menuItem>
+                        <menuItem title="Enable Power Adapter" hidden="YES" keyEquivalent="p" id="aEW-fU-9yN">
+                            <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
+                            <connections>
+                                <action selector="enablePowerAdapterHandlerWithSender:" target="Yoz-Et-jXW" id="PCx-sG-EOc"/>
+                            </connections>
+                        </menuItem>
                         <menuItem isSeparatorItem="YES" id="sGg-wU-dOW"/>
+                        <menuItem title="Settings…" keyEquivalent="," id="78l-zk-UHb" customClass="BTSettingsMenuItem" customModule="Battery_Toolkit" customModuleProvider="target">
+                            <connections>
+                                <segue destination="Lf9-ud-Dh4" kind="show" id="UU8-oN-xdh"/>
+                            </connections>
+                        </menuItem>
                         <menuItem title="Pause Background Activity" hidden="YES" keyEquivalent="b" id="R8X-od-FcL">
                             <connections>
                                 <action selector="pauseActivityHandlerWithSender:" target="Yoz-Et-jXW" id="zzP-KW-Rg5"/>
@@ -407,18 +418,6 @@
                             <modifierMask key="keyEquivalentModifierMask" option="YES" command="YES"/>
                             <connections>
                                 <action selector="resumeActivityHandlerWithSender:" target="Yoz-Et-jXW" id="nqU-EF-SJw"/>
-                            </connections>
-                        </menuItem>
-                        <menuItem isSeparatorItem="YES" id="LPM-MB-SEP"/>
-                        <menuItem title="Low Power Mode" id="LPM-MB-TGL">
-                            <modifierMask key="keyEquivalentModifierMask"/>
-                            <connections>
-                                <action selector="toggleLowPowerModeHandlerWithSender:" target="Yoz-Et-jXW" id="LPM-MB-ACT"/>
-                            </connections>
-                        </menuItem>
-                        <menuItem title="Settings…" keyEquivalent="," id="78l-zk-UHb" customClass="BTSettingsMenuItem" customModule="Battery_Toolkit" customModuleProvider="target">
-                            <connections>
-                                <segue destination="Lf9-ud-Dh4" kind="show" id="UU8-oN-xdh"/>
                             </connections>
                         </menuItem>
                         <menuItem isSeparatorItem="YES" id="9fM-fx-Sxj"/>

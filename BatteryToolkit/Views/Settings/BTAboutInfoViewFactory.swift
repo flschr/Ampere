@@ -7,7 +7,7 @@ import AppKit
 
 @MainActor
 internal struct BTAboutInfoViewFactory {
-    static let contentSize = NSSize(width: 520, height: 340)
+    static let contentSize = NSSize(width: 520, height: 300)
 
     let info: BTAboutInfo
     let target: AnyObject
@@ -45,17 +45,14 @@ internal struct BTAboutInfoViewFactory {
 
     private func makeContentStack() -> NSStackView {
         let metadataView = self.makeMetadataView()
-        let attributionSummary = self.makeAttributionSummary()
-        let actionView = self.makeActionView()
+        let linksView = self.makeLinksView()
         let footerView = self.makeFooterView()
         let spacerView = NSView()
         spacerView.setContentHuggingPriority(.defaultLow, for: .vertical)
         let stack = NSStackView(views: [
             self.makeHeaderView(),
             metadataView,
-            self.makeAttributionTitle(),
-            attributionSummary,
-            actionView,
+            linksView,
             spacerView,
             footerView,
         ])
@@ -66,10 +63,7 @@ internal struct BTAboutInfoViewFactory {
 
         NSLayoutConstraint.activate([
             metadataView.widthAnchor.constraint(equalTo: stack.widthAnchor),
-            attributionSummary.widthAnchor.constraint(
-                equalTo: stack.widthAnchor
-            ),
-            actionView.widthAnchor.constraint(equalTo: stack.widthAnchor),
+            linksView.widthAnchor.constraint(equalTo: stack.widthAnchor),
             footerView.widthAnchor.constraint(equalTo: stack.widthAnchor),
         ])
 
@@ -88,7 +82,7 @@ internal struct BTAboutInfoViewFactory {
         appNameLabel.font = .boldSystemFont(ofSize: 22)
 
         let versionLabel = NSTextField(
-            labelWithString: self.info.versionBuildText
+            labelWithString: self.info.versionText
         )
         versionLabel.textColor = .secondaryLabelColor
 
@@ -111,19 +105,18 @@ internal struct BTAboutInfoViewFactory {
     }
 
     private func makeMetadataView() -> NSView {
-        let publisherLabel = NSTextField(
-            wrappingLabelWithString: String(
-                format: BTLocalization.Settings.About.publisherFormat,
-                BTAboutInfo.publisherName
-            )
+        let copyrightLabel = NSTextField(
+            wrappingLabelWithString: self.info.copyrightText
         )
-        let metadataStack = NSStackView(views: [publisherLabel])
+        copyrightLabel.textColor = .secondaryLabelColor
+
+        let metadataStack = NSStackView(views: [copyrightLabel])
         metadataStack.orientation = .vertical
         metadataStack.alignment = .leading
         metadataStack.spacing = 0
 
         NSLayoutConstraint.activate([
-            publisherLabel.widthAnchor.constraint(
+            copyrightLabel.widthAnchor.constraint(
                 equalTo: metadataStack.widthAnchor
             ),
         ])
@@ -131,49 +124,24 @@ internal struct BTAboutInfoViewFactory {
         return metadataStack
     }
 
-    private func makeAttributionTitle() -> NSView {
-        let label = NSTextField(
-            labelWithString: BTLocalization.Settings.About.attributionTitle
-        )
-        label.font = .boldSystemFont(ofSize: NSFont.systemFontSize)
-
-        return label
-    }
-
-    private func makeAttributionSummary() -> NSView {
-        let label = NSTextField(
-            wrappingLabelWithString:
-                BTLocalization.Settings.About.attributionSummary
-        )
-        label.setContentCompressionResistancePriority(
-            .required,
-            for: .vertical
-        )
-
-        return label
-    }
-
-    private func makeActionView() -> NSView {
+    private func makeLinksView() -> NSView {
         let stack = NSStackView(views: [
-            self.makeActionButton(
+            self.makeTextLinkRow(
                 title: BTLocalization.Settings.About.website,
-                systemSymbolName: "safari",
                 action: self.websiteAction
             ),
-            self.makeActionButton(
+            self.makeTextLinkRow(
                 title: BTLocalization.Settings.About.privacy,
-                systemSymbolName: "hand.raised",
                 action: self.privacyAction
             ),
-            self.makeActionButton(
-                title: BTLocalization.Settings.About.license,
-                systemSymbolName: "doc.text",
+            self.makeTextLinkRow(
+                title: BTLocalization.Settings.About.licenses,
                 action: self.licenseAction
             ),
         ])
-        stack.orientation = .horizontal
-        stack.alignment = .centerY
-        stack.spacing = 8
+        stack.orientation = .vertical
+        stack.alignment = .leading
+        stack.spacing = 6
 
         return stack
     }

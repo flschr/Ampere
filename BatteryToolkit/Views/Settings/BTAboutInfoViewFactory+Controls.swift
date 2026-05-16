@@ -7,9 +7,24 @@ import AppKit
 
 @MainActor
 extension BTAboutInfoViewFactory {
-    func makeActionButton(
+    func makeTextLinkRow(
         title: String,
-        systemSymbolName: String,
+        action: Selector
+    ) -> NSView {
+        let bulletLabel = NSTextField(labelWithString: "\u{2022}")
+        bulletLabel.textColor = .secondaryLabelColor
+
+        let button = self.makeTextLinkButton(title: title, action: action)
+        let stack = NSStackView(views: [bulletLabel, button])
+        stack.orientation = .horizontal
+        stack.alignment = .firstBaseline
+        stack.spacing = 8
+
+        return stack
+    }
+
+    private func makeTextLinkButton(
+        title: String,
         action: Selector
     ) -> NSButton {
         let button = NSButton(
@@ -17,12 +32,15 @@ extension BTAboutInfoViewFactory {
             target: self.target,
             action: action
         )
-        button.bezelStyle = .rounded
-        button.image = NSImage(
-            systemSymbolName: systemSymbolName,
-            accessibilityDescription: title
+        button.alignment = .left
+        button.isBordered = false
+        button.attributedTitle = NSAttributedString(
+            string: title,
+            attributes: [
+                .foregroundColor: NSColor.linkColor,
+                .underlineStyle: NSUnderlineStyle.single.rawValue,
+            ]
         )
-        button.imagePosition = .imageLeading
         button.setContentHuggingPriority(.required, for: .horizontal)
 
         return button

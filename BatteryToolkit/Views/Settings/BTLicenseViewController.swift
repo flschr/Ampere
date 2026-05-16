@@ -7,7 +7,8 @@ import AppKit
 
 @MainActor
 internal final class BTLicenseViewController: NSViewController {
-    private static let contentSize = NSSize(width: 520, height: 440)
+    private static let contentSize = NSSize(width: 620, height: 520)
+    private weak var licenseTextView: NSTextView?
 
     init() {
         super.init(nibName: nil, bundle: nil)
@@ -26,13 +27,18 @@ internal final class BTLicenseViewController: NSViewController {
         self.buildView()
     }
 
+    override func viewDidAppear() {
+        super.viewDidAppear()
+        self.licenseTextView?.scrollToBeginningOfDocument(nil)
+    }
+
     @objc private func closeButtonAction(_: NSButton) {
         self.dismiss(nil)
     }
 
     private func buildView() {
         let title = NSTextField(
-            labelWithString: BTLocalization.Settings.About.licenseTitle
+            labelWithString: BTLocalization.Settings.About.licensesTitle
         )
         title.font = .boldSystemFont(ofSize: 17)
 
@@ -40,6 +46,11 @@ internal final class BTLicenseViewController: NSViewController {
             wrappingLabelWithString:
                 BTLocalization.Settings.About.licenseSummary
         )
+        summary.setContentCompressionResistancePriority(
+            .required,
+            for: .vertical
+        )
+
         let licenseView = self.makeLicenseView()
         let footer = self.makeFooterView()
 
@@ -70,7 +81,7 @@ internal final class BTLicenseViewController: NSViewController {
             ),
             summary.widthAnchor.constraint(equalTo: stack.widthAnchor),
             licenseView.widthAnchor.constraint(equalTo: stack.widthAnchor),
-            licenseView.heightAnchor.constraint(equalToConstant: 300),
+            licenseView.heightAnchor.constraint(equalToConstant: 344),
             footer.widthAnchor.constraint(equalTo: stack.widthAnchor),
         ])
     }
@@ -78,7 +89,13 @@ internal final class BTLicenseViewController: NSViewController {
     private func makeLicenseView() -> NSView {
         let scrollView = NSScrollView()
         scrollView.hasVerticalScroller = true
-        scrollView.borderType = .bezelBorder
+        scrollView.borderType = .noBorder
+        scrollView.drawsBackground = true
+        scrollView.backgroundColor = .textBackgroundColor
+        scrollView.wantsLayer = true
+        scrollView.layer?.cornerRadius = 8
+        scrollView.layer?.borderColor = NSColor.separatorColor.cgColor
+        scrollView.layer?.borderWidth = 1
         scrollView.documentView = self.makeLicenseTextView()
 
         return scrollView
@@ -88,7 +105,7 @@ internal final class BTLicenseViewController: NSViewController {
         let textView = NSTextView(
             frame: NSRect(
                 origin: .zero,
-                size: NSSize(width: Self.contentSize.width - 58, height: 420)
+                size: NSSize(width: Self.contentSize.width - 70, height: 720)
             )
         )
         textView.autoresizingMask = [.width]
@@ -97,20 +114,56 @@ internal final class BTLicenseViewController: NSViewController {
         textView.isHorizontallyResizable = false
         textView.isSelectable = true
         textView.isVerticallyResizable = true
-        textView.font = .monospacedSystemFont(
-            ofSize: NSFont.smallSystemFontSize,
-            weight: .regular
+        textView.textContainerInset = NSSize(width: 14, height: 14)
+        textView.textStorage?.setAttributedString(
+            self.makeLicenseAttributedText()
         )
-        textView.string = BTAboutInfo.licenseText
-        textView.textColor = .secondaryLabelColor
-        textView.textContainerInset = NSSize(width: 8, height: 8)
         textView.textContainer?.containerSize = NSSize(
-            width: Self.contentSize.width - 58,
+            width: Self.contentSize.width - 98,
             height: CGFloat.greatestFiniteMagnitude
         )
+        textView.textContainer?.lineFragmentPadding = 0
         textView.textContainer?.widthTracksTextView = true
+        self.licenseTextView = textView
 
         return textView
+    }
+
+    private func makeLicenseAttributedText() -> NSAttributedString {
+        let paragraphStyle = NSMutableParagraphStyle()
+        paragraphStyle.lineSpacing = 2
+        paragraphStyle.paragraphSpacing = 10
+
+        let attributedText = NSMutableAttributedString(
+            string: BTAboutInfo.licenseText,
+            attributes: [
+                .font: NSFont.systemFont(ofSize: 12.5),
+                .foregroundColor: NSColor.labelColor,
+                .paragraphStyle: paragraphStyle,
+            ]
+        )
+        self.applyHeading("BSD 3-Clause License", to: attributedText)
+        self.applyHeading("Attribution", to: attributedText)
+
+        return attributedText
+    }
+
+    private func applyHeading(
+        _ heading: String,
+        to attributedText: NSMutableAttributedString
+    ) {
+        let range = (attributedText.string as NSString).range(of: heading)
+        guard range.location != NSNotFound else {
+            return
+        }
+
+        attributedText.addAttributes(
+            [
+                .font: NSFont.boldSystemFont(ofSize: 13.5),
+                .foregroundColor: NSColor.labelColor,
+            ],
+            range: range
+        )
     }
 
     private func makeFooterView() -> NSView {

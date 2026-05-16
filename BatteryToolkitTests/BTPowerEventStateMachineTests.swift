@@ -89,12 +89,11 @@ final class BTPowerEventStateMachineTests: XCTestCase {
         )
     }
 
-    func testDisconnectedRecoveryEnablesBelowMinOnlyForStandardHold() {
+    func testDisconnectedRecoveryEnablesBelowMinForStandardMode() {
         XCTAssertEqual(
             BTPowerEventStateMachine.disconnectedRecoveryEffect(
                 percent: 49,
                 minCharge: 50,
-                chargingDisabled: true,
                 chargingMode: .standard
             ),
             .enableCharging
@@ -103,7 +102,14 @@ final class BTPowerEventStateMachineTests: XCTestCase {
             BTPowerEventStateMachine.disconnectedRecoveryEffect(
                 percent: 50,
                 minCharge: 50,
-                chargingDisabled: true,
+                chargingMode: .standard
+            ),
+            .none
+        )
+        XCTAssertEqual(
+            BTPowerEventStateMachine.disconnectedRecoveryEffect(
+                percent: 80,
+                minCharge: 50,
                 chargingMode: .standard
             ),
             .none
@@ -112,16 +118,6 @@ final class BTPowerEventStateMachineTests: XCTestCase {
             BTPowerEventStateMachine.disconnectedRecoveryEffect(
                 percent: 49,
                 minCharge: 50,
-                chargingDisabled: false,
-                chargingMode: .standard
-            ),
-            .none
-        )
-        XCTAssertEqual(
-            BTPowerEventStateMachine.disconnectedRecoveryEffect(
-                percent: 49,
-                minCharge: 50,
-                chargingDisabled: true,
                 chargingMode: .toFull
             ),
             .none
@@ -131,20 +127,17 @@ final class BTPowerEventStateMachineTests: XCTestCase {
     func testDisconnectedBatteryMonitoringOnlyForStandardHold() {
         XCTAssertTrue(
             BTPowerEventStateMachine.shouldMonitorDisconnectedBattery(
-                chargingDisabled: true,
                 chargingMode: .standard
             )
         )
         XCTAssertFalse(
             BTPowerEventStateMachine.shouldMonitorDisconnectedBattery(
-                chargingDisabled: false,
-                chargingMode: .standard
-            )
-        )
-        XCTAssertFalse(
-            BTPowerEventStateMachine.shouldMonitorDisconnectedBattery(
-                chargingDisabled: true,
                 chargingMode: .toLimit
+            )
+        )
+        XCTAssertFalse(
+            BTPowerEventStateMachine.shouldMonitorDisconnectedBattery(
+                chargingMode: .toFull
             )
         )
     }

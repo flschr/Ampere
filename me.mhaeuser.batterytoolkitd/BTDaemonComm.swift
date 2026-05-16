@@ -157,7 +157,7 @@ internal final class BTDaemonComm: NSObject, BTDaemonCommProtocol, Sendable {
 
         switch command {
         case .enablePowerAdapter:
-            return BTError(fromBool: BTPowerState.enablePowerAdapter())
+            return BTError(fromBool: BTPowerState.enablePowerAdapter(force: true))
         case .chargeToFull:
             return BTError(fromBool: BTPowerEvents.chargeToFull())
         case .chargeToLimit:

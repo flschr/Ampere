@@ -11,9 +11,11 @@ internal enum BTPowerState {
     private static var chargingDisabled = false
     private static var chargingSleepDisabled = false
     private static var powerDisabled = false
+    private static var adapterSleepDisabled = false
 
     static func initState() {
         self.chargingSleepDisabled = false
+        self.adapterSleepDisabled = false
 
         let chargingDisabled = SMCComm.Power.isChargingDisabled()
         self.chargingDisabled = chargingDisabled
@@ -139,9 +141,10 @@ internal enum BTPowerState {
 
     static func enableCharging(
         percent: UInt8,
-        disablesSleep: Bool = true
+        disablesSleep: Bool = true,
+        force: Bool = false
     ) -> Bool {
-        guard self.chargingDisabled else {
+        guard force || self.chargingDisabled else {
             if disablesSleep {
                 self.disableChargingSleep()
             }
@@ -189,8 +192,8 @@ internal enum BTPowerState {
         return true
     }
 
-    static func enablePowerAdapter() -> Bool {
-        guard self.powerDisabled else {
+    static func enablePowerAdapter(force: Bool = false) -> Bool {
+        guard force || self.powerDisabled else {
             return true
         }
 
@@ -260,22 +263,34 @@ internal enum BTPowerState {
     }
 
     private static func applyPowerAdapterSleepEffect(powerDisabled: Bool) {
-        self.apply(
-            sleepEffect: BTPowerEventStateMachine.powerAdapterSleepEffect(
-                powerDisabled: powerDisabled,
-                adapterSleep: BTSettings.adapterSleep
-            )
-        )
-    }
-
-    private static func apply(sleepEffect: BTPowerEventStateMachine.SleepEffect) {
-        switch sleepEffect {
+        switch BTPowerEventStateMachine.powerAdapterSleepEffect(
+            powerDisabled: powerDisabled,
+            adapterSleep: BTSettings.adapterSleep
+        ) {
         case .disableSleep:
-            GlobalSleep.disable()
+            self.disablePowerAdapterSleep()
         case .restoreSleep:
-            GlobalSleep.restore()
+            self.restorePowerAdapterSleep()
         case .none:
             break
         }
+    }
+
+    private static func disablePowerAdapterSleep() {
+        guard !self.adapterSleepDisabled else {
+            return
+        }
+
+        GlobalSleep.disable()
+        self.adapterSleepDisabled = true
+    }
+
+    private static func restorePowerAdapterSleep() {
+        guard self.adapterSleepDisabled else {
+            return
+        }
+
+        GlobalSleep.restore()
+        self.adapterSleepDisabled = false
     }
 }

@@ -587,6 +587,10 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
                 let enabled = try await BTActions.getLowPowerModeEnabled()
                 try await BTActions.setLowPowerModeEnabled(!enabled)
                 await self.refreshLowPowerModeItem()
+                NotificationCenter.default.post(
+                    name: .btStatusItemNeedsRefresh,
+                    object: nil
+                )
             } catch {
                 BTErrorHandler.errorHandler(error: error)
             }

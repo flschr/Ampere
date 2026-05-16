@@ -6,6 +6,11 @@
 import AppKit
 import os.log
 
+extension Notification.Name {
+    static let btStatusItemNeedsRefresh =
+        Notification.Name("app.justasimple.battertoolkit.statusItemNeedsRefresh")
+}
+
 @MainActor
 internal final class BTStatusItemController {
     private static let statusItemAutosaveName =
@@ -14,6 +19,7 @@ internal final class BTStatusItemController {
     private let menu: NSMenu
     private var statusItem: NSStatusItem?
     private var refreshTimer: DispatchSourceTimer?
+    private var refreshObserver: NSObjectProtocol?
 
     init(menu: NSMenu) {
         self.menu = menu
@@ -22,11 +28,16 @@ internal final class BTStatusItemController {
     func start() {
         self.rebuildStatusItem()
         self.startRefreshTimer()
+        self.startRefreshObserver()
     }
 
     func stop() {
         self.refreshTimer?.cancel()
         self.refreshTimer = nil
+        if let refreshObserver {
+            NotificationCenter.default.removeObserver(refreshObserver)
+            self.refreshObserver = nil
+        }
         self.removeStatusItem()
     }
 
@@ -67,6 +78,18 @@ internal final class BTStatusItemController {
         self.statusItem = nil
     }
 
+    private func startRefreshObserver() {
+        self.refreshObserver = NotificationCenter.default.addObserver(
+            forName: .btStatusItemNeedsRefresh,
+            object: nil,
+            queue: .main
+        ) { [weak self] _ in
+            Task { @MainActor in
+                await self?.refresh()
+            }
+        }
+    }
+
     private func refresh() async {
         guard let button = self.statusItem?.button else {
             return
@@ -76,6 +99,7 @@ internal final class BTStatusItemController {
         button.image = snapshot.image
         button.title = snapshot.title
         button.imagePosition = .imageLeading
+        button.contentTintColor = snapshot.contentTintColor
         button.toolTip = snapshot.toolTip
     }
 
@@ -83,9 +107,12 @@ internal final class BTStatusItemController {
         do {
             let state = try await BTActions.getState()
             let settings = try await BTActions.getSettings()
+            let lowPowerModeEnabled =
+                (try? await BTActions.getLowPowerModeEnabled()) ?? false
             return BTStatusItemSnapshotFactory.make(
                 state: state,
-                settings: settings
+                settings: settings,
+                lowPowerModeEnabled: lowPowerModeEnabled
             )
         } catch {
             os_log("Failed to refresh status item: \(error, privacy: .public)")

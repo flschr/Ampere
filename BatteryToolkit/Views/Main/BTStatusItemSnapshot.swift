@@ -9,13 +9,15 @@ internal struct BTStatusItemSnapshot {
     let image: NSImage?
     let title: String
     let toolTip: String
+    let contentTintColor: NSColor?
 }
 
 @MainActor
 internal enum BTStatusItemSnapshotFactory {
     static func make(
         state: [String: NSObject & Sendable],
-        settings: [String: NSObject & Sendable]
+        settings: [String: NSObject & Sendable],
+        lowPowerModeEnabled: Bool
     ) -> BTStatusItemSnapshot {
         let enabled = (state[BTStateInfo.Keys.enabled] as? NSNumber)?.boolValue
         guard enabled == true else {
@@ -34,6 +36,7 @@ internal enum BTStatusItemSnapshotFactory {
             return self.batterySnapshot(
                 percent: batteryPercent,
                 isCharging: false,
+                lowPowerModeEnabled: lowPowerModeEnabled,
                 toolTip: self.toolTip(
                     status: BTLocalization.StatusItem.adapterDisabled,
                     percent: batteryPercent
@@ -50,6 +53,7 @@ internal enum BTStatusItemSnapshotFactory {
             return self.batterySnapshot(
                 percent: batteryPercent,
                 isCharging: false,
+                lowPowerModeEnabled: lowPowerModeEnabled,
                 toolTip: toolTip
             )
         }
@@ -58,7 +62,8 @@ internal enum BTStatusItemSnapshotFactory {
             (state[BTStateInfo.Keys.chargingDisabled] as? NSNumber)?.boolValue
         guard chargingDisabled == true else {
             return self.chargingSnapshot(
-                state: state
+                state: state,
+                lowPowerModeEnabled: lowPowerModeEnabled
             )
         }
 
@@ -70,6 +75,7 @@ internal enum BTStatusItemSnapshotFactory {
         return self.batterySnapshot(
             percent: batteryPercent,
             isCharging: false,
+            lowPowerModeEnabled: lowPowerModeEnabled,
             toolTip: self.toolTip(status: toolTip, percent: batteryPercent)
         )
     }
@@ -83,7 +89,8 @@ internal enum BTStatusItemSnapshotFactory {
     }
 
     private static func chargingSnapshot(
-        state: [String: NSObject & Sendable]
+        state: [String: NSObject & Sendable],
+        lowPowerModeEnabled: Bool
     ) -> BTStatusItemSnapshot {
         let chargingMode =
             (state[BTStateInfo.Keys.chargingMode] as? NSNumber)?.intValue
@@ -106,6 +113,7 @@ internal enum BTStatusItemSnapshotFactory {
         return self.batterySnapshot(
             percent: batteryPercent,
             isCharging: true,
+            lowPowerModeEnabled: lowPowerModeEnabled,
             toolTip: self.toolTip(status: toolTip, percent: batteryPercent)
         )
     }
@@ -113,6 +121,7 @@ internal enum BTStatusItemSnapshotFactory {
     private static func batterySnapshot(
         percent: Int?,
         isCharging: Bool,
+        lowPowerModeEnabled: Bool,
         toolTip: String
     ) -> BTStatusItemSnapshot {
         self.snapshot(
@@ -120,6 +129,11 @@ internal enum BTStatusItemSnapshotFactory {
                 percent: percent,
                 isCharging: isCharging
             ),
+            image: lowPowerModeEnabled ? self.lowPowerBatteryImage(
+                percent: percent,
+                isCharging: isCharging,
+                accessibilityDescription: toolTip
+            ) : nil,
             title: percent.map { "\($0) %" } ?? "",
             toolTip: toolTip
         )
@@ -161,19 +175,86 @@ internal enum BTStatusItemSnapshotFactory {
 
     private static func snapshot(
         symbol: String,
+        image customImage: NSImage? = nil,
         title: String,
         toolTip: String
     ) -> BTStatusItemSnapshot {
-        let image = NSImage(
+        let image = customImage ?? NSImage(
             systemSymbolName: symbol,
             accessibilityDescription: toolTip
         ) ?? NSImage(named: NSImage.Name("ExtraItemIcon"))
-        image?.isTemplate = true
+        if customImage == nil {
+            image?.isTemplate = true
+        }
 
         return BTStatusItemSnapshot(
             image: image,
             title: title,
-            toolTip: toolTip
+            toolTip: toolTip,
+            contentTintColor: nil
         )
+    }
+
+    private static func lowPowerBatteryImage(
+        percent: Int?,
+        isCharging: Bool,
+        accessibilityDescription: String
+    ) -> NSImage {
+        let image = NSImage(size: NSSize(width: 23, height: 13))
+        image.accessibilityDescription = accessibilityDescription
+        image.lockFocus()
+        defer {
+            image.unlockFocus()
+        }
+
+        let bodyRect = NSRect(x: 0.8, y: 2.4, width: 18.5, height: 8.2)
+        let terminalRect = NSRect(x: 19.5, y: 5.0, width: 2.4, height: 3.0)
+        let bodyPath = NSBezierPath(
+            roundedRect: bodyRect,
+            xRadius: 2.2,
+            yRadius: 2.2
+        )
+        let terminalPath = NSBezierPath(
+            roundedRect: terminalRect,
+            xRadius: 1.0,
+            yRadius: 1.0
+        )
+
+        NSColor.labelColor.setStroke()
+        bodyPath.lineWidth = 1.25
+        bodyPath.stroke()
+        terminalPath.fill()
+
+        let fillPercent = CGFloat(min(max(percent ?? 100, 0), 100)) / 100.0
+        let fillWidth = max(1.4, (bodyRect.width - 3.0) * fillPercent)
+        let fillRect = NSRect(
+            x: bodyRect.minX + 1.5,
+            y: bodyRect.minY + 1.5,
+            width: fillWidth,
+            height: bodyRect.height - 3.0
+        )
+        let fillPath = NSBezierPath(
+            roundedRect: fillRect,
+            xRadius: 1.2,
+            yRadius: 1.2
+        )
+        NSColor.systemYellow.setFill()
+        fillPath.fill()
+
+        if isCharging {
+            let bolt = NSBezierPath()
+            bolt.move(to: NSPoint(x: 11.4, y: 10.8))
+            bolt.line(to: NSPoint(x: 7.9, y: 5.9))
+            bolt.line(to: NSPoint(x: 10.4, y: 5.9))
+            bolt.line(to: NSPoint(x: 8.8, y: 1.4))
+            bolt.line(to: NSPoint(x: 14.0, y: 7.2))
+            bolt.line(to: NSPoint(x: 11.3, y: 7.2))
+            bolt.close()
+            NSColor.labelColor.setFill()
+            bolt.fill()
+        }
+
+        image.isTemplate = false
+        return image
     }
 }

@@ -10,21 +10,15 @@ import os.log
 internal final class BTSettingsViewController: NSViewController {
     private static let contentSize = NSSize(width: 520, height: 520)
 
-    private let autostartSetting = "autostart"
-    
     private var currentSettings: [String: NSObject & Sendable]? = nil
     private var presetLabel: NSTextField? = nil
     private var presetControl: NSSegmentedControl? = nil
     private weak var cancelButton: NSButton? = nil
     private var optimizedChargingWarning: NSTextField? = nil
-    private var userSettingsView: BTSettingsUserView? = nil
     private let initialFocusView = BTSettingsInitialFocusView()
     
     @IBOutlet private var tabView: NSTabView!
-    @IBOutlet private var userTab: NSTabViewItem!
     @IBOutlet private var powerTab: NSTabViewItem!
-    
-    @IBOutlet private var autostartSwitch: NSSwitch!
     
     @IBOutlet private var minChargeTextField: NSTextField!
     @IBOutlet private var minChargeSlider: NSSlider!
@@ -122,7 +116,6 @@ internal final class BTSettingsViewController: NSViewController {
         }.first {
             $0.action == #selector(self.cancelButtonAction(_:))
         }
-        self.addUserSettingsView()
         self.addUninstallButton()
         self.addPresetControl()
         self.addOptimizedChargingWarning()
@@ -133,23 +126,6 @@ internal final class BTSettingsViewController: NSViewController {
     }
     
     @IBAction private func doneButtonAction(_: NSButton) {
-        let autostart = (self.autostartSwitch.state == .on)
-        let success = autostart ?
-        BTLoginItem.enable() :
-        BTLoginItem.disable()
-        
-        if success {
-            UserDefaults.standard.setValue(
-                autostart,
-                forKey: self.autostartSetting
-            )
-        } else {
-            BTErrorHandler.errorHandler(
-                error: BTError.unknown,
-                window: self.view.window
-            )
-        }
-
         let settings: [String: NSObject & Sendable]
         do {
             settings = try BTSettingsPayloadFactory.make(
@@ -176,13 +152,7 @@ internal final class BTSettingsViewController: NSViewController {
         )
         else {
             os_log("Power settings have not changed, ignoring")
-            //
-            // If the previous operations failed, we displayed an error prompt
-            // and must not close the window.
-            //
-            if success {
-                self.view.window?.windowController?.close()
-            }
+            self.view.window?.windowController?.close()
             
             return
         }
@@ -190,14 +160,6 @@ internal final class BTSettingsViewController: NSViewController {
         Task {
             do {
                 try await BTDaemonXPCClient.setSettings(settings: settings)
-                //
-                // If the previous operations failed, we already displayed an
-                // error prompt and must not close the window.
-                //
-                guard success else {
-                    return
-                }
-                
                 self.view.window?.windowController?.close()
             } catch{
                 BTErrorHandler.errorHandler(
@@ -220,7 +182,6 @@ internal final class BTSettingsViewController: NSViewController {
         super.viewWillAppear()
         
         self.view.window?.initialFirstResponder = self.initialFocusView
-        self.initUserState()
         
         Task {
             await self.initPowerState()
@@ -279,48 +240,6 @@ internal final class BTSettingsViewController: NSViewController {
                 textField.lineBreakMode = .byTruncatingTail
             }
         }
-    }
-
-    private func addUserSettingsView() {
-        guard let separator = self.view.footerSeparator else {
-            assertionFailure()
-            return
-        }
-
-        for constraint in self.view.constraints {
-            guard
-                (constraint.firstItem as? NSBox) === separator,
-                constraint.firstAttribute == .top,
-                (constraint.secondItem as? NSTabView) === self.tabView
-            else {
-                continue
-            }
-
-            constraint.isActive = false
-        }
-
-        let userSettingsView = BTSettingsUserView()
-        self.view.addSubview(userSettingsView)
-
-        NSLayoutConstraint.activate([
-            userSettingsView.topAnchor.constraint(
-                equalTo: self.tabView.bottomAnchor,
-                constant: 8
-            ),
-            userSettingsView.leadingAnchor.constraint(
-                equalTo: self.view.leadingAnchor
-            ),
-            userSettingsView.trailingAnchor.constraint(
-                equalTo: self.view.trailingAnchor
-            ),
-            separator.topAnchor.constraint(
-                equalTo: userSettingsView.bottomAnchor,
-                constant: 20
-            ),
-        ])
-
-        self.autostartSwitch = userSettingsView.autostartSwitch
-        self.userSettingsView = userSettingsView
     }
 
     private func addUninstallButton() {
@@ -468,13 +387,6 @@ internal final class BTSettingsViewController: NSViewController {
         self.magSafeSyncSwitch.state = value ? .on : .off
     }
     
-    private func initUserState() {
-        let autostart = UserDefaults.standard.bool(
-            forKey: self.autostartSetting
-        )
-        self.autostartSwitch.state = autostart ? .on : .off
-    }
-    
     private func initPowerState() async {
         do {
             let settings = try await BTActions.getSettings()
@@ -525,12 +437,6 @@ private extension NSView {
         self.subviews.flatMap { subview in
             ([subview as? NSTextField].compactMap { $0 }) +
                 subview.allTextFields
-        }
-    }
-
-    var footerSeparator: NSBox? {
-        self.subviews.compactMap { $0 as? NSBox }.first {
-            $0.boxType == .separator
         }
     }
 }

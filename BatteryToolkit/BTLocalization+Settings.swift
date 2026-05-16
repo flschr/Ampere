@@ -34,16 +34,6 @@ extension BTLocalization {
             comment: "Warning shown when macOS Optimized Battery Charging is enabled"
         )
 
-        static let autostart = NSLocalizedString(
-            "Open Ampere automatically when you log in to your Mac",
-            comment: "Settings label for launching Ampere automatically on login"
-        )
-
-        static let menuBarExtraInfo = NSLocalizedString(
-            "Display a menu bar extra to easily control the power state of your Mac. The background activity is independent from the application and is unaffected by this setting.",
-            comment: "Settings description explaining the menu bar extra"
-        )
-
         static let uninstall = NSLocalizedString(
             "Uninstall",
             comment: "Settings section title for removing the background service and app data"

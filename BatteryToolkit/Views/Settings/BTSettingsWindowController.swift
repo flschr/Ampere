@@ -25,10 +25,6 @@ internal final class BTSettingsWindowController: NSWindowController {
         super.close()
     }
 
-    @IBAction private func userAction(_ sender: NSToolbarItem) {
-        self.window?.title = Self.appName
-    }
-
     @IBAction private func powerAction(_ sender: NSToolbarItem) {
         self.window?.title = Self.appName
     }

@@ -24,7 +24,6 @@
 		CE2400012D7D000000000001 /* Localizable.strings in Resources */ = {isa = PBXBuildFile; fileRef = CE2400102D7D000000000001 /* Localizable.strings */; };
 		CE2B96C028A7E2BB00FE3DDB /* GlobalSleep.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2B96BF28A7E2BB00FE3DDB /* GlobalSleep.swift */; };
 		CE30CBA128C48995001E2AC6 /* BTSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE30CBA028C48995001E2AC6 /* BTSettingsViewController.swift */; };
-		CE30CBA328C48995001E2AC6 /* BTSettingsUserView.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE30CBA228C48995001E2AC6 /* BTSettingsUserView.swift */; };
 		CE3179EA28DB540600E9C121 /* SimpleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3179E928DB540600E9C121 /* SimpleAuth.swift */; };
 		CE3179EC28DB543200E9C121 /* SimpleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3179E928DB540600E9C121 /* SimpleAuth.swift */; };
 		CE3179ED28DB543600E9C121 /* SimpleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3179E928DB540600E9C121 /* SimpleAuth.swift */; };
@@ -232,7 +231,6 @@
 		CE2B96C228A81C5100FE3DDB /* BTPreprocessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BTPreprocessor.h; sourceTree = "<group>"; };
 		CE2B96C328A81CB900FE3DDB /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		CE30CBA028C48995001E2AC6 /* BTSettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTSettingsViewController.swift; sourceTree = "<group>"; };
-		CE30CBA228C48995001E2AC6 /* BTSettingsUserView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTSettingsUserView.swift; sourceTree = "<group>"; };
 		CE3179E928DB540600E9C121 /* SimpleAuth.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SimpleAuth.swift; sourceTree = "<group>"; };
 		CE3179F228DC729900E9C121 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Upgrading.storyboard; sourceTree = "<group>"; };
 		CE3179F428DC72D800E9C121 /* BTUpgradingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTUpgradingViewController.swift; sourceTree = "<group>"; };
@@ -529,7 +527,6 @@
 				CE1F5E4128D76C6D00F61F67 /* Settings.storyboard */,
 				CE5E5AE728DE31EB00AF1D07 /* BTSettingsMenuItem.swift */,
 				CEAA00172E00000000000001 /* BTSettingsModel.swift */,
-				CE30CBA228C48995001E2AC6 /* BTSettingsUserView.swift */,
 				CE30CBA028C48995001E2AC6 /* BTSettingsViewController.swift */,
 				CEB4A42E28D4D4D0004FA277 /* BTSettingsWindowController.swift */,
 			);
@@ -874,7 +871,6 @@
 				CEAA00012E00000000000001 /* BTBatteryModels.swift in Sources */,
 				CE0DB56328BEB4E600B8FC4C /* BTSettingsInfo.swift in Sources */,
 				CE5E5AF328DF183E00AF1D07 /* BTAuthorizationRights.swift in Sources */,
-				CE30CBA328C48995001E2AC6 /* BTSettingsUserView.swift in Sources */,
 				CEAA000E2E00000000000001 /* BTSettingsModel.swift in Sources */,
 				CE30CBA128C48995001E2AC6 /* BTSettingsViewController.swift in Sources */,
 				CE5E5AE528DE292D00AF1D07 /* BTCommandsMenuDelegate.swift in Sources */,

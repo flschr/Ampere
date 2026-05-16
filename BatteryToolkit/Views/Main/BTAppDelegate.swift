@@ -71,6 +71,10 @@ internal final class BTAppDelegate: NSObject, NSApplicationDelegate {
 
             do {
                 try await BTDaemonXPCClient.isSupported()
+                if !BTActions.enableLoginItem() {
+                    BTErrorHandler.errorHandler(error: BTError.unknown)
+                }
+
                 self.disableBackgroundItem.isEnabled = true
                 self.settingsItem.isEnabled = true
                 self.commandsMenuItem.isHidden = false

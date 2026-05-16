@@ -23,6 +23,10 @@ internal enum BTActions {
         BTDaemonXPCClient.disconnectDaemon()
     }
 
+    static func enableLoginItem() -> Bool {
+        return BTLoginItem.enable()
+    }
+
     @BTBackgroundActor static func disablePowerAdapter() async throws {
         try await BTDaemonXPCClient.disablePowerAdapter()
     }

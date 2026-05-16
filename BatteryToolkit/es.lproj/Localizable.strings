@@ -48,8 +48,6 @@
 "Travel" = "Viaje";
 "Preset:" = "Preajuste:";
 "macOS Optimized Battery Charging is on. Turn it off in Battery settings so Ampere can manage charging reliably." = "La carga optimizada de la batería de macOS está activada. Desactívala en los ajustes de Batería para que Ampere pueda gestionar la carga de forma fiable.";
-"Open Ampere automatically when you log in to your Mac" = "Abrir Ampere automáticamente al iniciar sesión en tu Mac";
-"Display a menu bar extra to easily control the power state of your Mac. The background activity is independent from the application and is unaffected by this setting." = "Muestra un elemento en la barra de menús para controlar fácilmente el estado de energía de tu Mac. La actividad en segundo plano es independiente de la aplicación y no se ve afectada por este ajuste.";
 "Uninstall" = "Desinstalar";
 "Remove the background service, disable automatic startup, delete Ampere's local settings, and move the app to the Trash." = "Elimina el servicio en segundo plano, desactiva el inicio automático, borra los ajustes locales de Ampere y mueve la app a la Papelera.";
 "Uninstall Ampere…" = "Desinstalar Ampere…";

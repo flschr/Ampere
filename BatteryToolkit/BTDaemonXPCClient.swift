@@ -119,6 +119,28 @@ internal enum BTDaemonXPCClient {
         }
     }
 
+    static func enableLowPowerMode() async throws {
+        let authData = try await BTAppXPCClient.getManageAuthorization()
+        try await withCheckedThrowingContinuation { continuation in
+            self.runExecute(
+                continuation: continuation,
+                authData: authData,
+                command: BTDaemonCommCommand.enableLowPowerMode
+            )
+        }
+    }
+
+    static func disableLowPowerMode() async throws {
+        let authData = try await BTAppXPCClient.getManageAuthorization()
+        try await withCheckedThrowingContinuation { continuation in
+            self.runExecute(
+                continuation: continuation,
+                authData: authData,
+                command: BTDaemonCommCommand.disableLowPowerMode
+            )
+        }
+    }
+
     static func getSettings() async throws -> [String: NSObject & Sendable] {
         try await withCheckedThrowingContinuation { continuation in
             self.executeDaemonRetry(continuation: continuation) { daemon in

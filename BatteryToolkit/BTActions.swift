@@ -55,6 +55,18 @@ internal enum BTActions {
         try await BTDaemonXPCClient.setSettings(settings: settings)
     }
 
+    @BTBackgroundActor static func getLowPowerModeEnabled() throws -> Bool {
+        return try BTLowPowerMode.isEnabled()
+    }
+
+    @BTBackgroundActor static func setLowPowerModeEnabled(_ enabled: Bool) async throws {
+        if enabled {
+            try await BTDaemonXPCClient.enableLowPowerMode()
+        } else {
+            try await BTDaemonXPCClient.disableLowPowerMode()
+        }
+    }
+
     @BTBackgroundActor static func removeDaemon() async throws {
         try await BTDaemonManagement.remove()
     }

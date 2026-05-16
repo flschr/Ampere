@@ -26,6 +26,8 @@
 "Your Mac is not supported." = "Dein Mac wird nicht unterstützt.";
 "Ampere does not support managing the power state of your Mac. Background activity will be disabled." = "Ampere unterstützt die Verwaltung des Energiezustands deines Mac nicht. Die Hintergrundaktivität wird deaktiviert.";
 "Preferences" = "Einstellungen";
+"Running on Battery" = "Auf Akku";
+"Using Power Adapter" = "Netzteil wird verwendet";
 "Charging until %d %%" = "Lädt bis %d %%";
 "Charging to 100 %" = "Lädt auf 100 %";
 "Holding charge; resumes below %d %%" = "Ladestand wird gehalten; lädt unter %d %% weiter";
@@ -33,6 +35,11 @@
 "Waiting; will charge to 100 %" = "Wartet; lädt auf 100 %";
 "Charge to %d %% Now" = "Jetzt auf %d %% laden";
 "Request Charging to %d %% Now" = "Laden auf %d %% jetzt anfordern";
+"Run on Battery" = "Auf Akku laufen";
+"Use Power Adapter" = "Netzteil verwenden";
+"Low Power Mode" = "Stromsparmodus";
+"Until Empty: %@" = "Bis leer: %@";
+"Until %d %%: %@" = "Bis %d %%: %@";
 "Everyday" = "Alltag";
 "Desk" = "Schreibtisch";
 "Travel" = "Reise";

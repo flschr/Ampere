@@ -7,6 +7,16 @@ import Foundation
 
 extension BTLocalization {
     enum Commands {
+        static let runningOnBattery = NSLocalizedString(
+            "Running on Battery",
+            comment: "Menu status indicating the Mac is running from battery"
+        )
+
+        static let usingPowerAdapter = NSLocalizedString(
+            "Using Power Adapter",
+            comment: "Menu status indicating the Mac is using the power adapter"
+        )
+
         static func chargingUntil(maxCharge: Int) -> String {
             String.localizedStringWithFormat(
                 NSLocalizedString(
@@ -64,6 +74,42 @@ extension BTLocalization {
                     comment: "Menu command to request charging up to the configured charge limit"
                 ),
                 maxCharge
+            )
+        }
+
+        static let runOnBattery = NSLocalizedString(
+            "Run on Battery",
+            comment: "Menu command to disable the power adapter and run from battery"
+        )
+
+        static let usePowerAdapter = NSLocalizedString(
+            "Use Power Adapter",
+            comment: "Menu command to enable the power adapter"
+        )
+
+        static let lowPowerMode = NSLocalizedString(
+            "Low Power Mode",
+            comment: "Menu command to toggle macOS Low Power Mode"
+        )
+
+        static func untilEmpty(duration: String) -> String {
+            String.localizedStringWithFormat(
+                NSLocalizedString(
+                    "Until Empty: %@",
+                    comment: "Menu status showing time remaining until the battery is empty"
+                ),
+                duration
+            )
+        }
+
+        static func untilCharge(percent: Int, duration: String) -> String {
+            String.localizedStringWithFormat(
+                NSLocalizedString(
+                    "Until %d %%: %@",
+                    comment: "Menu status showing time remaining until a battery percentage is reached"
+                ),
+                percent,
+                duration
             )
         }
     }

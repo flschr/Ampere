@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 //
 
+import Foundation
 import IOKit
 import IOKit.ps
 import notify
@@ -26,6 +27,23 @@ public enum IOPSPrivate {
         let isFullyCharged = ((packedBatteryBits & kPSTimeRemainingNotifyFullyChargedBit) != 0)
 
         return (percent, isCharging, isFullyCharged)
+    }
+
+    static func GetTimeToEmptyEstimate() -> TimeInterval? {
+        let estimate = IOPSGetTimeRemainingEstimate()
+        if estimate > 0 {
+            return estimate
+        }
+
+        return self.GetPowerSourceMinutes(key: "Time to Empty").map {
+            TimeInterval($0 * 60)
+        }
+    }
+
+    static func GetTimeToFullChargeEstimate() -> TimeInterval? {
+        self.GetPowerSourceMinutes(key: "Time to Full Charge").map {
+            TimeInterval($0 * 60)
+        }
     }
 
     static func DrawingUnlimitedPower() -> Bool {
@@ -64,6 +82,33 @@ public enum IOPSPrivate {
         }
 
         return false
+    }
+
+    private static func GetPowerSourceMinutes(key: String) -> Int? {
+        guard
+            let powerSources = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(),
+            let powerSourceList = IOPSCopyPowerSourcesList(powerSources)?
+                .takeRetainedValue() as? [CFTypeRef]
+        else {
+            return nil
+        }
+
+        for source in powerSourceList {
+            guard
+                let description = IOPSGetPowerSourceDescription(
+                    powerSources,
+                    source
+                )?.takeUnretainedValue() as? [String: Any],
+                let minutes = description[key] as? Int,
+                minutes >= 0
+            else {
+                continue
+            }
+
+            return minutes
+        }
+
+        return nil
     }
     
     private static func GetPackedBatteryBits() -> UInt64? {

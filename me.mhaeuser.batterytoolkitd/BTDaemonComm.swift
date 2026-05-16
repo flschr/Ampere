@@ -80,6 +80,48 @@ internal final class BTDaemonComm: NSObject, BTDaemonCommProtocol, Sendable {
                 reply(BTError(fromBool: success).rawValue)
                 return
 
+            case BTDaemonCommCommand.enableLowPowerMode.rawValue:
+                let authorized = self.checkRight(
+                    authData: authData,
+                    rightName: BTAuthorizationRights.manage
+                )
+                guard authorized else {
+                    reply(BTError.notAuthorized.rawValue)
+                    return
+                }
+
+                do {
+                    try BTLowPowerMode.setEnabled(true)
+                    reply(BTError.success.rawValue)
+                } catch {
+                    os_log(
+                        "Failed to enable Low Power Mode: \(error, privacy: .public)"
+                    )
+                    reply(BTError.commFailed.rawValue)
+                }
+                return
+
+            case BTDaemonCommCommand.disableLowPowerMode.rawValue:
+                let authorized = self.checkRight(
+                    authData: authData,
+                    rightName: BTAuthorizationRights.manage
+                )
+                guard authorized else {
+                    reply(BTError.notAuthorized.rawValue)
+                    return
+                }
+
+                do {
+                    try BTLowPowerMode.setEnabled(false)
+                    reply(BTError.success.rawValue)
+                } catch {
+                    os_log(
+                        "Failed to disable Low Power Mode: \(error, privacy: .public)"
+                    )
+                    reply(BTError.commFailed.rawValue)
+                }
+                return
+
             default:
                 //
                 // Power state management functions may only be invoked when

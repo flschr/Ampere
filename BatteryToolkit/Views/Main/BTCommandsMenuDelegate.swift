@@ -9,6 +9,7 @@ import os.log
 @MainActor
 internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
     private static let batteryLevelItemTag = 23_042
+    private static let remainingTimeItemTag = 23_043
 
     @IBOutlet private var infoUnknownStateItem: NSMenuItem!
     @IBOutlet private var infoPausedItem: NSMenuItem!
@@ -36,24 +37,39 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
     @IBOutlet private var requestChargingToLimitItem: NSMenuItem!
     @IBOutlet private var cancelChargingRequestItem: NSMenuItem!
 
+    @IBOutlet private var lowPowerModeItem: NSMenuItem!
+
     @IBOutlet private var pauseActivityItem: NSMenuItem!
     @IBOutlet private var resumeActivityItem: NSMenuItem!
 
     private var refreshTimer: DispatchSourceTimer? = nil
     private weak var batteryLevelItem: NSMenuItem?
+    private weak var remainingTimeItem: NSMenuItem?
 
-    private func ensureBatteryLevelItem(in menu: NSMenu) {
-        if let item = menu.item(withTag: Self.batteryLevelItemTag) {
-            self.batteryLevelItem = item
-            return
-        }
-
+    private func disabledInfoItem(tag: Int) -> NSMenuItem {
         let item = NSMenuItem()
-        item.tag = Self.batteryLevelItemTag
+        item.tag = tag
         item.isEnabled = false
         item.isHidden = true
-        menu.insertItem(item, at: 0)
-        self.batteryLevelItem = item
+        return item
+    }
+
+    private func ensureDynamicInfoItems(in menu: NSMenu) {
+        if let item = menu.item(withTag: Self.batteryLevelItemTag) {
+            self.batteryLevelItem = item
+        } else {
+            let item = self.disabledInfoItem(tag: Self.batteryLevelItemTag)
+            menu.insertItem(item, at: 0)
+            self.batteryLevelItem = item
+        }
+
+        if let item = menu.item(withTag: Self.remainingTimeItemTag) {
+            self.remainingTimeItem = item
+        } else {
+            let item = self.disabledInfoItem(tag: Self.remainingTimeItemTag)
+            menu.insertItem(item, at: 1)
+            self.remainingTimeItem = item
+        }
     }
 
     private func hidePowerItems() {
@@ -67,7 +83,27 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         self.cancelChargingRequestItem.isHidden = true
     }
 
+    private func refreshLowPowerModeItem() async {
+        do {
+            let enabled = try await BTActions.getLowPowerModeEnabled()
+            self.lowPowerModeItem.title = BTLocalization.Commands.lowPowerMode
+            self.lowPowerModeItem.state = enabled ? .on : .off
+            self.lowPowerModeItem.isEnabled = true
+            self.lowPowerModeItem.isHidden = false
+        } catch {
+            os_log(
+                "Failed to refresh Low Power Mode: \(error, privacy: .public)"
+            )
+            self.lowPowerModeItem.title = BTLocalization.Commands.lowPowerMode
+            self.lowPowerModeItem.state = .off
+            self.lowPowerModeItem.isEnabled = false
+            self.lowPowerModeItem.isHidden = false
+        }
+    }
+
     private func refresh() async {
+        await self.refreshLowPowerModeItem()
+
         do {
             let state = try await BTActions.getState()
             let settings = try await BTActions.getSettings()
@@ -79,6 +115,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
 
             guard enabled else {
                 self.batteryLevelItem?.isHidden = true
+                self.remainingTimeItem?.isHidden = true
                 self.infoUnknownStateItem.isHidden = true
                 self.infoPowerAdapterEnabledItem.isHidden = true
                 self.infoPowerAdapterDisabledItem.isHidden = true
@@ -137,21 +174,38 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
             self.batteryLevelItem?.title =
                 BTLocalization.StatusItem.batteryLevel(percent: batteryPercent)
             self.batteryLevelItem?.isHidden = false
+            self.updateRemainingTimeItem(
+                powerDisabled: powerDisabled,
+                connected: connected,
+                chargingDisabled: chargingDisabled,
+                batteryPercent: batteryPercent,
+                chargingMode: chargingMode,
+                maxCharge: maxCharge,
+                minCharge: minCharge
+            )
             
             self.infoUnknownStateItem.isHidden = true
             
             if !powerDisabled {
                 self.infoPowerAdapterDisabledItem.isHidden = true
                 self.infoPowerAdapterEnabledItem.isHidden = false
+                self.infoPowerAdapterEnabledItem.title =
+                    BTLocalization.Commands.usingPowerAdapter
                 
                 self.enablePowerAdapterItem.isHidden = true
                 self.disablePowerAdapterItem.isHidden = false
+                self.disablePowerAdapterItem.title =
+                    BTLocalization.Commands.runOnBattery
             } else {
                 self.infoPowerAdapterEnabledItem.isHidden = true
                 self.infoPowerAdapterDisabledItem.isHidden = false
+                self.infoPowerAdapterDisabledItem.title =
+                    BTLocalization.Commands.runningOnBattery
                 
                 self.disablePowerAdapterItem.isHidden = true
                 self.enablePowerAdapterItem.isHidden = false
+                self.enablePowerAdapterItem.title =
+                    BTLocalization.Commands.usePowerAdapter
             }
             
             if !chargingDisabled {
@@ -295,6 +349,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
             }
         } catch {
             self.batteryLevelItem?.isHidden = true
+            self.remainingTimeItem?.isHidden = true
             self.infoPowerAdapterEnabledItem.isHidden = true
             self.infoPowerAdapterDisabledItem.isHidden = true
             self.infoChargingToLimitItem.isHidden = true
@@ -315,7 +370,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
 
     func menuWillOpen(_ menu: NSMenu) {
         assert(self.refreshTimer == nil)
-        self.ensureBatteryLevelItem(in: menu)
+        self.ensureDynamicInfoItems(in: menu)
 
         let timer = DispatchSource.makeTimerSource(queue: DispatchQueue.main)
         timer.setEventHandler {
@@ -333,6 +388,156 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
 
         self.refreshTimer!.cancel()
         self.refreshTimer = nil
+    }
+
+    private func updateRemainingTimeItem(
+        powerDisabled: Bool,
+        connected: Bool,
+        chargingDisabled: Bool,
+        batteryPercent: Int,
+        chargingMode: Int,
+        maxCharge: Int,
+        minCharge: Int
+    ) {
+        guard
+            let title = self.remainingTimeTitle(
+                powerDisabled: powerDisabled,
+                connected: connected,
+                chargingDisabled: chargingDisabled,
+                batteryPercent: batteryPercent,
+                chargingMode: chargingMode,
+                maxCharge: maxCharge,
+                minCharge: minCharge
+            )
+        else {
+            self.remainingTimeItem?.isHidden = true
+            return
+        }
+
+        self.remainingTimeItem?.title = title
+        self.remainingTimeItem?.isHidden = false
+    }
+
+    private func remainingTimeTitle(
+        powerDisabled: Bool,
+        connected: Bool,
+        chargingDisabled: Bool,
+        batteryPercent: Int,
+        chargingMode: Int,
+        maxCharge: Int,
+        minCharge: Int
+    ) -> String? {
+        if !connected || powerDisabled {
+            guard let estimate = IOPSPrivate.GetTimeToEmptyEstimate() else {
+                return nil
+            }
+
+            if chargingDisabled &&
+                chargingMode == Int(BTStateInfo.ChargingMode.standard.rawValue) &&
+                batteryPercent > minCharge {
+                return self.timeTitle(
+                    targetPercent: minCharge,
+                    seconds: self.scaledDischargeTime(
+                        estimate: estimate,
+                        currentPercent: batteryPercent,
+                        targetPercent: minCharge
+                    )
+                )
+            }
+
+            return self.timeTitleToEmpty(seconds: estimate)
+        }
+
+        guard !chargingDisabled else {
+            return nil
+        }
+
+        guard let estimate = IOPSPrivate.GetTimeToFullChargeEstimate() else {
+            return nil
+        }
+
+        switch chargingMode {
+        case Int(BTStateInfo.ChargingMode.toFull.rawValue):
+            return self.timeTitle(
+                targetPercent: 100,
+                seconds: self.scaledChargeTime(
+                    estimate: estimate,
+                    currentPercent: batteryPercent,
+                    targetPercent: 100
+                )
+            )
+
+        default:
+            return self.timeTitle(
+                targetPercent: maxCharge,
+                seconds: self.scaledChargeTime(
+                    estimate: estimate,
+                    currentPercent: batteryPercent,
+                    targetPercent: maxCharge
+                )
+            )
+        }
+    }
+
+    private func scaledDischargeTime(
+        estimate: TimeInterval,
+        currentPercent: Int,
+        targetPercent: Int
+    ) -> TimeInterval? {
+        guard currentPercent > 0 && targetPercent < currentPercent else {
+            return nil
+        }
+
+        return estimate *
+            (Double(currentPercent - targetPercent) / Double(currentPercent))
+    }
+
+    private func scaledChargeTime(
+        estimate: TimeInterval,
+        currentPercent: Int,
+        targetPercent: Int
+    ) -> TimeInterval? {
+        guard currentPercent < 100 && targetPercent > currentPercent else {
+            return nil
+        }
+
+        return estimate *
+            (Double(targetPercent - currentPercent) / Double(100 - currentPercent))
+    }
+
+    private func timeTitleToEmpty(seconds: TimeInterval?) -> String? {
+        guard let duration = self.durationString(seconds: seconds) else {
+            return nil
+        }
+
+        return BTLocalization.Commands.untilEmpty(duration: duration)
+    }
+
+    private func timeTitle(
+        targetPercent: Int,
+        seconds: TimeInterval?
+    ) -> String? {
+        guard let duration = self.durationString(seconds: seconds) else {
+            return nil
+        }
+
+        return BTLocalization.Commands.untilCharge(
+            percent: targetPercent,
+            duration: duration
+        )
+    }
+
+    private func durationString(seconds: TimeInterval?) -> String? {
+        guard let seconds, seconds.isFinite, seconds > 0 else {
+            return nil
+        }
+
+        let formatter = DateComponentsFormatter()
+        formatter.allowedUnits = [.hour, .minute]
+        formatter.unitsStyle = .abbreviated
+        formatter.maximumUnitCount = 2
+
+        return formatter.string(from: seconds)
     }
 
     @IBAction private func quitHandler(sender _: NSMenuItem) {
@@ -383,6 +588,18 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         Task {
             do {
                 try await BTActions.disableCharging()
+            } catch {
+                BTErrorHandler.errorHandler(error: error)
+            }
+        }
+    }
+
+    @IBAction private func toggleLowPowerModeHandler(sender _: NSMenuItem) {
+        Task {
+            do {
+                let enabled = try await BTActions.getLowPowerModeEnabled()
+                try await BTActions.setLowPowerModeEnabled(!enabled)
+                await self.refreshLowPowerModeItem()
             } catch {
                 BTErrorHandler.errorHandler(error: error)
             }

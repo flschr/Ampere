@@ -14,6 +14,7 @@ internal struct BTBatteryState: Equatable, Sendable {
     let progress: BTStateInfo.ChargingProgress
     let chargingMode: BTStateInfo.ChargingMode
     let maxCharge: Int
+    let thermallyLimited: Bool
 
     init(
         enabled: Bool,
@@ -23,7 +24,8 @@ internal struct BTBatteryState: Equatable, Sendable {
         batteryPercent: Int = 100,
         progress: BTStateInfo.ChargingProgress = .full,
         chargingMode: BTStateInfo.ChargingMode = .standard,
-        maxCharge: Int = Int(BTSettingsInfo.Defaults.maxCharge)
+        maxCharge: Int = Int(BTSettingsInfo.Defaults.maxCharge),
+        thermallyLimited: Bool = false
     ) {
         self.enabled = enabled
         self.powerDisabled = powerDisabled
@@ -33,6 +35,7 @@ internal struct BTBatteryState: Equatable, Sendable {
         self.progress = progress
         self.chargingMode = chargingMode
         self.maxCharge = maxCharge
+        self.thermallyLimited = thermallyLimited
     }
 
     var usesPowerAdapter: Bool {
@@ -78,6 +81,9 @@ internal struct BTBatteryState: Equatable, Sendable {
         else {
             throw BTError.malformedData
         }
+        let thermallyLimited =
+            (payload[BTStateInfo.Keys.thermallyLimited] as? NSNumber)?
+                .boolValue ?? false
 
         self.init(
             enabled: enabled,
@@ -87,7 +93,8 @@ internal struct BTBatteryState: Equatable, Sendable {
             batteryPercent: batteryPercent,
             progress: progress,
             chargingMode: chargingMode,
-            maxCharge: maxCharge
+            maxCharge: maxCharge,
+            thermallyLimited: thermallyLimited
         )
     }
 
@@ -115,6 +122,9 @@ internal struct BTBatteryState: Equatable, Sendable {
                 value: self.chargingMode.rawValue
             ),
             BTStateInfo.Keys.maxCharge: NSNumber(value: self.maxCharge),
+            BTStateInfo.Keys.thermallyLimited: NSNumber(
+                value: self.thermallyLimited
+            ),
         ]
     }
 }

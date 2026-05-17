@@ -48,9 +48,14 @@ extension BTLocalization {
                     "Charging paused until %d%%",
                     comment: "Menu status indicating charging is paused until battery drops below the minimum limit"
                 ),
-                max(minCharge - 1, 0)
+                minCharge
             )
         }
+
+        static let chargingPausedHotBattery = NSLocalizedString(
+            "Charging paused: battery too warm",
+            comment: "Menu status indicating charging is paused because the battery is too warm"
+        )
 
         static func waitingToCharge(maxCharge: Int) -> String {
             String.localizedStringWithFormat(

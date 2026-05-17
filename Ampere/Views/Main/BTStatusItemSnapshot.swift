@@ -71,9 +71,16 @@ internal enum BTStatusItemSnapshotFactory {
 
         let minCharge =
             (settings[BTSettingsInfo.Keys.minCharge] as? NSNumber)?.intValue
-        let toolTip = minCharge.map {
-            BTLocalization.StatusItem.holding(minCharge: $0)
-        } ?? BTLocalization.StatusItem.holdingUnknown
+        let thermallyLimited =
+            (state[BTStateInfo.Keys.thermallyLimited] as? NSNumber)?.boolValue
+        let toolTip: String
+        if thermallyLimited == true {
+            toolTip = BTLocalization.StatusItem.holdingHotBattery
+        } else {
+            toolTip = minCharge.map {
+                BTLocalization.StatusItem.holding(minCharge: $0)
+            } ?? BTLocalization.StatusItem.holdingUnknown
+        }
         return self.batterySnapshot(
             percent: batteryPercent,
             isCharging: false,

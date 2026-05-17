@@ -26,6 +26,17 @@ internal enum BTPowerEventStateMachine {
         case restoreSleep
     }
 
+    enum ThermalEffect: Equatable {
+        case none
+        case pauseCharging
+        case resumeCharging
+    }
+
+    enum Thermal {
+        static let pauseTemperatureCelsius = 40.0
+        static let resumeTemperatureCelsius = 38.0
+    }
+
     static func hysteresisEffect(
         percent: UInt8,
         minCharge: UInt8,
@@ -78,6 +89,50 @@ internal enum BTPowerEventStateMachine {
         chargingMode: BTStateInfo.ChargingMode
     ) -> Bool {
         return chargingMode == .standard
+    }
+
+    static func thermalEffect(
+        temperatureCelsius: Double?,
+        thermallyLimited: Bool,
+        chargingDisabled: Bool,
+        percent: UInt8,
+        minCharge: UInt8,
+        chargingMode: BTStateInfo.ChargingMode,
+        pauseTemperatureCelsius: Double = Thermal.pauseTemperatureCelsius,
+        resumeTemperatureCelsius: Double = Thermal.resumeTemperatureCelsius
+    ) -> ThermalEffect {
+        guard let temperatureCelsius else {
+            return thermallyLimited ? .resumeCharging : .none
+        }
+
+        if thermallyLimited {
+            return temperatureCelsius <= resumeTemperatureCelsius ?
+                .resumeCharging :
+                .none
+        }
+
+        let chargingExpected = !chargingDisabled ||
+            chargingMode != .standard ||
+            percent < minCharge
+        guard chargingExpected,
+              temperatureCelsius >= pauseTemperatureCelsius else {
+            return .none
+        }
+
+        return .pauseCharging
+    }
+
+    static func thermalRecoveryEffect(
+        percent: UInt8,
+        maxCharge: UInt8,
+        chargingMode: BTStateInfo.ChargingMode
+    ) -> ChargingEffect {
+        switch chargingMode {
+        case .toFull:
+            return percent < 100 ? .enableCharging : .none
+        case .standard, .toLimit:
+            return percent < maxCharge ? .enableCharging : .none
+        }
     }
 
     static func chargingSleepEffect(chargingDisabled: Bool) -> SleepEffect {

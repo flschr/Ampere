@@ -78,11 +78,35 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
         XCTAssertFalse(snapshot.notCharging.isHidden)
         XCTAssertEqual(
             snapshot.statusHeader.title,
-            "Charging paused until 49%"
+            "Charging paused until 50%"
         )
         XCTAssertFalse(snapshot.chargeToLimitNow.isHidden)
         XCTAssertTrue(snapshot.requestChargingToFull.isHidden)
         XCTAssertTrue(snapshot.requestChargingToLimit.isHidden)
+    }
+
+    func testThermalLimitShowsHotBatteryStatus() {
+        let snapshot = BTCommandsMenuSnapshotFactory.make(
+            state: BTBatteryState(
+                enabled: true,
+                connected: true,
+                chargingDisabled: true,
+                batteryPercent: 75,
+                progress: .belowMax,
+                chargingMode: .toFull,
+                maxCharge: 80,
+                thermallyLimited: true
+            ),
+            settings: self.settings,
+            timeToEmptyEstimate: nil,
+            timeToFullEstimate: nil
+        )
+
+        XCTAssertFalse(snapshot.notCharging.isHidden)
+        XCTAssertEqual(
+            snapshot.statusHeader.title,
+            "Charging paused: battery too warm"
+        )
     }
 
     func testOnBatteryStandardModeShowsRequestActions() {
@@ -102,7 +126,7 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
         )
 
         XCTAssertFalse(snapshot.notCharging.isHidden)
-        XCTAssertEqual(snapshot.statusHeader.title, "Charging paused until 69%")
+        XCTAssertEqual(snapshot.statusHeader.title, "Charging paused until 70%")
         XCTAssertTrue(snapshot.remainingTime.title?.contains("until 70%") == true)
         XCTAssertFalse(snapshot.requestChargingToFull.isHidden)
         XCTAssertTrue(snapshot.requestChargingToLimit.isHidden)

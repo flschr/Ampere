@@ -57,6 +57,11 @@ extension BTLocalization {
             comment: "Menu bar tooltip when charging is paused"
         )
 
+        static let holdingHotBattery = NSLocalizedString(
+            "Charging paused: battery too warm",
+            comment: "Menu bar tooltip when charging is paused because the battery is too warm"
+        )
+
         static func holding(minCharge: Int) -> String {
             String.localizedStringWithFormat(
                 NSLocalizedString(

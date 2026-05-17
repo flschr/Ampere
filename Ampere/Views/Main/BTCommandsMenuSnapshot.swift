@@ -167,6 +167,13 @@ internal enum BTCommandsMenuSnapshotFactory {
         settings: BTBatterySettings,
         snapshot: inout BTCommandsMenuSnapshot
     ) {
+        if state.thermallyLimited {
+            snapshot.notCharging = .visible(
+                title: BTLocalization.Commands.chargingPausedHotBattery
+            )
+            return
+        }
+
         guard state.connected, !state.powerDisabled else {
             if state.chargingDisabled {
                 switch state.chargingMode {

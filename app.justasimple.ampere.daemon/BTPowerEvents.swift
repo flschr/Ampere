@@ -3,6 +3,7 @@
 // SPDX-License-Identifier: BSD-3-Clause
 //
 
+import Dispatch
 import Foundation
 import IOKit.ps
 import os.log
@@ -13,9 +14,12 @@ internal enum BTPowerEvents {
 
     private(set) static var chargingMode = BTStateInfo.ChargingMode.standard
     private(set) static var unlimitedPower = false
+    private(set) static var thermallyLimited = false
 
     private static var powerCreated = false
     private static var percentCreated = false
+    private static var thermalTimer: DispatchSourceTimer? = nil
+    private static let thermalCheckInterval: TimeInterval = 120
 
     static func start() throws {
         let smcSuccess = SMCComm.start()
@@ -65,6 +69,8 @@ internal enum BTPowerEvents {
 
         self.unregisterLimitedPowerHandler()
         self.unregisterPercentChangedHandler()
+        self.stopThermalTimer()
+        self.thermallyLimited = false
         self.restoreState()
         SMCComm.stop()
     }
@@ -109,6 +115,7 @@ internal enum BTPowerEvents {
 
     static func disableCharging(percent: UInt8) -> Bool {
         self.chargingMode = .standard
+        self.thermallyLimited = false
         return BTPowerState.disableCharging(percent: percent)
     }
 
@@ -210,7 +217,7 @@ internal enum BTPowerEvents {
         }
 
         let percent = self.handlePercentChanged()
-        guard self.unlimitedPower else {
+        guard self.unlimitedPower, !self.thermallyLimited else {
             return true
         }
         //
@@ -228,6 +235,7 @@ internal enum BTPowerEvents {
             break
         }
 
+        self.updateThermalTimer()
         return true
     }
 
@@ -248,12 +256,56 @@ internal enum BTPowerEvents {
         }
 
         if self.unlimitedPower {
-            self.handleChargeHysteresis(percent: percent)
+            self.handleConnectedPower(percent: percent)
         } else {
             self.handleDisconnectedRecovery(percent: percent)
         }
 
         return percent
+    }
+
+    private static func handleConnectedPower(percent: UInt8) {
+        if !self.handleThermalProtection(percent: percent) {
+            self.handleChargeHysteresis(percent: percent)
+        }
+
+        self.updateThermalTimer()
+    }
+
+    @discardableResult
+    private static func handleThermalProtection(percent: UInt8) -> Bool {
+        switch BTPowerEventStateMachine.thermalEffect(
+            temperatureCelsius: IOPSPrivate.GetBatteryTemperatureCelsius(),
+            thermallyLimited: self.thermallyLimited,
+            chargingDisabled: BTPowerState.isChargingDisabled(),
+            percent: percent,
+            minCharge: BTSettings.minCharge,
+            chargingMode: self.chargingMode
+        ) {
+        case .pauseCharging:
+            self.thermallyLimited = true
+            _ = BTPowerState.disableCharging(percent: percent)
+            return true
+        case .resumeCharging:
+            self.thermallyLimited = false
+            self.resumeChargingAfterThermalLimit(percent: percent)
+            return false
+        case .none:
+            return self.thermallyLimited
+        }
+    }
+
+    private static func resumeChargingAfterThermalLimit(percent: UInt8) {
+        switch BTPowerEventStateMachine.thermalRecoveryEffect(
+            percent: percent,
+            maxCharge: BTSettings.maxCharge,
+            chargingMode: self.chargingMode
+        ) {
+        case .enableCharging:
+            _ = BTPowerState.enableCharging(percent: percent)
+        case .disableCharging, .none:
+            break
+        }
     }
 
     private static func handleChargeHysteresis(percent: UInt8) {
@@ -309,16 +361,24 @@ internal enum BTPowerEvents {
             return false
         }
 
+        self.unlimitedPower = self.drawingUnlimitedPower()
+        if self.unlimitedPower {
+            self.disableLowPowerModeForPowerAdapter()
+            guard !self.handleThermalProtection(percent: percent) else {
+                self.updateThermalTimer()
+                return true
+            }
+        }
+
         let chargingEnabled = BTPowerState.enableCharging(
             percent: percent,
             disablesSleep: self.unlimitedPower,
             force: force
         )
-        self.unlimitedPower = self.drawingUnlimitedPower()
         if self.unlimitedPower {
-            self.disableLowPowerModeForPowerAdapter()
             _ = BTPowerState.enableCharging(percent: percent, force: force)
         }
+        self.updateThermalTimer()
 
         return chargingEnabled
     }
@@ -335,7 +395,10 @@ internal enum BTPowerEvents {
                 os_log("Failed to register percent changed handler")
                 self.restoreDefaults()
             }
+            self.updateThermalTimer()
         } else {
+            self.stopThermalTimer()
+            self.thermallyLimited = false
             self.normalizeLowPowerModeForBatteryPower()
             let (percent, _, _) = BTPowerState.getPercentRemaining()
             if BTPowerEventStateMachine.disconnectedRecoveryEffect(
@@ -417,6 +480,7 @@ internal enum BTPowerEvents {
         if BTSettings.magSafeSync {
             _ = SMCComm.MagSafe.setSystem()
         }
+        self.thermallyLimited = false
     }
 
     private static func enableBelowLimitMode(limit: UInt8) -> Bool {
@@ -433,6 +497,11 @@ internal enum BTPowerEvents {
             return false
         }
 
+        if self.unlimitedPower, self.handleThermalProtection(percent: percent) {
+            self.updateThermalTimer()
+            return true
+        }
+
         if BTPowerEventStateMachine.belowLimitModeEffect(
             percent: percent,
             limit: limit
@@ -443,7 +512,52 @@ internal enum BTPowerEvents {
             )
         }
 
+        self.updateThermalTimer()
         return true
+    }
+
+    private static func updateThermalTimer() {
+        let needsTimer = self.unlimitedPower &&
+            (!BTPowerState.isChargingDisabled() || self.thermallyLimited)
+        if needsTimer {
+            self.startThermalTimer()
+        } else {
+            self.stopThermalTimer()
+        }
+    }
+
+    private static func startThermalTimer() {
+        guard self.thermalTimer == nil else {
+            return
+        }
+
+        let timer = DispatchSource.makeTimerSource(queue: DispatchQueue.main)
+        timer.schedule(
+            deadline: .now() + self.thermalCheckInterval,
+            repeating: self.thermalCheckInterval
+        )
+        timer.setEventHandler {
+            Task { @MainActor in
+                self.handleThermalTimer()
+            }
+        }
+        timer.resume()
+        self.thermalTimer = timer
+    }
+
+    private static func stopThermalTimer() {
+        self.thermalTimer?.cancel()
+        self.thermalTimer = nil
+    }
+
+    private static func handleThermalTimer() {
+        guard self.powerCreated, self.unlimitedPower else {
+            self.stopThermalTimer()
+            return
+        }
+
+        let (percent, _, _) = BTPowerState.getPercentRemaining()
+        self.handleConnectedPower(percent: percent)
     }
 
     private static func disableLowPowerModeForPowerAdapter() {

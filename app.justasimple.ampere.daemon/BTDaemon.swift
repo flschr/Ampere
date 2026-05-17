@@ -35,6 +35,7 @@ internal enum BTDaemon {
         let progress = BTPowerEvents.getChargingProgress()
         let mode = BTPowerEvents.chargingMode
         let maxCharge = BTSettings.maxCharge
+        let thermallyLimited = BTPowerEvents.thermallyLimited
 
         return BTBatteryState(
             enabled: true,
@@ -44,7 +45,8 @@ internal enum BTDaemon {
             batteryPercent: Int(batteryPercent),
             progress: progress,
             chargingMode: mode,
-            maxCharge: Int(maxCharge)
+            maxCharge: Int(maxCharge),
+            thermallyLimited: thermallyLimited
         ).payload
     }
 

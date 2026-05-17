@@ -56,6 +56,7 @@
 "Holding charge, resumes below %d %%" = "Carica mantenuta; riprende sotto il %d %%";
 "Holding charge; resumes below %d %%" = "Carica mantenuta; riprende sotto il %d %%";
 "Charging paused until %d%%" = "Ricarica in pausa fino al %d%%";
+"Charging paused: battery too warm" = "Ricarica in pausa: batteria troppo calda";
 "Waiting, will charge to %d %%" = "In attesa, ricaricherà fino al %d %%";
 "Waiting to charge to %d%%" = "In attesa di ricaricare fino al %d%%";
 "Waiting, will charge to 100 %" = "In attesa, ricaricherà fino al 100 %";

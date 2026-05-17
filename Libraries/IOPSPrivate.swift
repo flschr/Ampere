@@ -46,6 +46,37 @@ public enum IOPSPrivate {
         }
     }
 
+    static func GetBatteryTemperatureCelsius() -> Double? {
+        let service = IOServiceGetMatchingService(
+            kIOMasterPortDefault,
+            IOServiceMatching("AppleSmartBattery")
+        )
+        guard service != IO_OBJECT_NULL else {
+            return nil
+        }
+        defer {
+            IOObjectRelease(service)
+        }
+
+        guard
+            let value = IORegistryEntryCreateCFProperty(
+                service,
+                "Temperature" as CFString,
+                kCFAllocatorDefault,
+                0
+            )?.takeRetainedValue() as? NSNumber
+        else {
+            return nil
+        }
+
+        let deciKelvin = value.doubleValue
+        guard deciKelvin > 0 else {
+            return nil
+        }
+
+        return deciKelvin / 10 - 273.15
+    }
+
     static func DrawingUnlimitedPower() -> Bool {
         guard let packedBatteryBits = GetPackedBatteryBits() else {
             return true

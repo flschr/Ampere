@@ -15,10 +15,32 @@ final class BTBatteryModelsTests: XCTestCase {
             batteryPercent: 64,
             progress: .belowFull,
             chargingMode: .toFull,
-            maxCharge: 90
+            maxCharge: 90,
+            thermallyLimited: true
         )
 
         XCTAssertEqual(try BTBatteryState(payload: state.payload), state)
+    }
+
+    func testBatteryStateDefaultsMissingThermalLimitToFalse() throws {
+        let payload: [String: NSObject & Sendable] = [
+            BTStateInfo.Keys.enabled: NSNumber(value: true),
+            BTStateInfo.Keys.powerDisabled: NSNumber(value: false),
+            BTStateInfo.Keys.connected: NSNumber(value: true),
+            BTStateInfo.Keys.chargingDisabled: NSNumber(value: false),
+            BTStateInfo.Keys.batteryPercent: NSNumber(value: 50),
+            BTStateInfo.Keys.progress: NSNumber(
+                value: BTStateInfo.ChargingProgress.belowMax.rawValue
+            ),
+            BTStateInfo.Keys.chargingMode: NSNumber(
+                value: BTStateInfo.ChargingMode.standard.rawValue
+            ),
+            BTStateInfo.Keys.maxCharge: NSNumber(value: 80),
+        ]
+
+        let state = try BTBatteryState(payload: payload)
+
+        XCTAssertFalse(state.thermallyLimited)
     }
 
     func testBatteryStateUsesPowerAdapterOnlyWhenConnectedAndEnabled() {

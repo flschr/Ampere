@@ -142,6 +142,111 @@ final class BTPowerEventStateMachineTests: XCTestCase {
         )
     }
 
+    func testThermalProtectionPausesHotActiveCharging() {
+        XCTAssertEqual(
+            BTPowerEventStateMachine.thermalEffect(
+                temperatureCelsius: 40,
+                thermallyLimited: false,
+                chargingDisabled: false,
+                percent: 75,
+                minCharge: 70,
+                chargingMode: .standard
+            ),
+            .pauseCharging
+        )
+    }
+
+    func testThermalProtectionBlocksExpectedChargingWhileAlreadyDisabled() {
+        XCTAssertEqual(
+            BTPowerEventStateMachine.thermalEffect(
+                temperatureCelsius: 41,
+                thermallyLimited: false,
+                chargingDisabled: true,
+                percent: 69,
+                minCharge: 70,
+                chargingMode: .standard
+            ),
+            .pauseCharging
+        )
+        XCTAssertEqual(
+            BTPowerEventStateMachine.thermalEffect(
+                temperatureCelsius: 41,
+                thermallyLimited: false,
+                chargingDisabled: true,
+                percent: 75,
+                minCharge: 70,
+                chargingMode: .standard
+            ),
+            .none
+        )
+    }
+
+    func testThermalProtectionUsesRecoveryHysteresis() {
+        XCTAssertEqual(
+            BTPowerEventStateMachine.thermalEffect(
+                temperatureCelsius: 39,
+                thermallyLimited: true,
+                chargingDisabled: true,
+                percent: 75,
+                minCharge: 70,
+                chargingMode: .standard
+            ),
+            .none
+        )
+        XCTAssertEqual(
+            BTPowerEventStateMachine.thermalEffect(
+                temperatureCelsius: 38,
+                thermallyLimited: true,
+                chargingDisabled: true,
+                percent: 75,
+                minCharge: 70,
+                chargingMode: .standard
+            ),
+            .resumeCharging
+        )
+    }
+
+    func testThermalProtectionResumesWhenTemperatureUnavailable() {
+        XCTAssertEqual(
+            BTPowerEventStateMachine.thermalEffect(
+                temperatureCelsius: nil,
+                thermallyLimited: true,
+                chargingDisabled: true,
+                percent: 75,
+                minCharge: 70,
+                chargingMode: .toFull
+            ),
+            .resumeCharging
+        )
+    }
+
+    func testThermalRecoveryResumesTowardRequestedTarget() {
+        XCTAssertEqual(
+            BTPowerEventStateMachine.thermalRecoveryEffect(
+                percent: 75,
+                maxCharge: 80,
+                chargingMode: .standard
+            ),
+            .enableCharging
+        )
+        XCTAssertEqual(
+            BTPowerEventStateMachine.thermalRecoveryEffect(
+                percent: 80,
+                maxCharge: 80,
+                chargingMode: .standard
+            ),
+            .none
+        )
+        XCTAssertEqual(
+            BTPowerEventStateMachine.thermalRecoveryEffect(
+                percent: 99,
+                maxCharge: 80,
+                chargingMode: .toFull
+            ),
+            .enableCharging
+        )
+    }
+
     func testChargingSleepEffectBalancesSleepWithChargingState() {
         XCTAssertEqual(
             BTPowerEventStateMachine.chargingSleepEffect(chargingDisabled: true),

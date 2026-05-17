@@ -11,7 +11,7 @@ internal final class BTCommandsMenuStatusHeaderView: NSView {
         static let width: CGFloat = 360
         static let singleLineHeight: CGFloat = 30
         static let twoLineHeight: CGFloat = 44
-        static let leadingInset: CGFloat = 22
+        static let leadingInset: CGFloat = 14
         static let trailingInset: CGFloat = 14
         static let verticalInset: CGFloat = 6
         static let detailSpacing: CGFloat = 1

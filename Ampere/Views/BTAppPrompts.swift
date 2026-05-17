@@ -183,6 +183,15 @@ internal enum BTAppPrompts {
         self.runPrompt(alert: alert, window: window)
     }
 
+    static func promptLicenseRequired(window: NSWindow? = nil) {
+        let alert = NSAlert()
+        alert.messageText = BTLocalization.Prompts.licenseRequiredMessage
+        alert.informativeText = BTLocalization.Prompts.licenseRequiredInfo
+        alert.alertStyle = NSAlert.Style.informational
+        _ = alert.addButton(withTitle: BTLocalization.Prompts.ok)
+        self.runPrompt(alert: alert, window: window)
+    }
+
     static func promptDaemonCommFailed(window: NSWindow? = nil) {
         Task {
             let alert = NSAlert()

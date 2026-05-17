@@ -27,4 +27,16 @@ final class BTAboutInfoModelTests: XCTestCase {
         XCTAssertTrue(info.versionText.contains("1.2"))
         XCTAssertFalse(info.versionText.contains("("))
     }
+
+    func testBuildTextUsesInjectedBuildKind() {
+        let info = BTAboutInfo(
+            infoDictionary: [
+                "CFBundleDisplayName": "Ampere",
+                "CFBundleShortVersionString": "1.2",
+            ],
+            buildKind: .official
+        )
+
+        XCTAssertEqual(info.buildText, "Official Build")
+    }
 }

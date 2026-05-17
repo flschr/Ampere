@@ -1,8 +1,8 @@
 # Ampere Release and Updates
 
-This project uses Sparkle 2 for direct macOS distribution outside the App Store.
-Sparkle is the update authority for release builds; Homebrew is only an
-installation channel.
+This project uses Sparkle 2 for official macOS release builds distributed
+outside the App Store. Sparkle is the update authority for official builds.
+Homebrew is not an official distribution or update channel.
 
 ## Sparkle Configuration
 
@@ -16,6 +16,24 @@ BT_SPARKLE_PUBLIC_ED_KEY=<public EdDSA key from Sparkle>
 The private EdDSA key is a release secret. Do not commit it to the repository.
 If either value is missing, Ampere keeps the updater disabled and the manual
 update command explains that updates are not configured for the current build.
+
+## Commercial Build Boundary
+
+Public source builds compile without `OFFICIAL_BUILD`. They use the source-build
+license manager, do not use Lemon Squeezy, and do not join the official Sparkle
+update channel.
+
+Official release builds define `OFFICIAL_BUILD` and must provide the private
+license manager for both the app target and the daemon target. That private code
+is responsible for the 14-day trial, Lemon Squeezy license activation, cached
+license state, and license revocation behaviour.
+
+Keep these out of the public repository:
+
+- Lemon Squeezy API keys, webhook secrets, and store configuration exports.
+- The private license manager implementation and any signed license cache keys.
+- Sparkle private signing keys.
+- Developer ID certificates, notary credentials, and release keychain material.
 
 `BT_SPARKLE_FEED_URL` is not predefined by the app. Choose the final hosting
 location before the first public Sparkle release. Good options are a static file
@@ -96,17 +114,6 @@ should show its native update dialog when the appcast contains a newer
 
 ## Homebrew
 
-Homebrew should not replace Sparkle. Once public releases use Sparkle, the Cask
-should declare:
-
-```ruby
-auto_updates true
-livecheck do
-  url "<public HTTPS URL for appcast.xml>"
-  strategy :sparkle
-end
-```
-
-The existing archived Homebrew tap still refers to the old distribution.
-Ampere needs either a maintained tap or a future submission to Homebrew Cask
-once the public download and appcast URLs are stable.
+Do not publish or advertise an official Homebrew formula or cask for Ampere
+release builds. Official builds are distributed directly and updated through
+Sparkle.

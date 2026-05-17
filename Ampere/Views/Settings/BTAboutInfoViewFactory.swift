@@ -83,7 +83,14 @@ internal struct BTAboutInfoViewFactory {
         )
         versionLabel.textColor = .secondaryLabelColor
 
-        let titleStack = NSStackView(views: [appNameLabel, versionLabel])
+        let buildLabel = NSTextField(labelWithString: self.info.buildText)
+        buildLabel.textColor = .tertiaryLabelColor
+
+        let titleStack = NSStackView(views: [
+            appNameLabel,
+            versionLabel,
+            buildLabel,
+        ])
         titleStack.orientation = .vertical
         titleStack.alignment = .leading
         titleStack.spacing = 3

@@ -11,12 +11,16 @@ internal struct BTAboutInfo {
 
     let appName: String
     let version: String
+    let buildKind: BTBuildKind
 
     static var current: Self {
         Self(infoDictionary: Bundle.main.infoDictionary ?? [:])
     }
 
-    init(infoDictionary: [String: Any]) {
+    init(
+        infoDictionary: [String: Any],
+        buildKind: BTBuildKind = BTBuildConfiguration.kind
+    ) {
         self.appName = Self.infoString(
             for: "CFBundleDisplayName",
             in: infoDictionary
@@ -29,6 +33,8 @@ internal struct BTAboutInfo {
             for: "CFBundleShortVersionString",
             in: infoDictionary
         ) ?? BTLocalization.Settings.About.unknownValue
+
+        self.buildKind = buildKind
     }
 
     var versionText: String {
@@ -36,6 +42,10 @@ internal struct BTAboutInfo {
             format: BTLocalization.Settings.About.versionFormat,
             self.version
         )
+    }
+
+    var buildText: String {
+        self.buildKind.localizedName
     }
 
     private static func infoString(

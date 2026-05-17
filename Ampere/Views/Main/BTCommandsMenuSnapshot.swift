@@ -104,12 +104,6 @@ internal enum BTCommandsMenuSnapshotFactory {
     private static func statusHeaderItem(
         from snapshot: BTCommandsMenuSnapshot
     ) -> BTMenuItemSnapshot {
-        var titles: [String] = []
-
-        if let title = self.visibleTitle(snapshot.remainingTime) {
-            titles.append(title)
-        }
-
         if let title = self.visibleTitle(snapshot.chargingToLimit)
             ?? self.visibleTitle(snapshot.chargingToFull)
             ?? self.visibleTitle(snapshot.chargingUnknownMode)
@@ -117,21 +111,16 @@ internal enum BTCommandsMenuSnapshotFactory {
             ?? self.visibleTitle(snapshot.requestedChargingToLimit)
             ?? self.visibleTitle(snapshot.requestedChargingToFull)
             ?? self.visibleTitle(snapshot.notChargingUnknownMode) {
-            titles.append(title)
+            return .visible(title: title)
         }
 
-        if titles.isEmpty {
-            if let title = self.visibleTitle(snapshot.powerAdapterEnabled)
-                ?? self.visibleTitle(snapshot.powerAdapterDisabled) {
-                titles.append(title)
-            }
+        if let title = self.visibleTitle(snapshot.powerAdapterEnabled)
+            ?? self.visibleTitle(snapshot.powerAdapterDisabled)
+            ?? self.visibleTitle(snapshot.remainingTime) {
+            return .visible(title: title)
         }
 
-        guard !titles.isEmpty else {
-            return .hidden
-        }
-
-        return .visible(title: titles.joined(separator: " · "))
+        return .hidden
     }
 
     private static func visibleTitle(_ snapshot: BTMenuItemSnapshot) -> String? {

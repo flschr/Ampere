@@ -30,6 +30,14 @@ dist/
 Local*.xcconfig
 *.local.xcconfig
 
+# Commercial build/private licensing material
+Private/
+CommercialLicensingKit/
+LemonSqueezy*.json
+SparklePrivate*
+*.ed25519
+*.p8
+
 # Editor-local settings
 .vscode/
 .idea/

@@ -12,6 +12,8 @@
 "To temporarily suspend it, disable the background activity in System Settings." = "Pour le suspendre temporairement, désactivez l'activité en arrière-plan dans Réglages Système.";
 "An unexpected error has occured." = "Une erreur inattendue s'est produite.";
 "You do not have permission to perform this operation." = "Vous n'avez pas l'autorisation d'effectuer cette opération.";
+"Ampere trial expired." = "La période d'essai d'Ampere a expiré.";
+"Enter a license to continue managing charging. Safety actions remain available." = "Saisissez une licence pour continuer à gérer la recharge. Les actions de sécurité restent disponibles.";
 "To manage the power state of your Mac, Ampere needs to run in the background." = "Pour gérer l'état d'alimentation de votre Mac, Ampere doit fonctionner en arrière-plan.";
 "Allow background activity?" = "Autoriser l'activité en arrière-plan ?";
 "Do you want to approve the Ampere Login Item in System Settings?" = "Voulez-vous autoriser l'élément d'ouverture Ampere dans Réglages Système ?";
@@ -29,6 +31,8 @@
 "Preferences" = "Préférences";
 "About Ampere" = "À propos d'Ampere";
 "Version %@" = "Version %@";
+"Unofficial Build" = "Build non officiel";
+"Official Build" = "Build officiel";
 "Website" = "Site web";
 "Privacy" = "Confidentialité";
 "Licenses" = "Licences";
@@ -38,6 +42,8 @@
 "Close" = "Fermer";
 "Updates are not configured for this build." = "Les mises à jour ne sont pas configurées pour cette build.";
 "Install an official release build or configure the Sparkle appcast URL and public EdDSA key for this build." = "Installez une build de version officielle ou configurez l'URL de l'appcast Sparkle et la clé EdDSA publique pour cette build.";
+"Official updates are not available for unofficial builds." = "Les mises à jour officielles ne sont pas disponibles pour les builds non officiels.";
+"Build Ampere from the latest source or install an official release build to use automatic updates." = "Compilez Ampere depuis la dernière source ou installez une build officielle pour utiliser les mises à jour automatiques.";
 "Unknown State" = "État inconnu";
 "Ampere Paused" = "Ampere en pause";
 "Running on Battery" = "Sur batterie";
@@ -64,6 +70,7 @@
 "Until %d %%: %@" = "Jusqu'à %d %% : %@";
 "%@ until empty" = "%@ jusqu'à vide";
 "%@ until %d%%" = "%@ jusqu'à %d%%";
+"approx. %@" = "env. %@";
 "Everyday" = "Quotidien";
 "Desk" = "Bureau";
 "Travel" = "Voyage";

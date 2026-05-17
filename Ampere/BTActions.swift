@@ -28,6 +28,7 @@ internal enum BTActions {
     }
 
     @BTBackgroundActor static func disablePowerAdapter() async throws {
+        try BTLicenseController.requireCanManageCharging()
         try await BTDaemonXPCClient.disablePowerAdapter()
     }
 
@@ -36,14 +37,17 @@ internal enum BTActions {
     }
 
     @BTBackgroundActor static func chargeToLimit() async throws {
+        try BTLicenseController.requireCanManageCharging()
         try await BTDaemonXPCClient.chargeToLimit()
     }
 
     @BTBackgroundActor static func chargeToFull() async throws {
+        try BTLicenseController.requireCanManageCharging()
         try await BTDaemonXPCClient.chargeToFull()
     }
 
     @BTBackgroundActor static func disableCharging() async throws {
+        try BTLicenseController.requireCanManageCharging()
         try await BTDaemonXPCClient.disableCharging()
     }
 
@@ -56,6 +60,7 @@ internal enum BTActions {
     }
 
     @BTBackgroundActor static func setSettings(settings: [String: NSObject & Sendable]) async throws {
+        try BTLicenseController.requireCanManageCharging()
         try await BTDaemonXPCClient.setSettings(settings: settings)
     }
 
@@ -64,6 +69,7 @@ internal enum BTActions {
     }
 
     @BTBackgroundActor static func setLowPowerModeEnabled(_ enabled: Bool) async throws {
+        try BTLicenseController.requireCanManageCharging()
         if enabled {
             try await BTDaemonXPCClient.enableLowPowerMode()
         } else {
@@ -84,6 +90,7 @@ internal enum BTActions {
     }
 
     @BTBackgroundActor static func resumeActiivty() async throws {
+        try BTLicenseController.requireCanManageCharging()
         try await BTDaemonXPCClient.resumeActivity()
     }
 }

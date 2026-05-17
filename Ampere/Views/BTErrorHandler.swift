@@ -25,6 +25,9 @@ internal enum BTErrorHandler {
         case BTError.commFailed:
             BTAppPrompts.promptDaemonCommFailed(window: window)
 
+        case BTError.licenseRequired:
+            BTAppPrompts.promptLicenseRequired(window: window)
+
         default:
             BTAppPrompts.promptUnexpectedError(window: window)
         }

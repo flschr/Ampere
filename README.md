@@ -54,9 +54,9 @@ The Ampere "Commands" menu and its menu bar extra allow you to issue various com
 3. Unzip the archive
 4. Drag `Ampere.app` into your Applications folder
 
-### Install via Homebrew :beer:
-Homebrew distribution is not available for Ampere yet. Use the manual install
-until an Ampere tap or cask is published.
+### Homebrew
+Homebrew is not an official distribution channel for Ampere. Official release
+builds use the direct download and Sparkle update path.
 
 ### Opening the App
 

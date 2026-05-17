@@ -31,6 +31,20 @@
 		CE2400812E01000000000001 /* Sparkle in Frameworks */ = {isa = PBXBuildFile; productRef = CE2400822E01000000000001 /* Sparkle */; };
 		CE2400862E01000000000001 /* BTAboutInfoModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400852E01000000000001 /* BTAboutInfoModelTests.swift */; };
 		CE2400872E01000000000001 /* BTAboutInfoModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400722E01000000000001 /* BTAboutInfoModel.swift */; };
+		CE2400902E03000000000001 /* BTBuildConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400912E03000000000001 /* BTBuildConfiguration.swift */; };
+		CE2400922E03000000000001 /* BTLicenseManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400932E03000000000001 /* BTLicenseManaging.swift */; };
+		CE2400942E03000000000001 /* BTSourceBuildLicenseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400952E03000000000001 /* BTSourceBuildLicenseManager.swift */; };
+		CE2400962E03000000000001 /* BTLicenseManagerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400972E03000000000001 /* BTLicenseManagerFactory.swift */; };
+		CE2400992E03000000000001 /* BTLicenseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE24009A2E03000000000001 /* BTLicenseController.swift */; };
+		CE2400A02E03000000000001 /* BTBuildConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400912E03000000000001 /* BTBuildConfiguration.swift */; };
+		CE2400A12E03000000000001 /* BTLicenseManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400932E03000000000001 /* BTLicenseManaging.swift */; };
+		CE2400A22E03000000000001 /* BTSourceBuildLicenseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400952E03000000000001 /* BTSourceBuildLicenseManager.swift */; };
+		CE2400A32E03000000000001 /* BTLicenseModelTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400A42E03000000000001 /* BTLicenseModelTests.swift */; };
+		CE2400A52E03000000000001 /* BTLicenseManaging.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400932E03000000000001 /* BTLicenseManaging.swift */; };
+		CE2400A62E03000000000001 /* BTSourceBuildLicenseManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400952E03000000000001 /* BTSourceBuildLicenseManager.swift */; };
+		CE2400A72E03000000000001 /* BTLicenseManagerFactory.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2400972E03000000000001 /* BTLicenseManagerFactory.swift */; };
+		CE2400A82E03000000000001 /* BTLicenseController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE24009A2E03000000000001 /* BTLicenseController.swift */; };
+		CE2400A92E03000000000001 /* BTDaemonCommProtocol.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA80FDA285A57030064ADEA /* BTDaemonCommProtocol.swift */; };
 		CE2B96C028A7E2BB00FE3DDB /* GlobalSleep.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2B96BF28A7E2BB00FE3DDB /* GlobalSleep.swift */; };
 		CE30CBA128C48995001E2AC6 /* BTSettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE30CBA028C48995001E2AC6 /* BTSettingsViewController.swift */; };
 		CE3179EA28DB540600E9C121 /* SimpleAuth.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3179E928DB540600E9C121 /* SimpleAuth.swift */; };
@@ -245,6 +259,12 @@
 		CE2400842E01000000000001 /* BTUpdateController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTUpdateController.swift; sourceTree = "<group>"; };
 		CE2400852E01000000000001 /* BTAboutInfoModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTAboutInfoModelTests.swift; sourceTree = "<group>"; };
 		CE2400792E01000000000001 /* BTLicenseViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTLicenseViewController.swift; sourceTree = "<group>"; };
+		CE2400912E03000000000001 /* BTBuildConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTBuildConfiguration.swift; sourceTree = "<group>"; };
+		CE2400932E03000000000001 /* BTLicenseManaging.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTLicenseManaging.swift; sourceTree = "<group>"; };
+		CE2400952E03000000000001 /* BTSourceBuildLicenseManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTSourceBuildLicenseManager.swift; sourceTree = "<group>"; };
+		CE2400972E03000000000001 /* BTLicenseManagerFactory.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTLicenseManagerFactory.swift; sourceTree = "<group>"; };
+		CE24009A2E03000000000001 /* BTLicenseController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTLicenseController.swift; sourceTree = "<group>"; };
+		CE2400A42E03000000000001 /* BTLicenseModelTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTLicenseModelTests.swift; sourceTree = "<group>"; };
 		CE2B96BD28A7CEFE00FE3DDB /* IOPMLibPrivate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IOPMLibPrivate.h; sourceTree = "<group>"; };
 		CE2B96BF28A7E2BB00FE3DDB /* GlobalSleep.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = GlobalSleep.swift; sourceTree = "<group>"; };
 		CE2B96C228A81C5100FE3DDB /* BTPreprocessor.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = BTPreprocessor.h; sourceTree = "<group>"; };
@@ -455,7 +475,9 @@
 			isa = PBXGroup;
 			children = (
 				CEF429872CB1628600E49B67 /* BTBackgroundActor.swift */,
+				CE2400912E03000000000001 /* BTBuildConfiguration.swift */,
 				CE2400842E01000000000001 /* BTUpdateController.swift */,
+				CE2400982E03000000000001 /* Licensing */,
 				CE0DA2BB28D7BFA800C35C45 /* DaemonManagement */,
 				CEA3908928DF95170023261A /* Views */,
 				CE52867A28298B6E00860C7B /* Assets.xcassets */,
@@ -474,6 +496,17 @@
 				CE2322D328E5EB8B00874CDE /* BTLoginItem.swift */,
 			);
 			path = Ampere;
+			sourceTree = "<group>";
+		};
+		CE2400982E03000000000001 /* Licensing */ = {
+			isa = PBXGroup;
+			children = (
+				CE24009A2E03000000000001 /* BTLicenseController.swift */,
+				CE2400972E03000000000001 /* BTLicenseManagerFactory.swift */,
+				CE2400932E03000000000001 /* BTLicenseManaging.swift */,
+				CE2400952E03000000000001 /* BTSourceBuildLicenseManager.swift */,
+			);
+			path = Licensing;
 			sourceTree = "<group>";
 		};
 		CE555D89285D2A0B0031A6F9 /* Libraries */ = {
@@ -605,6 +638,7 @@
 			children = (
 				CEAA00122E00000000000001 /* BTBatteryModelsTests.swift */,
 				CE2400852E01000000000001 /* BTAboutInfoModelTests.swift */,
+				CE2400A42E03000000000001 /* BTLicenseModelTests.swift */,
 				CEAA00162E00000000000001 /* BTCommandsMenuSnapshotTests.swift */,
 				CEAA00412E00000000000001 /* BTPowerEventStateMachineTests.swift */,
 				CEAA00192E00000000000001 /* BTLowPowerModeTests.swift */,
@@ -862,6 +896,10 @@
 				CE7F623428B95A7E00EF58F9 /* BTPreprocessor.m in Sources */,
 				CE5E5AF928DF1CB100AF1D07 /* BTError.swift in Sources */,
 				CEAA00022E00000000000001 /* BTBatteryModels.swift in Sources */,
+				CE2400A52E03000000000001 /* BTLicenseManaging.swift in Sources */,
+				CE2400A62E03000000000001 /* BTSourceBuildLicenseManager.swift in Sources */,
+				CE2400A72E03000000000001 /* BTLicenseManagerFactory.swift in Sources */,
+				CE2400A82E03000000000001 /* BTLicenseController.swift in Sources */,
 				CEAA00422E00000000000001 /* BTPowerEventStateMachine.swift in Sources */,
 				CEA80FD2285A28230064ADEA /* BTSettings.swift in Sources */,
 				CEB4A42928D3B184004FA277 /* BTStateInfo.swift in Sources */,
@@ -910,11 +948,16 @@
 				CEAA00012E00000000000001 /* BTBatteryModels.swift in Sources */,
 				CE0DB56328BEB4E600B8FC4C /* BTSettingsInfo.swift in Sources */,
 				CE5E5AF328DF183E00AF1D07 /* BTAuthorizationRights.swift in Sources */,
+				CE2400902E03000000000001 /* BTBuildConfiguration.swift in Sources */,
 				CE2400702E01000000000001 /* BTAboutInfoModel.swift in Sources */,
 				CE2400712E01000000000001 /* BTAboutInfoViewController.swift in Sources */,
 				CE2400742E01000000000001 /* BTAboutInfoViewFactory.swift in Sources */,
 				CE2400752E01000000000001 /* BTAboutInfoViewFactory+Controls.swift in Sources */,
 				CE2400782E01000000000001 /* BTLicenseViewController.swift in Sources */,
+				CE2400992E03000000000001 /* BTLicenseController.swift in Sources */,
+				CE2400962E03000000000001 /* BTLicenseManagerFactory.swift in Sources */,
+				CE2400922E03000000000001 /* BTLicenseManaging.swift in Sources */,
+				CE2400942E03000000000001 /* BTSourceBuildLicenseManager.swift in Sources */,
 				CE2400802E01000000000001 /* BTUpdateController.swift in Sources */,
 				CEAA000E2E00000000000001 /* BTSettingsModel.swift in Sources */,
 				CE30CBA128C48995001E2AC6 /* BTSettingsViewController.swift in Sources */,
@@ -962,12 +1005,16 @@
 				CEAA00052E00000000000001 /* BTSettingsInfo.swift in Sources */,
 				CEAA00042E00000000000001 /* BTStateInfo.swift in Sources */,
 				CEAA00032E00000000000001 /* BTBatteryModels.swift in Sources */,
+				CE2400A92E03000000000001 /* BTDaemonCommProtocol.swift in Sources */,
 				CEAA00432E00000000000001 /* BTPowerEventStateMachine.swift in Sources */,
 				CEAA001B2E00000000000001 /* BTLowPowerMode.swift in Sources */,
 				CEAA001F2E00000000000001 /* BTLowPowerModeState.swift in Sources */,
 				CEAA000B2E00000000000001 /* BTLocalization.swift in Sources */,
 				CEAA000C2E00000000000001 /* BTLocalization+Commands.swift in Sources */,
 				CEAA00102E00000000000002 /* BTLocalization+Settings.swift in Sources */,
+				CE2400A02E03000000000001 /* BTBuildConfiguration.swift in Sources */,
+				CE2400A12E03000000000001 /* BTLicenseManaging.swift in Sources */,
+				CE2400A22E03000000000001 /* BTSourceBuildLicenseManager.swift in Sources */,
 				CE2400872E01000000000001 /* BTAboutInfoModel.swift in Sources */,
 				CEAA000A2E00000000000001 /* BTCommandsMenuSnapshot.swift in Sources */,
 				CEAA000F2E00000000000001 /* BTSettingsModel.swift in Sources */,
@@ -977,6 +1024,7 @@
 				CEAA001A2E00000000000001 /* BTLowPowerModeTests.swift in Sources */,
 				CEAA00442E00000000000001 /* BTPowerEventStateMachineTests.swift in Sources */,
 				CEAA00112E00000000000002 /* BTSettingsModelTests.swift in Sources */,
+				CE2400A32E03000000000001 /* BTLicenseModelTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

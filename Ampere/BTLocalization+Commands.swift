@@ -117,5 +117,15 @@ extension BTLocalization {
                 percent
             )
         }
+
+        static func approximateRemainingTime(_ title: String) -> String {
+            String.localizedStringWithFormat(
+                NSLocalizedString(
+                    "approx. %@",
+                    comment: "Menu status showing that a remaining time value is approximate"
+                ),
+                title
+            )
+        }
     }
 }

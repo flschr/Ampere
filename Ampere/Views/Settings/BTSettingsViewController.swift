@@ -159,7 +159,7 @@ internal final class BTSettingsViewController: NSViewController {
 
         Task {
             do {
-                try await BTDaemonXPCClient.setSettings(settings: settings)
+                try await BTActions.setSettings(settings: settings)
                 self.view.window?.windowController?.close()
             } catch {
                 BTErrorHandler.errorHandler(

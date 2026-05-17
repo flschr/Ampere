@@ -43,6 +43,18 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
 
     private var refreshTimer: DispatchSourceTimer? = nil
     private weak var statusHeaderItem: NSMenuItem?
+    private var remainingTimeCache: [String: CachedRemainingTime] = [:]
+
+    private struct CachedRemainingTime {
+        private static let maximumAge: TimeInterval = 5 * 60
+
+        let title: String
+        let date: Date
+
+        var isFresh: Bool {
+            Date().timeIntervalSince(self.date) < Self.maximumAge
+        }
+    }
 
     private func disabledInfoItem(tag: Int) -> NSMenuItem {
         let item = NSMenuItem()
@@ -140,10 +152,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
     }
 
     private func apply(snapshot: BTCommandsMenuSnapshot) {
-        self.apply(
-            snapshot.statusHeader,
-            toStatusHeaderItem: self.statusHeaderItem
-        )
+        self.applyStatusHeader(snapshot)
         self.hideLegacyStatusItems()
         self.apply(snapshot.disablePowerAdapter, to: self.disablePowerAdapterItem)
         self.apply(snapshot.enablePowerAdapter, to: self.enablePowerAdapterItem)
@@ -180,18 +189,49 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         self.apply(.hidden, to: self.infoNotChargingUnknownModeItem)
     }
 
-    private func apply(
-        _ snapshot: BTMenuItemSnapshot,
-        toStatusHeaderItem item: NSMenuItem?
-    ) {
-        item?.isHidden = snapshot.isHidden
+    private func applyStatusHeader(_ snapshot: BTCommandsMenuSnapshot) {
+        self.statusHeaderItem?.isHidden = snapshot.statusHeader.isHidden
 
-        guard !snapshot.isHidden, let title = snapshot.title else {
-            item?.view = nil
+        guard !snapshot.statusHeader.isHidden,
+              let title = snapshot.statusHeader.title else {
+            self.statusHeaderItem?.view = nil
             return
         }
 
-        item?.view = BTCommandsMenuStatusHeaderView(title: title)
+        self.statusHeaderItem?.view = BTCommandsMenuStatusHeaderView(
+            title: title,
+            detail: self.statusHeaderDetail(from: snapshot, statusTitle: title)
+        )
+    }
+
+    private func statusHeaderDetail(
+        from snapshot: BTCommandsMenuSnapshot,
+        statusTitle: String
+    ) -> String? {
+        if let title = self.visibleTitle(snapshot.remainingTime),
+           title != statusTitle {
+            self.remainingTimeCache[statusTitle] = CachedRemainingTime(
+                title: title,
+                date: Date()
+            )
+            return title
+        }
+
+        guard let cached = self.remainingTimeCache[statusTitle],
+              cached.isFresh else {
+            self.remainingTimeCache[statusTitle] = nil
+            return nil
+        }
+
+        return BTLocalization.Commands.approximateRemainingTime(cached.title)
+    }
+
+    private func visibleTitle(_ snapshot: BTMenuItemSnapshot) -> String? {
+        guard !snapshot.isHidden else {
+            return nil
+        }
+
+        return snapshot.title
     }
 
     private func apply(

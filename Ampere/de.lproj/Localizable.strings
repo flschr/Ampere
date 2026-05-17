@@ -12,6 +12,8 @@
 "To temporarily suspend it, disable the background activity in System Settings." = "Um es vorübergehend anzuhalten, deaktiviere die Hintergrundaktivität in den Systemeinstellungen.";
 "An unexpected error has occured." = "Ein unerwarteter Fehler ist aufgetreten.";
 "You do not have permission to perform this operation." = "Du hast keine Berechtigung, diesen Vorgang auszuführen.";
+"Ampere trial expired." = "Ampere-Testphase abgelaufen.";
+"Enter a license to continue managing charging. Safety actions remain available." = "Gib eine Lizenz ein, um die Ladeverwaltung weiter zu verwenden. Sicherheitsaktionen bleiben verfügbar.";
 "To manage the power state of your Mac, Ampere needs to run in the background." = "Um den Energiezustand deines Mac zu verwalten, muss Ampere im Hintergrund laufen.";
 "Allow background activity?" = "Hintergrundaktivität erlauben?";
 "Do you want to approve the Ampere Login Item in System Settings?" = "Möchtest du das Ampere-Anmeldeobjekt in den Systemeinstellungen genehmigen?";
@@ -29,6 +31,8 @@
 "Preferences" = "Einstellungen";
 "About Ampere" = "Info zu Ampere";
 "Version %@" = "Version %@";
+"Unofficial Build" = "Inoffizieller Build";
+"Official Build" = "Offizieller Build";
 "Website" = "Website";
 "Privacy" = "Datenschutz";
 "Licenses" = "Lizenzen";
@@ -38,6 +42,8 @@
 "Close" = "Schließen";
 "Updates are not configured for this build." = "Updates sind für diesen Build nicht konfiguriert.";
 "Install an official release build or configure the Sparkle appcast URL and public EdDSA key for this build." = "Installiere einen offiziellen Release-Build oder konfiguriere die Sparkle-Appcast-URL und den öffentlichen EdDSA-Schlüssel für diesen Build.";
+"Official updates are not available for unofficial builds." = "Offizielle Updates sind für inoffizielle Builds nicht verfügbar.";
+"Build Ampere from the latest source or install an official release build to use automatic updates." = "Baue Ampere aus dem aktuellen Quellcode oder installiere einen offiziellen Release-Build, um automatische Updates zu verwenden.";
 "Unknown State" = "Unbekannter Status";
 "Ampere Paused" = "Ampere pausiert";
 "Running on Battery" = "Auf Akku";
@@ -64,6 +70,7 @@
 "Until %d %%: %@" = "Bis %d %%: %@";
 "%@ until empty" = "%@ bis leer";
 "%@ until %d%%" = "%@ bis %d%%";
+"approx. %@" = "ca. %@";
 "Everyday" = "Alltag";
 "Desk" = "Schreibtisch";
 "Travel" = "Reise";

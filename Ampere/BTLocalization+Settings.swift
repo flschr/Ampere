@@ -18,6 +18,16 @@ extension BTLocalization {
                 comment: "About screen version format"
             )
 
+            static let sourceBuild = NSLocalizedString(
+                "Unofficial Build",
+                comment: "About screen label for builds that are not official signed releases"
+            )
+
+            static let officialBuild = NSLocalizedString(
+                "Official Build",
+                comment: "About screen label for signed official builds"
+            )
+
             static let website = NSLocalizedString(
                 "Website",
                 comment: "About screen button to open the app website"
@@ -66,6 +76,17 @@ extension BTLocalization {
             static let updateUnavailableInfo = NSLocalizedString(
                 "Install an official release build or configure the Sparkle appcast URL and public EdDSA key for this build.",
                 comment: "Update check error details when Sparkle is not configured"
+            )
+
+            static let sourceBuildUpdateUnavailableMessage =
+                NSLocalizedString(
+                    "Official updates are not available for unofficial builds.",
+                    comment: "Update check error for unofficial builds"
+                )
+
+            static let sourceBuildUpdateUnavailableInfo = NSLocalizedString(
+                "Build Ampere from the latest source or install an official release build to use automatic updates.",
+                comment: "Update check error details for unofficial builds"
             )
         }
 

@@ -12,6 +12,7 @@ internal enum BTError: UInt8, Error {
     case commFailed
     case malformedData
     case unsupported
+    case licenseRequired
 
     init(fromBool: Bool) {
         self = fromBool ? .success : .unknown

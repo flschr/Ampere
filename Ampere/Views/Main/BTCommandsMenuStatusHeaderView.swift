@@ -9,43 +9,89 @@ import Cocoa
 internal final class BTCommandsMenuStatusHeaderView: NSView {
     private enum Metrics {
         static let width: CGFloat = 360
-        static let height: CGFloat = 30
+        static let singleLineHeight: CGFloat = 30
+        static let twoLineHeight: CGFloat = 44
         static let leadingInset: CGFloat = 22
         static let trailingInset: CGFloat = 14
         static let verticalInset: CGFloat = 6
+        static let detailSpacing: CGFloat = 1
     }
 
-    init(title: String) {
+    init(title: String, detail: String?) {
         super.init(
             frame: NSRect(
                 x: 0,
                 y: 0,
                 width: Metrics.width,
-                height: Metrics.height
+                height: detail == nil
+                    ? Metrics.singleLineHeight
+                    : Metrics.twoLineHeight
             )
         )
 
-        let label = NSTextField(labelWithString: title)
-        label.font = .systemFont(ofSize: NSFont.systemFontSize, weight: .semibold)
-        label.lineBreakMode = .byTruncatingTail
-        label.textColor = .labelColor
-        label.translatesAutoresizingMaskIntoConstraints = false
+        let titleLabel = NSTextField(labelWithString: title)
+        titleLabel.font = .systemFont(
+            ofSize: NSFont.systemFontSize,
+            weight: .semibold
+        )
+        titleLabel.lineBreakMode = .byTruncatingTail
+        titleLabel.textColor = .labelColor
+        titleLabel.translatesAutoresizingMaskIntoConstraints = false
 
-        self.addSubview(label)
+        self.addSubview(titleLabel)
+        let trailingConstraint = titleLabel.trailingAnchor.constraint(
+            lessThanOrEqualTo: self.trailingAnchor,
+            constant: -Metrics.trailingInset
+        )
+
+        guard let detail else {
+            NSLayoutConstraint.activate([
+                titleLabel.leadingAnchor.constraint(
+                    equalTo: self.leadingAnchor,
+                    constant: Metrics.leadingInset
+                ),
+                trailingConstraint,
+                titleLabel.topAnchor.constraint(
+                    equalTo: self.topAnchor,
+                    constant: Metrics.verticalInset
+                ),
+                titleLabel.bottomAnchor.constraint(
+                    equalTo: self.bottomAnchor,
+                    constant: -Metrics.verticalInset
+                ),
+            ])
+            return
+        }
+
+        let detailLabel = NSTextField(labelWithString: detail)
+        detailLabel.font = .systemFont(ofSize: 12, weight: .regular)
+        detailLabel.lineBreakMode = .byTruncatingTail
+        detailLabel.textColor = .secondaryLabelColor
+        detailLabel.translatesAutoresizingMaskIntoConstraints = false
+
+        self.addSubview(detailLabel)
         NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(
+            titleLabel.leadingAnchor.constraint(
                 equalTo: self.leadingAnchor,
                 constant: Metrics.leadingInset
             ),
-            label.trailingAnchor.constraint(
-                lessThanOrEqualTo: self.trailingAnchor,
-                constant: -Metrics.trailingInset
-            ),
-            label.topAnchor.constraint(
+            trailingConstraint,
+            titleLabel.topAnchor.constraint(
                 equalTo: self.topAnchor,
                 constant: Metrics.verticalInset
             ),
-            label.bottomAnchor.constraint(
+            detailLabel.leadingAnchor.constraint(
+                equalTo: titleLabel.leadingAnchor
+            ),
+            detailLabel.trailingAnchor.constraint(
+                lessThanOrEqualTo: self.trailingAnchor,
+                constant: -Metrics.trailingInset
+            ),
+            detailLabel.topAnchor.constraint(
+                equalTo: titleLabel.bottomAnchor,
+                constant: Metrics.detailSpacing
+            ),
+            detailLabel.bottomAnchor.constraint(
                 equalTo: self.bottomAnchor,
                 constant: -Metrics.verticalInset
             ),

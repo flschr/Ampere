@@ -21,6 +21,10 @@ internal final class BTUpdateController: NSObject {
     }
 
     func start() {
+        guard BTBuildConfiguration.allowsOfficialUpdates else {
+            return
+        }
+
         guard self.isConfigured else {
             return
         }
@@ -29,6 +33,11 @@ internal final class BTUpdateController: NSObject {
     }
 
     func checkForUpdates(_ sender: Any?) {
+        guard BTBuildConfiguration.allowsOfficialUpdates else {
+            self.presentSourceBuildUpdateUnavailable()
+            return
+        }
+
         guard self.isConfigured else {
             self.presentConfigurationError()
             return
@@ -57,12 +66,26 @@ internal final class BTUpdateController: NSObject {
         return trimmed
     }
 
+    private func presentSourceBuildUpdateUnavailable() {
+        self.presentError(
+            message: BTLocalization.Settings.About
+                .sourceBuildUpdateUnavailableMessage,
+            info: BTLocalization.Settings.About
+                .sourceBuildUpdateUnavailableInfo
+        )
+    }
+
     private func presentConfigurationError() {
+        self.presentError(
+            message: BTLocalization.Settings.About.updateUnavailableMessage,
+            info: BTLocalization.Settings.About.updateUnavailableInfo
+        )
+    }
+
+    private func presentError(message: String, info: String) {
         let alert = NSAlert()
-        alert.messageText =
-            BTLocalization.Settings.About.updateUnavailableMessage
-        alert.informativeText =
-            BTLocalization.Settings.About.updateUnavailableInfo
+        alert.messageText = message
+        alert.informativeText = info
         alert.addButton(withTitle: BTLocalization.Prompts.ok)
 
         if let window = NSApp.keyWindow {

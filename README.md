@@ -123,3 +123,11 @@ Note that sleep should usually be disabled when the power adapter is disabled, a
 
 # Donate
 For various reasons, I will not accept personal donations. However, if you would like to support my work with the [Kinderschutzbund Kaiserslautern-Kusel](https://www.kinderschutzbund-kaiserslautern.de/) child protection association, you may donate [here](https://www.kinderschutzbund-kaiserslautern.de/helfen-sie-mit/spenden/).
+
+# README Rewrite Notes
+
+These recent Ampere additions should be preserved when this README is reworked:
+
+* Battery protection: Ampere pauses charging when the battery gets too warm and resumes only after it has cooled down enough. This is a battery-longevity protection layer on top of macOS' built-in hardware safety behavior.
+* Low Power Mode: Ampere can manage macOS Low Power Mode from the menu bar workflow.
+* Positioning: Ampere focuses on explicit charge limits, lower-limit hysteresis, power adapter control, thermal charging protection, MagSafe indicator sync, Low Power Mode control, and a small native menu bar experience.

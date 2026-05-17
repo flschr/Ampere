@@ -46,22 +46,17 @@ The Ampere "Commands" menu and its menu bar extra allow you to issue various com
 # Install
 
 > [!IMPORTANT]
-> Ampere currently only supports Apple Silicon Macs [#15](https://github.com/mhaeuser/Battery-Toolkit/issues/15)
+> Ampere currently only supports Apple Silicon Macs [#15](https://github.com/flschr/ampere/issues/15)
 
 ### Manual Install
-1. Go to the GitHub [releases](https://github.com/mhaeuser/Battery-Toolkit/releases/latest) page
-2. Download the latest non-dSYM build (i.e., `Battery-Toolkit-X.Y.zip`)
+1. Go to the GitHub [releases](https://github.com/flschr/ampere/releases/latest) page
+2. Download the latest non-dSYM build (i.e., `Ampere-X.Y.zip`)
 3. Unzip the archive
 4. Drag `Ampere.app` into your Applications folder
 
 ### Install via Homebrew :beer:
-1. Install [Homebrew](https://brew.sh) if you haven't already
-2. Open Terminal and run `brew tap mhaeuser/mhaeuser`
-3. Run `brew install battery-toolkit`
-
-You may want to add the `--no-quarantine` flag onto the end of the install command to bypass Gatekeeper more conveniently, but beware the potential security risks of doing so.
-
-Otherwise, follow the steps mentioned below.
+Homebrew distribution is not available for Ampere yet. Use the manual install
+until an Ampere tap or cask is published.
 
 ### Opening the App
 

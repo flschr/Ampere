@@ -1,3 +1,5 @@
-Battery Toolkit.xcodeproj/xcuserdata/
-Battery Toolkit.xcodeproj/project.xcworkspace/xcuserdata/
+Ampere.xcodeproj/xcuserdata/
+Ampere.xcodeproj/project.xcworkspace/xcuserdata/
 build/
+dist/
+.DS_Store

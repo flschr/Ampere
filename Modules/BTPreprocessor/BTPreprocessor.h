@@ -10,22 +10,22 @@
 
 __BEGIN_DECLS
 
-/// The Battery Toolkit bundle identifier.
+/// The Ampere bundle identifier.
 extern const NSString *const BT_APP_ID;
 
-/// The Battery Toolkit Service identifier.
+/// The Ampere Service identifier.
 extern const NSString *const BT_SERVICE_ID;
 
-/// The Battery Toolkit daemon identifier.
+/// The Ampere daemon identifier.
 extern const NSString *const BT_DAEMON_ID;
 
-/// The Battery Toolkit daemon connection name.
+/// The Ampere daemon connection name.
 extern const NSString *const BT_DAEMON_CONN;
 
-/// The Battery Toolkit Autostart identifier.
+/// The Ampere Autostart identifier.
 extern const NSString *const BT_AUTOSTART_ID;
 
-/// The Battery Toolkit codesign Common Name.
+/// The Ampere codesign Common Name.
 extern const NSString *const BT_CODESIGN_CN;
 
 __END_DECLS

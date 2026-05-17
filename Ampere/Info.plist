@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>NSSupportsSuddenTermination</key>
+	<true/>
+	<key>SUFeedURL</key>
+	<string>$(BT_SPARKLE_FEED_URL)</string>
+	<key>SUPublicEDKey</key>
+	<string>$(BT_SPARKLE_PUBLIC_ED_KEY)</string>
+	<key>SMPrivilegedExecutables</key>
+	<dict>
+		<key>app.justasimple.ampere.daemon</key>
+		<string>identifier &quot;app.justasimple.ampere.daemon&quot; and anchor apple generic and certificate leaf[subject.CN] = &quot;$(BT_CODESIGN_CN)&quot; and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */</string>
+	</dict>
+</dict>
+</plist>

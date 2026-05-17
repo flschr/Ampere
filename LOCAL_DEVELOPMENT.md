@@ -5,12 +5,12 @@ Development certificate.
 
 ## Bundle IDs
 
-- App: `app.justasimple.battertoolkit`
-- XPC service: `app.justasimple.battertoolkit.service`
-- Login item: `app.justasimple.battertoolkit.autostart`
-- Privileged daemon: `app.justasimple.battertoolkit.daemon`
+- App: `app.justasimple.ampere`
+- XPC service: `app.justasimple.ampere.service`
+- Login item: `app.justasimple.ampere.autostart`
+- Privileged daemon: `app.justasimple.ampere.daemon`
 - Privileged daemon Mach service:
-  `H2FNY8B779.app.justasimple.battertoolkit.daemon`
+  `H2FNY8B779.app.justasimple.ampere.daemon`
 
 ## Product Naming
 
@@ -19,10 +19,9 @@ The user-facing app name is `Ampere`. The main app target builds
 are `Ampere`.
 
 The Xcode project, scheme, bundle identifiers, helper identifiers, XPC service
-identifier, privileged daemon identifier, and internal `BT*` symbols still use
-the original Battery Toolkit naming. This preserves the app's local identity,
-stored preferences, login item relationship, XPC validation, and privileged
-helper installation paths.
+identifier, and privileged daemon identifier use Ampere naming. Internal `BT*`
+symbols remain unchanged because they are implementation symbols, not product
+identity.
 
 ## Signing
 
@@ -35,14 +34,14 @@ service prefix use the Apple team identifier.
 
 ## Build
 
-Open `Battery Toolkit.xcodeproj` in Xcode and build the `Battery Toolkit`
+Open `Ampere.xcodeproj` in Xcode and build the `Ampere`
 scheme.
 
 From Terminal:
 
 ```sh
-xcodebuild -project "Battery Toolkit.xcodeproj" \
-  -scheme "Battery Toolkit" \
+xcodebuild -project "Ampere.xcodeproj" \
+  -scheme "Ampere" \
   -configuration Debug \
   -destination 'platform=macOS' \
   build
@@ -51,7 +50,7 @@ xcodebuild -project "Battery Toolkit.xcodeproj" \
 The local Debug app is written to Xcode DerivedData, for example:
 
 ```text
-~/Library/Developer/Xcode/DerivedData/Battery_Toolkit-*/Build/Products/Debug/Ampere.app
+~/Library/Developer/Xcode/DerivedData/Ampere-*/Build/Products/Debug/Ampere.app
 ```
 
 Use Debug builds for local installation while signing with `Apple Development`.

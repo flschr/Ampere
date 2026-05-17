@@ -16,32 +16,32 @@ internal final class BTSettingsViewController: NSViewController {
     private weak var cancelButton: NSButton? = nil
     private var optimizedChargingWarning: NSTextField? = nil
     private let initialFocusView = BTSettingsInitialFocusView()
-    
+
     @IBOutlet private var tabView: NSTabView!
     @IBOutlet private var powerTab: NSTabViewItem!
-    
+
     @IBOutlet private var minChargeTextField: NSTextField!
     @IBOutlet private var minChargeSlider: NSSlider!
-    
+
     @IBOutlet private var maxChargeTextField: NSTextField!
     @IBOutlet private var maxChargeSlider: NSSlider!
-    
+
     @IBOutlet private var adapterSleepSwitch: NSSwitch!
     @IBOutlet private var magSafeSyncSwitch: NSSwitch!
-    
+
     private var minChargeVal = BTSettingsInfo.Defaults.minCharge
     @objc private dynamic var minChargeNum: NSNumber {
         get {
             return NSNumber(value: self.minChargeVal)
         }
-        
+
         set {
             let value = newValue.intValue
             //
             // For clamping, the assignment needs to be async, because otherwise
             // the source control does not get notified of the update. We cannot
             // change the values of the UI controls directly, because this
-            // caues the NSSlider to sometimes visually desync with its value.
+            // causes the NSSlider to sometimes visually desync with its value.
             //
             if value < BTSettingsInfo.Bounds.minChargeMin {
                 Task {
@@ -64,13 +64,13 @@ internal final class BTSettingsViewController: NSViewController {
             }
         }
     }
-    
+
     private var maxChargeVal = BTSettingsInfo.Defaults.maxCharge
     @objc private dynamic var maxChargeNum: NSNumber {
         get {
             return NSNumber(value: self.maxChargeVal)
         }
-        
+
         set {
             let value = newValue.intValue
             //
@@ -120,11 +120,11 @@ internal final class BTSettingsViewController: NSViewController {
         self.addPresetControl()
         self.addOptimizedChargingWarning()
     }
-    
+
     @IBAction private func cancelButtonAction(_: NSButton) {
         self.view.window?.windowController?.close()
     }
-    
+
     @IBAction private func doneButtonAction(_: NSButton) {
         let settings: [String: NSObject & Sendable]
         do {
@@ -153,15 +153,15 @@ internal final class BTSettingsViewController: NSViewController {
         else {
             os_log("Power settings have not changed, ignoring")
             self.view.window?.windowController?.close()
-            
+
             return
         }
-        
+
         Task {
             do {
                 try await BTDaemonXPCClient.setSettings(settings: settings)
                 self.view.window?.windowController?.close()
-            } catch{
+            } catch {
                 BTErrorHandler.errorHandler(
                     error: error,
                     window: self.view.window
@@ -173,12 +173,12 @@ internal final class BTSettingsViewController: NSViewController {
     @objc private func aboutButtonAction(_: NSButton) {
         self.presentAsSheet(BTAboutInfoViewController())
     }
-    
+
     override func viewWillAppear() {
         super.viewWillAppear()
-        
+
         self.view.window?.initialFirstResponder = self.initialFocusView
-        
+
         Task {
             await self.initPowerState()
             self.view.window?.center()
@@ -211,7 +211,7 @@ internal final class BTSettingsViewController: NSViewController {
             self.initialFocusView.heightAnchor.constraint(equalToConstant: 0),
         ])
     }
-    
+
     private func configurePowerTabTextFields() {
         guard let powerView = self.powerTab.view else {
             assertionFailure()
@@ -273,12 +273,12 @@ internal final class BTSettingsViewController: NSViewController {
             aboutButton.heightAnchor.constraint(equalToConstant: 24),
         ])
     }
-    
+
     private func setMinCharge(value: Int) {
         self.minChargeNum = NSNumber(value: value)
         self.updatePresetSelection()
     }
-    
+
     private func setMaxCharge(value: Int) {
         self.maxChargeNum = NSNumber(value: value)
         self.updatePresetSelection()
@@ -387,21 +387,21 @@ internal final class BTSettingsViewController: NSViewController {
         self.optimizedChargingWarning?.isHidden =
             !IOPSPrivate.OptimizedBatteryChargingEngaged()
     }
-    
+
     private func setAdapterSleep(value: Bool) {
         self.adapterSleepSwitch.state = value ? .off : .on
     }
-    
+
     private func setMagSafeSync(value: Bool) {
         self.magSafeSyncSwitch.state = value ? .on : .off
     }
-    
+
     private func initPowerState() async {
         do {
             let settings = try await BTActions.getSettings()
             self.currentSettings = settings
             self.updateOptimizedChargingWarning()
-            
+
             let minChargeNum =
             settings[BTSettingsInfo.Keys.minCharge] as? NSNumber
             let maxChargeNum =
@@ -410,7 +410,7 @@ internal final class BTSettingsViewController: NSViewController {
             settings[BTSettingsInfo.Keys.adapterSleep] as? NSNumber
             let magSafeSyncNum =
             settings[BTSettingsInfo.Keys.magSafeSync] as? NSNumber
-            
+
             guard let minCharge = minChargeNum?.intValue,
                   let maxCharge = maxChargeNum?.intValue,
                   let adapterSleep = adapterSleepNum?.boolValue
@@ -418,11 +418,11 @@ internal final class BTSettingsViewController: NSViewController {
                 BTErrorHandler.errorHandler(error: BTError.commFailed)
                 return
             }
-            
+
             self.setMinCharge(value: minCharge)
             self.setMaxCharge(value: maxCharge)
             self.setAdapterSleep(value: adapterSleep)
-            
+
             if let magSafeSync = magSafeSyncNum?.boolValue {
                 self.magSafeSyncSwitch.isEnabled = true
                 self.setMagSafeSync(value: magSafeSync)

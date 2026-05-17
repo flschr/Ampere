@@ -110,7 +110,7 @@ public enum IOPSPrivate {
 
         return nil
     }
-    
+
     private static func GetPackedBatteryBits() -> UInt64? {
         var token: Int32 = 0
         let status = notify_register_check(kIOPSNotifyPercentChange, &token)

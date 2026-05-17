@@ -12,4 +12,6 @@ const NSString *const BT_SERVICE_ID   = @BT_SERVICE_ID_;
 const NSString *const BT_DAEMON_ID    = @BT_DAEMON_ID_;
 const NSString *const BT_DAEMON_CONN  = @BT_DAEMON_CONN_;
 const NSString *const BT_AUTOSTART_ID = @BT_AUTOSTART_ID_;
-const NSString *const BT_CODESIGN_CN  = @BT_CODESIGN_CN_;
+const NSString *const BT_TEAM_ID      = @BT_TEAM_ID_;
+const NSString *const BT_CODESIGN_IDENTITY =
+    @BT_CODESIGN_IDENTITY_;

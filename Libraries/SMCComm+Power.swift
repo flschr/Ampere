@@ -134,7 +134,7 @@ private extension SMCComm.Power {
             )
         )
     }
-    
+
     private struct KeyControl {
         let keyInfo: SMCComm.KeyInfo
         let onBytes: [UInt8]

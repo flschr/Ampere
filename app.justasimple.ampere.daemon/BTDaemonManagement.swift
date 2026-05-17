@@ -41,7 +41,7 @@ internal enum BTDaemonManagement {
         } catch CocoaError.fileNoSuchFile {
             return true
         } catch {
-            os_log("Error deleting file \(path): \(error, privacy: .public))")
+            os_log("Error deleting file \(path): \(error, privacy: .public)")
             return false
         }
     }

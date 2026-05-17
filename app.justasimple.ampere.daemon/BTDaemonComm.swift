@@ -202,7 +202,7 @@ internal final class BTDaemonComm: NSObject, BTDaemonCommProtocol, Sendable {
                 reply([:])
                 return
             }
-            
+
             reply(BTDaemon.getState())
         }
     }
@@ -215,7 +215,7 @@ internal final class BTDaemonComm: NSObject, BTDaemonCommProtocol, Sendable {
                 reply([:])
                 return
             }
-            
+
             reply(BTSettings.getSettings())
         }
     }
@@ -234,7 +234,7 @@ internal final class BTDaemonComm: NSObject, BTDaemonCommProtocol, Sendable {
                 reply(BTError.unsupported.rawValue)
                 return
             }
-            
+
             let authorized = self.checkRight(
                 authData: authData,
                 rightName: BTAuthorizationRights.manage
@@ -243,7 +243,7 @@ internal final class BTDaemonComm: NSObject, BTDaemonCommProtocol, Sendable {
                 reply(BTError.notAuthorized.rawValue)
                 return
             }
-            
+
             BTSettings.setSettings(settings: settings, reply: reply)
         }
     }

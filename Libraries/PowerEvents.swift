@@ -14,15 +14,15 @@ public enum PowerEvents {
     private static func iokit_common_msg(_ message: UInt32) -> UInt32 {
         return (sys_iokit|sub_iokit_common|message)
     }
-    
+
     static let kIOMessageCanSystemSleep = iokit_common_msg(0x270)
     static let kIOMessageSystemWillSleep = iokit_common_msg(0x280)
     static let kIOMessageSystemHasPoweredOn = iokit_common_msg(0x300)
-    
+
     private static var notifyPortRef: IONotificationPortRef? = nil
     private static var notifierObject: io_object_t = IO_OBJECT_NULL
     private(set) static var root_port: io_connect_t = IO_OBJECT_NULL
-    
+
     static func register(callback: IOServiceInterestCallback) -> Bool {
         assert(self.root_port == IO_OBJECT_NULL)
         assert(self.notifyPortRef == nil)
@@ -45,7 +45,7 @@ public enum PowerEvents {
             self.notifyPortRef!,
             DispatchQueue.main
         )
-        
+
         return true
     }
 

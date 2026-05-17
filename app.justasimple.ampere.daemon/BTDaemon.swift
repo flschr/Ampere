@@ -47,7 +47,7 @@ internal enum BTDaemon {
             maxCharge: Int(maxCharge)
         ).payload
     }
-    
+
     private static func start() throws {
         try BTPowerEvents.start()
 
@@ -87,7 +87,7 @@ internal enum BTDaemon {
             exit(-1)
         }
     }
-    
+
     static func pause() {
         guard self.enabled else {
             return
@@ -108,7 +108,7 @@ internal enum BTDaemon {
         self.uniqueId = CSIdentification.getUniqueIdSelf()
 
         BTSettings.readDefaults()
-        
+
         GlobalSleep.restoreOnStart()
 
         do {

@@ -68,7 +68,7 @@ public extension SMCComm {
         static let ui32 = SMCComm.KeyType("u", "i", "3", "2")
         static let hex  = SMCComm.KeyType("h", "e", "x", "_")
     }
-    
+
     static func KeyInfoDataEq (
         data1: SMCComm.KeyInfoData,
         data2: SMCComm.KeyInfoData
@@ -159,7 +159,7 @@ public enum SMCComm {
               SMCComm.KeyInfoDataEq(data1: keyInfo.info, data2: info) else {
             return false
         }
-        
+
         return true
     }
 
@@ -170,7 +170,7 @@ public enum SMCComm {
         guard let outputStruct else {
             return nil
         }
-        
+
         let mirror = Mirror(reflecting: outputStruct.bytes)
         let data = mirror.children.prefix(dataSize)
         return data.map { byte in byte.value as! UInt8 }

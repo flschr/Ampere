@@ -20,7 +20,7 @@ internal enum BTAppPrompts {
         switch response {
         case NSApplication.ModalResponse.alertFirstButtonReturn:
             await self.tryQuit()
-            
+
         case NSApplication.ModalResponse.alertSecondButtonReturn:
             break
 
@@ -188,10 +188,10 @@ internal enum BTAppPrompts {
             let alert = NSAlert()
             alert.messageText = BTLocalization.Prompts.Daemon.commFailMessage
             alert.informativeText = BTLocalization.Prompts.Daemon.requiredInfo +
-            "\n\n" + BTLocalization.Prompts.Daemon.commFailInfo
+                "\n\n" + BTLocalization.Prompts.Daemon.commFailInfo
             alert.alertStyle = NSAlert.Style.critical
             _ = alert.addButton(withTitle: BTLocalization.Prompts.quit)
-            let _ = await self.runPrompt(alert: alert, window: window)
+            _ = await self.runPrompt(alert: alert, window: window)
             NSApp.terminate(self)
         }
     }

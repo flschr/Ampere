@@ -1,7 +1,7 @@
 # Local Development
 
-This fork is configured for local development with Rene Fischer's Apple
-Development certificate.
+This repository is configured for local development with the project signing
+settings in Xcode.
 
 ## Bundle IDs
 
@@ -10,7 +10,7 @@ Development certificate.
 - Login item: `app.justasimple.ampere.autostart`
 - Privileged daemon: `app.justasimple.ampere.daemon`
 - Privileged daemon Mach service:
-  `H2FNY8B779.app.justasimple.ampere.daemon`
+  `<Apple Team ID>.app.justasimple.ampere.daemon`
 
 ## Product Naming
 
@@ -25,12 +25,12 @@ identity.
 
 ## Signing
 
-- Development team: `H2FNY8B779`
-- Development signing certificate:
-  `Apple Development: rene@gaehn.org (UD9FDHGUAH)`
+- Select a local Apple development team in Xcode.
+- Use an `Apple Development` certificate for Debug builds.
 
-The Common Name is intentionally the certificate CN, while the team and Mach
-service prefix use the Apple team identifier.
+The daemon, app, and XPC validation use the Apple team identifier for trusted
+local development builds. If you change the team identifier, keep the daemon
+Mach service name and signing settings in sync.
 
 ## Build
 

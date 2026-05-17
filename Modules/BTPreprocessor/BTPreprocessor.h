@@ -25,8 +25,11 @@ extern const NSString *const BT_DAEMON_CONN;
 /// The Ampere Autostart identifier.
 extern const NSString *const BT_AUTOSTART_ID;
 
-/// The Ampere codesign Common Name.
-extern const NSString *const BT_CODESIGN_CN;
+/// The Apple team identifier used for codesign validation.
+extern const NSString *const BT_TEAM_ID;
+
+/// The codesign identity family used for local validation policy.
+extern const NSString *const BT_CODESIGN_IDENTITY;
 
 __END_DECLS
 

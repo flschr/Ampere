@@ -1,5 +1,37 @@
-Ampere.xcodeproj/xcuserdata/
-Ampere.xcodeproj/project.xcworkspace/xcuserdata/
-build/
-dist/
+# macOS
 .DS_Store
+.AppleDouble
+.LSOverride
+
+# Xcode local state and build output
+build/
+DerivedData/
+*.xcuserstate
+*.xcuserdata/
+*.xcuserdatad/
+*.xcodeproj/xcuserdata/
+*.xcworkspace/xcuserdata/
+*.xcscmblueprint
+*.moved-aside
+*.xccheckout
+
+# Local release artifacts
+dist/
+*.app
+*.dSYM
+*.dmg
+*.ipa
+*.xcarchive
+*.zip
+
+# Local configuration
+.env
+.env.*
+Local*.xcconfig
+*.local.xcconfig
+
+# Editor-local settings
+.vscode/
+.idea/
+.cursor/
+.zed/

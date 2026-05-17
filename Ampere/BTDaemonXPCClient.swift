@@ -125,8 +125,7 @@ internal enum BTDaemonXPCClient {
         Task {
             do {
                 try await self.run(command: .finishUpdate, authorization: .none)
-            }
-            catch {
+            } catch {
                 //
                 // Deliberately ignore errors as this is an optional notification.
                 //
@@ -187,7 +186,7 @@ internal enum BTDaemonXPCClient {
             continuation.resume()
         }
     }
-    
+
     private static func connectDaemon() -> NSXPCConnection {
         if let connect = self.connect {
             return connect
@@ -227,12 +226,12 @@ internal enum BTDaemonXPCClient {
         command: @BTBackgroundActor @escaping @Sendable (BTDaemonCommProtocol) -> Void
     ) {
         self.executeDaemon(command: command) { error in
-            os_log("XPC client remote error: \(error, privacy: .public))")
+            os_log("XPC client remote error: \(error, privacy: .public)")
             os_log("Retrying...")
             Task { @BTBackgroundActor in
                 self.disconnectDaemon()
                 self.executeDaemon(command: command) { error in
-                    os_log("XPC client remote error: \(error, privacy: .public))")
+                    os_log("XPC client remote error: \(error, privacy: .public)")
                     continuation.resume(throwing: BTError.commFailed)
                 }
             }

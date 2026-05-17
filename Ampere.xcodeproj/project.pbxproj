@@ -1138,10 +1138,11 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				BT_APP_ID = app.justasimple.ampere;
 				BT_AUTOSTART_ID = app.justasimple.ampere.autostart;
-				BT_CODESIGN_CN = "Apple Development: rene@gaehn.org (UD9FDHGUAH)";
-				BT_DAEMON_CONN = H2FNY8B779.app.justasimple.ampere.daemon;
+				BT_CODESIGN_IDENTITY = "$(CODE_SIGN_IDENTITY)";
+				BT_DAEMON_CONN = "$(BT_TEAM_ID).$(BT_DAEMON_ID)";
 				BT_DAEMON_ID = app.justasimple.ampere.daemon;
 				BT_SERVICE_ID = app.justasimple.ampere.service;
+				BT_TEAM_ID = H2FNY8B779;
 				CLANG_ANALYZER_GCD_PERFORMANCE = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_EMPTY_CONTEXT = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -1223,7 +1224,8 @@
 					"\"BT_AUTOSTART_ID_=\\\"$(BT_AUTOSTART_ID)\\\"\"",
 					"\"BT_DAEMON_ID_=\\\"$(BT_DAEMON_ID)\\\"\"",
 					"\"BT_DAEMON_CONN_=\\\"$(BT_DAEMON_CONN)\\\"\"",
-					"\"BT_CODESIGN_CN_=\\\"$(BT_CODESIGN_CN)\\\"\"",
+					"\"BT_TEAM_ID_=\\\"$(BT_TEAM_ID)\\\"\"",
+					"\"BT_CODESIGN_IDENTITY_=\\\"$(BT_CODESIGN_IDENTITY)\\\"\"",
 					"\"BT_SERVICE_ID_=\\\"$(BT_SERVICE_ID)\\\"\"",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
@@ -1276,10 +1278,11 @@
 				ASSETCATALOG_COMPILER_GENERATE_SWIFT_ASSET_SYMBOL_EXTENSIONS = YES;
 				BT_APP_ID = app.justasimple.ampere;
 				BT_AUTOSTART_ID = app.justasimple.ampere.autostart;
-				BT_CODESIGN_CN = "Apple Development: rene@gaehn.org (UD9FDHGUAH)";
-				BT_DAEMON_CONN = H2FNY8B779.app.justasimple.ampere.daemon;
+				BT_CODESIGN_IDENTITY = "$(CODE_SIGN_IDENTITY)";
+				BT_DAEMON_CONN = "$(BT_TEAM_ID).$(BT_DAEMON_ID)";
 				BT_DAEMON_ID = app.justasimple.ampere.daemon;
 				BT_SERVICE_ID = app.justasimple.ampere.service;
+				BT_TEAM_ID = H2FNY8B779;
 				CLANG_ANALYZER_GCD_PERFORMANCE = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_EMPTY_CONTEXT = YES;
 				CLANG_ANALYZER_LOCALIZABILITY_NONLOCALIZED = YES;
@@ -1359,7 +1362,8 @@
 					"\"BT_AUTOSTART_ID_=\\\"$(BT_AUTOSTART_ID)\\\"\"",
 					"\"BT_DAEMON_ID_=\\\"$(BT_DAEMON_ID)\\\"\"",
 					"\"BT_DAEMON_CONN_=\\\"$(BT_DAEMON_CONN)\\\"\"",
-					"\"BT_CODESIGN_CN_=\\\"$(BT_CODESIGN_CN)\\\"\"",
+					"\"BT_TEAM_ID_=\\\"$(BT_TEAM_ID)\\\"\"",
+					"\"BT_CODESIGN_IDENTITY_=\\\"$(BT_CODESIGN_IDENTITY)\\\"\"",
 					"\"BT_SERVICE_ID_=\\\"$(BT_SERVICE_ID)\\\"\"",
 				);
 				GCC_SYMBOLS_PRIVATE_EXTERN = YES;
@@ -1412,7 +1416,7 @@
 				CODE_SIGN_ENTITLEMENTS = Ampere/Ampere.entitlements;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Ampere/Info.plist";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 René Fischer / Just a Simple App. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Just a Simple App. All rights reserved.";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;
@@ -1435,7 +1439,7 @@
 				CODE_SIGN_ENTITLEMENTS = Ampere/Ampere.entitlements;
 				GENERATE_INFOPLIST_FILE = YES;
 				INFOPLIST_FILE = "$(SRCROOT)/Ampere/Info.plist";
-				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 René Fischer / Just a Simple App. All rights reserved.";
+				INFOPLIST_KEY_NSHumanReadableCopyright = "Copyright © 2026 Just a Simple App. All rights reserved.";
 				INFOPLIST_KEY_LSApplicationCategoryType = "public.app-category.utilities";
 				INFOPLIST_KEY_NSMainStoryboardFile = Main;
 				INFOPLIST_KEY_NSPrincipalClass = NSApplication;

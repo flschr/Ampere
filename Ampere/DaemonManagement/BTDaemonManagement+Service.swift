@@ -73,15 +73,15 @@ internal extension BTDaemonManagement {
             }
 
             BTDaemonXPCClient.disconnectDaemon()
-            
+
             do {
                 try await appService.unregister()
                 assert(!self.registered(status: appService.status))
             } catch {
                 os_log(
-                    "Daemon service unregistering failed, error: \(error, privacy: .public)), status: \(appService.status.rawValue)"
+                    "Daemon service unregistering failed, error: \(error, privacy: .public), status: \(appService.status.rawValue)"
                 )
-                
+
                 throw BTError.unknown
             }
         }
@@ -97,7 +97,7 @@ internal extension BTDaemonManagement {
                 try appService.register()
             } catch {
                 os_log(
-                    "Daemon service registering failed, error: \(error, privacy: .public)), status: \(appService.status.rawValue)"
+                    "Daemon service registering failed, error: \(error, privacy: .public), status: \(appService.status.rawValue)"
                 )
             }
         }
@@ -117,12 +117,12 @@ internal extension BTDaemonManagement {
 
                     return BTDaemonManagement.Status(fromSMStatus: appService.status)
                 }
-                
+
                 try? await Task.sleep(nanoseconds: 500_000_000)
             }
 
             BTDaemonXPCClient.finishUpdate()
-            
+
             return .notRegistered
         }
 
@@ -146,8 +146,8 @@ internal extension BTDaemonManagement {
                 if !self.registered(status: appService.status) {
                     return
                 }
-                
-                
+
+
                 try? await Task.sleep(nanoseconds: 5_000_000_000)
             }
 
@@ -162,11 +162,11 @@ internal extension BTDaemonManagement {
                 if appService.status == .enabled {
                     return
                 }
-                
-                
+
+
                 try? await Task.sleep(nanoseconds: 5_000_000_000)
             }
-            
+
             throw BTError.unknown
         }
     }

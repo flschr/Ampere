@@ -32,7 +32,7 @@ public enum GlobalSleep {
         guard let value = UserDefaults.standard.object(forKey: self.previousSleepDisabledKey) as? Bool else {
             return
         }
-        
+
         self.setSleepDisabledIOPMValue(value: value as CFBoolean)
 
         UserDefaults.standard.removeObject(forKey: self.previousSleepDisabledKey)

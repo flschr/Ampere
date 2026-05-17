@@ -110,7 +110,7 @@ internal final class BTAppDelegate: NSObject, NSApplicationDelegate {
                 }
 
                 self.initialized = true
-                
+
                 if !NSApp.isActive {
                     BTAccessoryMode.activate()
                 }

@@ -17,13 +17,13 @@ internal enum BTAppXPCClient {
             let service = self.getService {
                 continuation.resume(throwing: BTError.commFailed)
             }
-            
+
             service.getAuthorization { data in
                 guard let data = data else {
                     continuation.resume(throwing: BTError.notAuthorized)
                     return
                 }
-                
+
                 continuation.resume(returning: data)
             }
         }
@@ -34,13 +34,13 @@ internal enum BTAppXPCClient {
             let service = self.getService {
                 continuation.resume(throwing: BTError.commFailed)
             }
-            
+
             service.getDaemonAuthorization { data in
                 guard let data = data else {
                     continuation.resume(throwing: BTError.notAuthorized)
                     return
                 }
-                
+
                 continuation.resume(returning: data)
             }
         }
@@ -51,13 +51,13 @@ internal enum BTAppXPCClient {
             let service = self.getService {
                 continuation.resume(throwing: BTError.commFailed)
             }
-            
+
             service.getManageAuthorization { data in
                 guard let data = data else {
                     continuation.resume(throwing: BTError.notAuthorized)
                     return
                 }
-                
+
                 continuation.resume(returning: data)
             }
         }
@@ -106,7 +106,7 @@ internal enum BTAppXPCClient {
         let connect = self.connectService()
 
         let service = connect.remoteObjectProxyWithErrorHandler { error in
-            os_log("XPC app remote object error: \(error, privacy: .public))")
+            os_log("XPC app remote object error: \(error, privacy: .public)")
             errorHandler()
         } as! BTServiceCommProtocol
 

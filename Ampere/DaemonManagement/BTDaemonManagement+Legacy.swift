@@ -29,7 +29,7 @@ internal extension BTDaemonManagement {
                 guard let simpleAuth else {
                     throw BTError.malformedData
                 }
-                
+
                 var error: Unmanaged<CFError>?
                 let success = SMJobBless(
                     kSMDomainSystemLaunchd,
@@ -41,9 +41,9 @@ internal extension BTDaemonManagement {
                 BTDaemonXPCClient.finishUpdate()
 
                 os_log(
-                    "Legacy helper registering result: \(success), error: \(String(describing: error), privacy: .public))"
+                    "Legacy helper registering result: \(success), error: \(String(describing: error), privacy: .public)"
                 )
-                
+
                 return BTDaemonManagement.Status(fromBool: success)
             } catch {
                 BTDaemonXPCClient.finishUpdate()
@@ -70,7 +70,7 @@ internal extension BTDaemonManagement {
             )
 
             os_log(
-                "Legacy helper unregistering result: \(success), error: \(String(describing: error), privacy: .public))"
+                "Legacy helper unregistering result: \(success), error: \(String(describing: error), privacy: .public)"
             )
             //
             // Errors are not returned because the legacy helper PLIST has
@@ -92,7 +92,7 @@ internal extension BTDaemonManagement {
                 guard let simpleAuth else {
                     throw BTError.notAuthorized
                 }
-                
+
                 self.unregister(simpleAuth: simpleAuth)
             } catch {
                 throw BTError.notAuthorized

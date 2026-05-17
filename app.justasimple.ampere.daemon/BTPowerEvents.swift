@@ -51,7 +51,7 @@ internal enum BTPowerEvents {
         // Don't free remaining resources, as we will exit anyway.
         //
     }
-    
+
     static func exit() {
         guard self.powerCreated else {
             return
@@ -59,7 +59,7 @@ internal enum BTPowerEvents {
 
         self.restoreState()
     }
-    
+
     static func stop() {
         assert(self.powerCreated)
 

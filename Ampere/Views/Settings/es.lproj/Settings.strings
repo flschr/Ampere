@@ -4,10 +4,10 @@
 "47S-lH-kMQ.title" = "Sincronizar luz indicadora MagSafe";
 "BOx-qm-k90.title" = "Cuando la tapa está cerrada, tu Mac puede entrar en reposo automáticamente con el adaptador de corriente desactivado, incluso si hay una pantalla externa conectada y encendida.";
 "IMi-pw-cwy.label" = "Energía";
-"SrC-Z2-byQ.title" = "75";
+"SrC-Z2-byQ.title" = "70";
 "WC9-iw-C9D.title" = "%";
-"Wuy-t5-ID5.title" = "Desactivar carga por encima de:";
-"YrV-xe-P4m.title" = "Activar carga por debajo de:";
+"Wuy-t5-ID5.title" = "Pausar carga al llegar a:";
+"YrV-xe-P4m.title" = "Iniciar carga por debajo de:";
 "ZWd-cD-Dlp.label" = "Energía";
 "ZWd-cD-Dlp.paletteLabel" = "Energía";
 "cnq-Zd-qMS.title" = "OK";

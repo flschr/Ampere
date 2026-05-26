@@ -189,12 +189,12 @@
                                             <modifierMask key="keyEquivalentModifierMask"/>
                                         </menuItem>
                                         <menuItem isSeparatorItem="YES" id="gI3-dm-1ia"/>
-                                        <menuItem title="Use Power Adapter" hidden="YES" keyEquivalent="p" id="wQc-iH-a0U">
+                                        <menuItem title="Use Power Adapter Instead of Battery" hidden="YES" keyEquivalent="p" id="wQc-iH-a0U">
                                             <connections>
                                                 <action selector="disablePowerAdapterHandlerWithSender:" target="Q4N-wh-Pcn" id="fvm-7S-EXd"/>
                                             </connections>
                                         </menuItem>
-                                        <menuItem title="Use Power Adapter" hidden="YES" keyEquivalent="p" id="v10-VJ-vXg">
+                                        <menuItem title="Use Power Adapter Instead of Battery" hidden="YES" keyEquivalent="p" id="v10-VJ-vXg">
                                             <connections>
                                                 <action selector="enablePowerAdapterHandlerWithSender:" target="Q4N-wh-Pcn" id="MFm-8u-wJh"/>
                                             </connections>
@@ -398,12 +398,12 @@
                                 <action selector="toggleLowPowerModeHandlerWithSender:" target="Yoz-Et-jXW" id="LPM-MB-ACT"/>
                             </connections>
                         </menuItem>
-                        <menuItem title="Use Power Adapter" hidden="YES" keyEquivalent="p" id="ter-ZE-C7E">
+                        <menuItem title="Use Power Adapter Instead of Battery" hidden="YES" keyEquivalent="p" id="ter-ZE-C7E">
                             <connections>
                                 <action selector="disablePowerAdapterHandlerWithSender:" target="Yoz-Et-jXW" id="dbn-vT-If5"/>
                             </connections>
                         </menuItem>
-                        <menuItem title="Use Power Adapter" hidden="YES" keyEquivalent="p" id="aEW-fU-9yN">
+                        <menuItem title="Use Power Adapter Instead of Battery" hidden="YES" keyEquivalent="p" id="aEW-fU-9yN">
                             <connections>
                                 <action selector="enablePowerAdapterHandlerWithSender:" target="Yoz-Et-jXW" id="PCx-sG-EOc"/>
                             </connections>

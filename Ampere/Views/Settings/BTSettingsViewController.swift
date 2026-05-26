@@ -8,11 +8,9 @@ import os.log
 
 @MainActor
 internal final class BTSettingsViewController: NSViewController {
-    private static let contentSize = NSSize(width: 520, height: 453)
+    private static let contentSize = NSSize(width: 520, height: 417)
 
     private var currentSettings: [String: NSObject & Sendable]? = nil
-    private var presetLabel: NSTextField? = nil
-    private var presetControl: NSSegmentedControl? = nil
     private weak var cancelButton: NSButton? = nil
     private var optimizedChargingWarning: NSTextField? = nil
     private let initialFocusView = BTSettingsInitialFocusView()
@@ -108,7 +106,7 @@ internal final class BTSettingsViewController: NSViewController {
             equalToConstant: Self.contentSize.height
         ).isActive = true
         self.tabView.selectTabViewItem(self.powerTab)
-        self.tabView.heightAnchor.constraint(equalToConstant: 384).isActive = true
+        self.tabView.heightAnchor.constraint(equalToConstant: 348).isActive = true
         self.addInitialFocusView()
         self.configurePowerTabTextFields()
         self.cancelButton = self.view.subviews.compactMap {
@@ -117,7 +115,6 @@ internal final class BTSettingsViewController: NSViewController {
             $0.action == #selector(self.cancelButtonAction(_:))
         }
         self.addAboutButton()
-        self.addPresetControl()
         self.addOptimizedChargingWarning()
     }
 
@@ -276,61 +273,10 @@ internal final class BTSettingsViewController: NSViewController {
 
     private func setMinCharge(value: Int) {
         self.minChargeNum = NSNumber(value: value)
-        self.updatePresetSelection()
     }
 
     private func setMaxCharge(value: Int) {
         self.maxChargeNum = NSNumber(value: value)
-        self.updatePresetSelection()
-    }
-
-    private func addPresetControl() {
-        guard let powerView = self.powerTab.view else {
-            assertionFailure()
-            return
-        }
-
-        let label = NSTextField(
-            labelWithString: BTLocalization.Settings.preset
-        )
-        label.translatesAutoresizingMaskIntoConstraints = false
-
-        let presetControl = NSSegmentedControl(
-            labels: BTChargePreset.allCases.map(\.title),
-            trackingMode: .selectOne,
-            target: self,
-            action: #selector(self.presetChanged(_:))
-        )
-        presetControl.translatesAutoresizingMaskIntoConstraints = false
-        presetControl.segmentStyle = .rounded
-
-        powerView.addSubview(label)
-        powerView.addSubview(presetControl)
-
-        NSLayoutConstraint.activate([
-            label.leadingAnchor.constraint(
-                equalTo: powerView.leadingAnchor,
-                constant: 20
-            ),
-            label.centerYAnchor.constraint(equalTo: presetControl.centerYAnchor),
-
-            presetControl.leadingAnchor.constraint(
-                equalTo: label.trailingAnchor,
-                constant: 8
-            ),
-            presetControl.topAnchor.constraint(
-                equalTo: powerView.topAnchor,
-                constant: 20
-            ),
-            presetControl.trailingAnchor.constraint(
-                lessThanOrEqualTo: powerView.trailingAnchor,
-                constant: -20
-            ),
-        ])
-
-        self.presetControl = presetControl
-        self.presetLabel = label
-        self.updatePresetSelection()
     }
 
     private func addOptimizedChargingWarning() {
@@ -361,26 +307,6 @@ internal final class BTSettingsViewController: NSViewController {
         ])
 
         self.optimizedChargingWarning = warning
-    }
-
-    @objc private func presetChanged(_ sender: NSSegmentedControl) {
-        guard
-            let preset = BTChargePreset(rawValue: sender.selectedSegment)
-        else {
-            return
-        }
-
-        self.setMinCharge(value: preset.minCharge)
-        self.setMaxCharge(value: preset.maxCharge)
-    }
-
-    private func updatePresetSelection() {
-        let matchingPreset = BTChargePreset.matching(
-            minCharge: Int(self.minChargeVal),
-            maxCharge: Int(self.maxChargeVal)
-        )
-
-        self.presetControl?.selectedSegment = matchingPreset?.rawValue ?? -1
     }
 
     private func updateOptimizedChargingWarning() {

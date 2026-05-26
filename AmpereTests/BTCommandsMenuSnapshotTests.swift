@@ -78,7 +78,7 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
         XCTAssertFalse(snapshot.notCharging.isHidden)
         XCTAssertEqual(
             snapshot.statusHeader.title,
-            "Charging paused until 50%"
+            "Charging paused until below 50%"
         )
         XCTAssertFalse(snapshot.chargeToLimitNow.isHidden)
         XCTAssertTrue(snapshot.requestChargingToFull.isHidden)
@@ -126,7 +126,10 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
         )
 
         XCTAssertFalse(snapshot.notCharging.isHidden)
-        XCTAssertEqual(snapshot.statusHeader.title, "Charging paused until 70%")
+        XCTAssertEqual(
+            snapshot.statusHeader.title,
+            "Charging paused until below 70%"
+        )
         XCTAssertTrue(snapshot.remainingTime.title?.contains("until 70%") == true)
         XCTAssertFalse(snapshot.requestChargingToFull.isHidden)
         XCTAssertTrue(snapshot.requestChargingToLimit.isHidden)

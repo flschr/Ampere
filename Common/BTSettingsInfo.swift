@@ -7,7 +7,7 @@ import Foundation
 
 internal enum BTSettingsInfo {
     enum Defaults {
-        static let minCharge: UInt8 = 75
+        static let minCharge: UInt8 = 70
         static let maxCharge: UInt8 = 80
         static let adapterSleep = false
         static let magSafeSync = false

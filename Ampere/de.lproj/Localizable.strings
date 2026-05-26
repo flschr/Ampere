@@ -55,7 +55,7 @@
 "Charging to 100%" = "Lädt auf 100%";
 "Holding charge, resumes below %d %%" = "Laden pausiert; lädt unter %d%% weiter";
 "Holding charge; resumes below %d %%" = "Laden pausiert; lädt unter %d%% weiter";
-"Charging paused until %d%%" = "Laden bis %d%% pausiert";
+"Charging paused until below %d%%" = "Laden pausiert bis unter %d%%";
 "Charging paused: battery too warm" = "Laden pausiert: Akku zu warm";
 "Waiting, will charge to %d %%" = "Wartet, lädt auf %d %%";
 "Waiting to charge to %d%%" = "Wartet auf Laden bis %d%%";
@@ -65,17 +65,13 @@
 "Waiting; will charge to 100 %" = "Wartet; lädt auf 100 %";
 "Charge to %d %% Now" = "Jetzt auf %d %% laden";
 "Request Charging to %d %% Now" = "Laden auf %d %% jetzt anfordern";
-"Use Power Adapter" = "Netzteil verwenden";
+"Use Power Adapter Instead of Battery" = "Netzteil statt Akku verwenden";
 "Low Power Mode" = "Stromsparmodus";
 "Until Empty: %@" = "Bis leer: %@";
 "Until %d %%: %@" = "Bis %d %%: %@";
 "%@ until empty" = "%@ bis leer";
 "%@ until %d%%" = "%@ bis %d%%";
 "approx. %@" = "ca. %@";
-"Everyday" = "Alltag";
-"Desk" = "Schreibtisch";
-"Travel" = "Reise";
-"Preset:" = "Voreinstellung:";
 "macOS Optimized Battery Charging is on. Turn it off in Battery settings so Ampere can manage charging reliably." = "Optimiertes Laden der Batterie von macOS ist aktiviert. Deaktiviere es in den Batterieeinstellungen, damit Ampere das Laden zuverlässig verwalten kann.";
 "Uninstall" = "Deinstallieren";
 "Remove the background service, disable automatic startup, delete Ampere's local settings, and move the app to the Trash." = "Entfernt den Hintergrunddienst, deaktiviert den automatischen Start, löscht die lokalen Einstellungen von Ampere und bewegt die App in den Papierkorb.";

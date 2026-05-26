@@ -15,10 +15,10 @@
                     <window key="window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="utilityWindow" tabbingMode="disallowed" toolbarStyle="preference" id="zbj-Ah-uH1">
                         <windowStyleMask key="styleMask" titled="YES"/>
                         <windowCollectionBehavior key="collectionBehavior" fullScreenNone="YES" fullScreenDisallowsTiling="YES"/>
-                        <rect key="contentRect" x="2080" y="983" width="480" height="270"/>
+                        <rect key="contentRect" x="2080" y="983" width="480" height="234"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
                         <view key="contentView" id="zIT-84-1ZB">
-                            <rect key="frame" x="0.0" y="0.0" width="480" height="270"/>
+                            <rect key="frame" x="0.0" y="0.0" width="480" height="234"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </view>
                         <toolbar key="toolbar" implicitIdentifier="139CDA02-1562-4BA9-8D5C-8C3CA70163F7" autosavesConfiguration="NO" allowsUserCustomization="NO" showsBaselineSeparator="NO" displayMode="iconAndLabel" sizeMode="regular" id="w28-jh-n04">
@@ -52,35 +52,24 @@
             <objects>
                 <viewController storyboardIdentifier="SettingsViewController" showSeguePresentationStyle="single" id="qK6-EM-YZH" userLabel="SettingsViewController" customClass="BTSettingsViewController" customModule="Battery_Toolkit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" translatesAutoresizingMaskIntoConstraints="NO" id="IvC-q3-fvl" userLabel="Settings View">
-                        <rect key="frame" x="0.0" y="0.0" width="495" height="453"/>
+                        <rect key="frame" x="0.0" y="0.0" width="495" height="417"/>
                         <subviews>
                             <tabView allowsTruncatedLabels="NO" type="noTabsNoBorder" translatesAutoresizingMaskIntoConstraints="NO" id="NXG-fh-uCo">
-                                <rect key="frame" x="0.0" y="69" width="495" height="384"/>
+                                <rect key="frame" x="0.0" y="69" width="495" height="348"/>
                                 <font key="font" metaFont="system"/>
                                 <tabViewItems>
                                     <tabViewItem label="Power" identifier="" id="IMi-pw-cwy" userLabel="Power">
                                         <view key="view" id="Blc-dd-9Qv">
-                                            <rect key="frame" x="0.0" y="0.0" width="495" height="384"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="495" height="348"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
-                                                <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="nq7-TF-yL4" userLabel="Max Stepper">
-                                                    <rect key="frame" x="442" y="164" width="19" height="28"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="20" id="CgW-fv-xEB"/>
-                                                        <constraint firstAttribute="width" constant="13" id="LgR-Wb-JpC"/>
-                                                    </constraints>
-                                                    <stepperCell key="cell" continuous="YES" alignment="left" maxValue="100" id="4tl-Ng-hyq"/>
-                                                    <connections>
-                                                        <binding destination="qK6-EM-YZH" name="value" keyPath="self.maxChargeNum" id="cm5-lb-m9T"/>
-                                                    </connections>
-                                                </stepper>
                                                 <textField focusRingType="none" verticalHuggingPriority="750" mirrorLayoutDirectionWhenInternationalizing="never" preferredMaxLayoutWidth="30" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UVz-So-HqI" userLabel="Min Charge ">
-                                                    <rect key="frame" x="410" y="220" width="35" height="21"/>
+                                                    <rect key="frame" x="410" y="220" width="50" height="21"/>
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="21" id="Kuf-Hs-zxF"/>
-                                                        <constraint firstAttribute="width" constant="35" id="MRL-G0-91Y"/>
+                                                        <constraint firstAttribute="width" constant="50" id="MRL-G0-91Y"/>
                                                     </constraints>
-                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" truncatesLastVisibleLine="YES" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" baseWritingDirection="leftToRight" alignment="center" title="75" drawsBackground="YES" usesSingleLineMode="YES" id="SrC-Z2-byQ">
+                                                    <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" truncatesLastVisibleLine="YES" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" baseWritingDirection="leftToRight" alignment="center" title="70" drawsBackground="YES" usesSingleLineMode="YES" id="SrC-Z2-byQ">
                                                         <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="decimal" formatWidth="-1" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="Ufs-Cu-5R1"/>
                                                         <font key="font" metaFont="system"/>
                                                         <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
@@ -96,7 +85,7 @@
                                                         <constraint firstAttribute="height" relation="greaterThanOrEqual" constant="16" id="EuL-L8-25Q"/>
                                                         <constraint firstAttribute="height" constant="16" id="gnV-QU-pzo"/>
                                                     </constraints>
-                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="Turn battery charging off above:" id="Wuy-t5-ID5">
+                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="Pause charging at:" id="Wuy-t5-ID5">
                                                         <font key="font" metaFont="system"/>
                                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -114,17 +103,6 @@
                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
                                                 </textField>
-                                                <stepper horizontalHuggingPriority="750" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="BRS-K5-tS0" userLabel="Min Stepper">
-                                                    <rect key="frame" x="442" y="216" width="19" height="28"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="20" id="1ax-0q-HUH"/>
-                                                        <constraint firstAttribute="width" constant="13" id="G5f-Ks-aX5"/>
-                                                    </constraints>
-                                                    <stepperCell key="cell" continuous="YES" alignment="left" maxValue="100" id="MX2-oM-Nxs"/>
-                                                    <connections>
-                                                        <binding destination="qK6-EM-YZH" name="value" keyPath="self.minChargeNum" id="3y9-Yj-f6y"/>
-                                                    </connections>
-                                                </stepper>
                                                 <textField focusRingType="none" horizontalHuggingPriority="750" verticalHuggingPriority="750" preferredMaxLayoutWidth="16" translatesAutoresizingMaskIntoConstraints="NO" id="cpE-XY-Cm8" userLabel="Min %">
                                                     <rect key="frame" x="461" y="222" width="16" height="16"/>
                                                     <constraints>
@@ -148,9 +126,9 @@
                                                     </connections>
                                                 </slider>
                                                 <textField focusRingType="none" verticalHuggingPriority="750" mirrorLayoutDirectionWhenInternationalizing="never" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="jVr-RT-V0O" userLabel="Max Charge">
-                                                    <rect key="frame" x="410" y="168" width="35" height="21"/>
+                                                    <rect key="frame" x="410" y="168" width="50" height="21"/>
                                                     <constraints>
-                                                        <constraint firstAttribute="width" constant="35" id="hfS-3E-kvP"/>
+                                                        <constraint firstAttribute="width" constant="50" id="hfS-3E-kvP"/>
                                                         <constraint firstAttribute="height" constant="21" id="inl-id-yxn"/>
                                                     </constraints>
                                                     <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" truncatesLastVisibleLine="YES" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" baseWritingDirection="leftToRight" alignment="center" title="80" drawsBackground="YES" usesSingleLineMode="YES" id="sW6-EL-lV5">
@@ -178,7 +156,7 @@
                                                     <constraints>
                                                         <constraint firstAttribute="height" constant="16" id="CJk-Zk-wNS"/>
                                                     </constraints>
-                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="Turn battery charging on below:" id="YrV-xe-P4m">
+                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="Start charging below:" id="YrV-xe-P4m">
                                                         <font key="font" metaFont="system"/>
                                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -249,24 +227,21 @@
                                             <constraints>
                                                 <constraint firstItem="cpE-XY-Cm8" firstAttribute="centerY" secondItem="GpU-47-1gg" secondAttribute="centerY" id="1dl-YS-6Zu"/>
                                                 <constraint firstItem="Ghe-cF-C3L" firstAttribute="leading" secondItem="4VU-bn-waD" secondAttribute="leading" id="2RH-su-Np3"/>
-                                                <constraint firstItem="nq7-TF-yL4" firstAttribute="leading" secondItem="jVr-RT-V0O" secondAttribute="trailing" id="48j-SF-AGL"/>
-                                                <constraint firstItem="cpE-XY-Cm8" firstAttribute="leading" secondItem="BRS-K5-tS0" secondAttribute="trailing" constant="5" id="5BV-JP-wks"/>
+                                                <constraint firstItem="cpE-XY-Cm8" firstAttribute="leading" secondItem="UVz-So-HqI" secondAttribute="trailing" constant="5" id="5BV-JP-wks"/>
                                                 <constraint firstItem="gVg-BR-NcJ" firstAttribute="top" secondItem="Z0P-wM-ijd" secondAttribute="bottom" constant="8" symbolic="YES" id="6JY-Uc-bCv"/>
                                                 <constraint firstItem="jVr-RT-V0O" firstAttribute="centerY" secondItem="9gz-yn-SNi" secondAttribute="centerY" id="7Rl-Gj-COU"/>
-                                                <constraint firstItem="nq7-TF-yL4" firstAttribute="centerY" secondItem="9gz-yn-SNi" secondAttribute="centerY" id="8ev-xd-I2H"/>
-                                                <constraint firstItem="BRS-K5-tS0" firstAttribute="centerY" secondItem="GpU-47-1gg" secondAttribute="centerY" id="B0V-0o-CzJ"/>
                                                 <constraint firstItem="Kei-Vw-B1H" firstAttribute="leading" secondItem="gVg-BR-NcJ" secondAttribute="leading" id="BIy-17-5GJ"/>
                                                 <constraint firstItem="eKL-lO-rZG" firstAttribute="leading" secondItem="9gz-yn-SNi" secondAttribute="leading" id="BY0-uc-RVE"/>
                                                 <constraint firstAttribute="trailing" secondItem="Sq5-KE-c3T" secondAttribute="trailing" constant="20" symbolic="YES" id="Cto-Ja-rGl"/>
                                                 <constraint firstItem="UVz-So-HqI" firstAttribute="leading" secondItem="GpU-47-1gg" secondAttribute="trailing" constant="8" symbolic="YES" id="GGc-ca-f1c"/>
-                                                <constraint firstItem="xbB-Gg-5TD" firstAttribute="top" secondItem="Blc-dd-9Qv" secondAttribute="top" constant="56" id="GUv-KX-cgU"/>
+                                                <constraint firstItem="xbB-Gg-5TD" firstAttribute="top" secondItem="Blc-dd-9Qv" secondAttribute="top" constant="20" id="GUv-KX-cgU"/>
                                                 <constraint firstItem="GpU-47-1gg" firstAttribute="top" secondItem="xbB-Gg-5TD" secondAttribute="bottom" constant="8" symbolic="YES" id="HJY-El-CV7"/>
                                                 <constraint firstItem="Kei-Vw-B1H" firstAttribute="top" secondItem="gVg-BR-NcJ" secondAttribute="bottom" constant="3" id="HN7-MJ-nQS"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="zNI-F1-3zH" secondAttribute="trailing" constant="20" symbolic="YES" id="Hq4-Jc-hce"/>
                                                 <constraint firstItem="jVr-RT-V0O" firstAttribute="width" secondItem="UVz-So-HqI" secondAttribute="width" id="Jhg-b8-0QC"/>
                                                 <constraint firstItem="kwg-mE-JId" firstAttribute="centerY" secondItem="9gz-yn-SNi" secondAttribute="centerY" id="Jti-qG-eyX"/>
                                                 <constraint firstItem="Kei-Vw-B1H" firstAttribute="leading" secondItem="Blc-dd-9Qv" secondAttribute="leading" constant="20" symbolic="YES" id="KRY-s2-g81"/>
-                                                <constraint firstItem="eKL-lO-rZG" firstAttribute="top" secondItem="nq7-TF-yL4" secondAttribute="bottom" constant="8" symbolic="YES" id="LGz-F9-lWX"/>
+                                                <constraint firstItem="eKL-lO-rZG" firstAttribute="top" secondItem="9gz-yn-SNi" secondAttribute="bottom" constant="8" symbolic="YES" id="LGz-F9-lWX"/>
                                                 <constraint firstItem="Sq5-KE-c3T" firstAttribute="centerY" secondItem="4VU-bn-waD" secondAttribute="centerY" id="LTy-1O-IYQ"/>
                                                 <constraint firstItem="4VU-bn-waD" firstAttribute="top" secondItem="Kei-Vw-B1H" secondAttribute="bottom" constant="8" symbolic="YES" id="Mnj-hi-FzQ"/>
                                                 <constraint firstItem="ueg-wa-VAZ" firstAttribute="centerY" secondItem="gVg-BR-NcJ" secondAttribute="centerY" id="PTV-z9-vU7"/>
@@ -274,7 +249,6 @@
                                                 <constraint firstItem="Ghe-cF-C3L" firstAttribute="width" secondItem="4VU-bn-waD" secondAttribute="width" id="RqI-ZC-Kck"/>
                                                 <constraint firstAttribute="trailing" secondItem="cpE-XY-Cm8" secondAttribute="trailing" constant="20" symbolic="YES" id="Te3-hT-ilx"/>
                                                 <constraint firstItem="jVr-RT-V0O" firstAttribute="height" secondItem="UVz-So-HqI" secondAttribute="height" id="Vso-fw-dlC"/>
-                                                <constraint firstItem="BRS-K5-tS0" firstAttribute="leading" secondItem="UVz-So-HqI" secondAttribute="trailing" id="WE7-wV-Qsy"/>
                                                 <constraint firstItem="4VU-bn-waD" firstAttribute="leading" secondItem="Blc-dd-9Qv" secondAttribute="leading" constant="20" symbolic="YES" id="XDG-Oy-TLS"/>
                                                 <constraint firstItem="eKL-lO-rZG" firstAttribute="leading" secondItem="Blc-dd-9Qv" secondAttribute="leading" constant="20" symbolic="YES" id="XOK-Vw-w9X"/>
                                                 <constraint firstItem="9gz-yn-SNi" firstAttribute="top" secondItem="zNI-F1-3zH" secondAttribute="bottom" constant="8" symbolic="YES" id="Zu6-zf-Np0"/>
@@ -286,7 +260,7 @@
                                                 <constraint firstAttribute="trailing" secondItem="ueg-wa-VAZ" secondAttribute="trailing" constant="20" symbolic="YES" id="f7d-Fr-Xpc"/>
                                                 <constraint firstItem="Z0P-wM-ijd" firstAttribute="leading" secondItem="Blc-dd-9Qv" secondAttribute="leading" constant="20" symbolic="YES" id="g5d-KP-936"/>
                                                 <constraint firstItem="Sq5-KE-c3T" firstAttribute="leading" secondItem="4VU-bn-waD" secondAttribute="trailing" constant="18" id="hDN-ZH-CZF"/>
-                                                <constraint firstItem="kwg-mE-JId" firstAttribute="leading" secondItem="nq7-TF-yL4" secondAttribute="trailing" constant="5" id="iJT-WO-ahy"/>
+                                                <constraint firstItem="kwg-mE-JId" firstAttribute="leading" secondItem="jVr-RT-V0O" secondAttribute="trailing" constant="5" id="iJT-WO-ahy"/>
                                                 <constraint firstItem="Kei-Vw-B1H" firstAttribute="width" secondItem="gVg-BR-NcJ" secondAttribute="width" id="kw1-bL-IZV"/>
                                                 <constraint firstItem="kwg-mE-JId" firstAttribute="trailing" secondItem="eKL-lO-rZG" secondAttribute="trailing" id="l71-gL-9vs"/>
                                                 <constraint firstItem="Ghe-cF-C3L" firstAttribute="leading" secondItem="Blc-dd-9Qv" secondAttribute="leading" constant="20" symbolic="YES" id="las-Hj-6YJ"/>

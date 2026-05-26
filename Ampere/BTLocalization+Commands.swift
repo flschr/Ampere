@@ -45,7 +45,7 @@ extension BTLocalization {
         static func holdingCharge(minCharge: Int) -> String {
             String.localizedStringWithFormat(
                 NSLocalizedString(
-                    "Charging paused until %d%%",
+                    "Charging paused until below %d%%",
                     comment: "Menu status indicating charging is paused until battery drops below the minimum limit"
                 ),
                 minCharge
@@ -93,7 +93,7 @@ extension BTLocalization {
         }
 
         static let usePowerAdapter = NSLocalizedString(
-            "Use Power Adapter",
+            "Use Power Adapter Instead of Battery",
             comment: "Menu command to toggle whether the Mac uses the power adapter"
         )
 

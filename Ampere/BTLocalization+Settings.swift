@@ -90,28 +90,6 @@ extension BTLocalization {
             )
         }
 
-        enum Presets {
-            static let everyday = NSLocalizedString(
-                "Everyday",
-                comment: "Charge preset for everyday battery use"
-            )
-
-            static let desk = NSLocalizedString(
-                "Desk",
-                comment: "Charge preset for mostly desk-bound battery use"
-            )
-
-            static let travel = NSLocalizedString(
-                "Travel",
-                comment: "Charge preset for travel battery use"
-            )
-        }
-
-        static let preset = NSLocalizedString(
-            "Preset:",
-            comment: "Label for charge preset segmented control"
-        )
-
         static let optimizedChargingWarning = NSLocalizedString(
             "macOS Optimized Battery Charging is on. Turn it off in Battery settings so Ampere can manage charging reliably.",
             comment: "Warning shown when macOS Optimized Battery Charging is enabled"

@@ -55,7 +55,7 @@
 "Charging to 100%" = "Ricarica fino al 100%";
 "Holding charge, resumes below %d %%" = "Carica mantenuta; riprende sotto il %d %%";
 "Holding charge; resumes below %d %%" = "Carica mantenuta; riprende sotto il %d %%";
-"Charging paused until %d%%" = "Ricarica in pausa fino al %d%%";
+"Charging paused until below %d%%" = "Ricarica in pausa fino a sotto il %d%%";
 "Charging paused: battery too warm" = "Ricarica in pausa: batteria troppo calda";
 "Waiting, will charge to %d %%" = "In attesa, ricaricherà fino al %d %%";
 "Waiting to charge to %d%%" = "In attesa di ricaricare fino al %d%%";
@@ -65,17 +65,13 @@
 "Waiting; will charge to 100 %" = "In attesa; ricaricherà fino al 100 %";
 "Charge to %d %% Now" = "Ricarica al %d %% ora";
 "Request Charging to %d %% Now" = "Richiedi ricarica al %d %% ora";
-"Use Power Adapter" = "Usa alimentatore";
+"Use Power Adapter Instead of Battery" = "Usa alimentatore invece della batteria";
 "Low Power Mode" = "Modalità risparmio energetico";
 "Until Empty: %@" = "Fino a scarica: %@";
 "Until %d %%: %@" = "Fino al %d %%: %@";
 "%@ until empty" = "%@ fino a scarica";
 "%@ until %d%%" = "%@ fino al %d%%";
 "approx. %@" = "circa %@";
-"Everyday" = "Quotidiano";
-"Desk" = "Scrivania";
-"Travel" = "Viaggio";
-"Preset:" = "Preset:";
 "macOS Optimized Battery Charging is on. Turn it off in Battery settings so Ampere can manage charging reliably." = "Il caricamento ottimizzato della batteria di macOS è attivo. Disattivalo nelle impostazioni Batteria affinché Ampere possa gestire la ricarica in modo affidabile.";
 "Uninstall" = "Disinstalla";
 "Remove the background service, disable automatic startup, delete Ampere's local settings, and move the app to the Trash." = "Rimuove il servizio in background, disattiva l'avvio automatico, elimina le impostazioni locali di Ampere e sposta l'app nel Cestino.";

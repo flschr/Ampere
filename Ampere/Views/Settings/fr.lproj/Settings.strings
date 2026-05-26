@@ -4,10 +4,10 @@
 "47S-lH-kMQ.title" = "Synchroniser le voyant MagSafe";
 "BOx-qm-k90.title" = "Lorsque le couvercle est fermé, votre Mac peut se mettre automatiquement en veille avec l'adaptateur secteur désactivé, même si un écran externe est connecté et allumé.";
 "IMi-pw-cwy.label" = "Alimentation";
-"SrC-Z2-byQ.title" = "75";
+"SrC-Z2-byQ.title" = "70";
 "WC9-iw-C9D.title" = "%";
-"Wuy-t5-ID5.title" = "Désactiver la recharge au-dessus de :";
-"YrV-xe-P4m.title" = "Activer la recharge en dessous de :";
+"Wuy-t5-ID5.title" = "Suspendre la recharge à :";
+"YrV-xe-P4m.title" = "Démarrer la recharge sous :";
 "ZWd-cD-Dlp.label" = "Alimentation";
 "ZWd-cD-Dlp.paletteLabel" = "Alimentation";
 "cnq-Zd-qMS.title" = "OK";

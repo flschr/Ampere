@@ -5,49 +5,6 @@
 
 import Foundation
 
-internal enum BTChargePreset: Int, CaseIterable, Sendable {
-    case everyday
-    case desk
-    case travel
-
-    var title: String {
-        switch self {
-        case .everyday:
-            return BTLocalization.Settings.Presets.everyday
-        case .desk:
-            return BTLocalization.Settings.Presets.desk
-        case .travel:
-            return BTLocalization.Settings.Presets.travel
-        }
-    }
-
-    var minCharge: Int {
-        switch self {
-        case .everyday:
-            return 70
-        case .desk:
-            return 50
-        case .travel:
-            return 80
-        }
-    }
-
-    var maxCharge: Int {
-        switch self {
-        case .everyday, .desk:
-            return 80
-        case .travel:
-            return 90
-        }
-    }
-
-    static func matching(minCharge: Int, maxCharge: Int) -> Self? {
-        Self.allCases.first { preset in
-            preset.minCharge == minCharge && preset.maxCharge == maxCharge
-        }
-    }
-}
-
 internal struct BTChargeLimitDraft: Equatable, Sendable {
     private(set) var minCharge: UInt8
     private(set) var maxCharge: UInt8
@@ -80,13 +37,6 @@ internal struct BTChargeLimitDraft: Equatable, Sendable {
         if self.minCharge > self.maxCharge {
             self.minCharge = self.maxCharge
         }
-    }
-
-    var matchingPreset: BTChargePreset? {
-        BTChargePreset.matching(
-            minCharge: Int(self.minCharge),
-            maxCharge: Int(self.maxCharge)
-        )
     }
 
     private static func clamp(_ value: Int, lowerBound: Int) -> Int {

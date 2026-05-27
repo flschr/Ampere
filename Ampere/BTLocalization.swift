@@ -67,16 +67,6 @@ internal enum BTLocalization {
             comment: "Prompt caption informing the user that they are not authorized to perform a specific operation"
         )
 
-        static let licenseRequiredMessage = NSLocalizedString(
-            "Ampere trial expired.",
-            comment: "Prompt caption informing the user that a license is required"
-        )
-
-        static let licenseRequiredInfo = NSLocalizedString(
-            "Enter a license to continue managing charging. Safety actions remain available.",
-            comment: "Prompt text explaining that charging management requires a license"
-        )
-
         enum Daemon {
             static let requiredInfo = NSLocalizedString(
                 "To manage the power state of your Mac, Ampere needs to run in the background.",

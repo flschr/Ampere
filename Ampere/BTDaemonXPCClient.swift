@@ -180,7 +180,9 @@ internal enum BTDaemonXPCClient {
     private static func continuationStatusHandler(continuation: CheckedContinuation<Void, any Error>) -> (@Sendable (BTError.RawValue) -> Void) {
         return { error in
             guard error == BTError.success.rawValue else {
-                continuation.resume(throwing: BTError.init(rawValue: error)!)
+                continuation.resume(
+                    throwing: BTError(daemonRawValue: error)
+                )
                 return
             }
             continuation.resume()

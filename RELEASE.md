@@ -17,21 +17,16 @@ The private EdDSA key is a release secret. Do not commit it to the repository.
 If either value is missing, Ampere keeps the updater disabled and the manual
 update command explains that updates are not configured for the current build.
 
-## Commercial Build Boundary
+## Release Channel Boundary
 
-Public source builds compile without `OFFICIAL_BUILD`. They use the source-build
-license manager, do not use Lemon Squeezy, and do not join the official Sparkle
-update channel.
+Public source builds compile without `OFFICIAL_BUILD` and do not join the
+official Sparkle update channel.
 
-Official release builds define `OFFICIAL_BUILD` and must provide the private
-license manager for both the app target and the daemon target. That private code
-is responsible for the 14-day trial, Lemon Squeezy license activation, cached
-license state, and license revocation behaviour.
+Official release builds define `OFFICIAL_BUILD` and use the configured Sparkle
+appcast as their update channel.
 
 Keep these out of the public repository:
 
-- Lemon Squeezy API keys, webhook secrets, and store configuration exports.
-- The private license manager implementation and any signed license cache keys.
 - Sparkle private signing keys.
 - Developer ID certificates, notary credentials, and release keychain material.
 

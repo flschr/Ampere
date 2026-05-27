@@ -115,10 +115,6 @@ internal final class BTDaemonComm: NSObject, BTDaemonCommProtocol, Sendable {
         _ command: BTDaemonCommCommand,
         authData: Data?
     ) -> BTError {
-        guard self.hasChargingManagementLicense() else {
-            return .licenseRequired
-        }
-
         guard self.isAuthorized(
             authData: authData,
             rightName: BTAuthorizationRights.manage
@@ -157,12 +153,6 @@ internal final class BTDaemonComm: NSObject, BTDaemonCommProtocol, Sendable {
         //
         guard BTDaemon.supported else {
             return .unsupported
-        }
-
-        guard !command.requiresChargingManagementLicense ||
-            self.hasChargingManagementLicense()
-        else {
-            return .licenseRequired
         }
 
         switch command {
@@ -245,11 +235,6 @@ internal final class BTDaemonComm: NSObject, BTDaemonCommProtocol, Sendable {
                 return
             }
 
-            guard self.hasChargingManagementLicense() else {
-                reply(BTError.licenseRequired.rawValue)
-                return
-            }
-
             let authorized = self.checkRight(
                 authData: authData,
                 rightName: BTAuthorizationRights.manage
@@ -280,15 +265,6 @@ internal final class BTDaemonComm: NSObject, BTDaemonCommProtocol, Sendable {
             authData: authData,
             rightName: BTAuthorizationRights.manage
         )
-    }
-
-    private func hasChargingManagementLicense() -> Bool {
-        do {
-            try BTLicenseController.requireCanManageCharging()
-            return true
-        } catch {
-            return false
-        }
     }
 
     private func isAuthorized(authData: Data?, rightName: String) -> Bool {

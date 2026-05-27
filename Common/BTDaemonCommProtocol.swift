@@ -20,27 +20,6 @@ internal enum BTDaemonCommCommand: UInt8 {
     case resumeActivity
     case enableLowPowerMode
     case disableLowPowerMode
-
-    var requiresChargingManagementLicense: Bool {
-        switch self {
-        case .chargeToFull,
-             .chargeToLimit,
-             .disablePowerAdapter,
-             .disableCharging,
-             .resumeActivity,
-             .enableLowPowerMode,
-             .disableLowPowerMode:
-            return true
-        case .enablePowerAdapter,
-             .prepareUpdate,
-             .finishUpdate,
-             .removeLegacyHelperFiles,
-             .prepareDisable,
-             .isSupported,
-             .pauseActivity:
-            return false
-        }
-    }
 }
 
 @objc internal protocol BTDaemonCommProtocol {

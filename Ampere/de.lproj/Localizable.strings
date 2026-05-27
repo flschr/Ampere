@@ -12,8 +12,6 @@
 "To temporarily suspend it, disable the background activity in System Settings." = "Um es vorübergehend anzuhalten, deaktiviere die Hintergrundaktivität in den Systemeinstellungen.";
 "An unexpected error has occured." = "Ein unerwarteter Fehler ist aufgetreten.";
 "You do not have permission to perform this operation." = "Du hast keine Berechtigung, diesen Vorgang auszuführen.";
-"Ampere trial expired." = "Ampere-Testphase abgelaufen.";
-"Enter a license to continue managing charging. Safety actions remain available." = "Gib eine Lizenz ein, um die Ladeverwaltung weiter zu verwenden. Sicherheitsaktionen bleiben verfügbar.";
 "To manage the power state of your Mac, Ampere needs to run in the background." = "Um den Energiezustand deines Mac zu verwalten, muss Ampere im Hintergrund laufen.";
 "Allow background activity?" = "Hintergrundaktivität erlauben?";
 "Do you want to approve the Ampere Login Item in System Settings?" = "Möchtest du das Ampere-Anmeldeobjekt in den Systemeinstellungen genehmigen?";

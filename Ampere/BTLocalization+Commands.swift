@@ -17,14 +17,14 @@ extension BTLocalization {
             comment: "Menu status indicating Ampere background activity is paused"
         )
 
-        static let runningOnBattery = NSLocalizedString(
-            "Running on Battery",
-            comment: "Menu status indicating the Mac is running from battery"
+        static let poweredByBattery = NSLocalizedString(
+            "MacBook is powered by the battery",
+            comment: "Menu status indicating the MacBook is powered by battery"
         )
 
-        static let usingPowerAdapter = NSLocalizedString(
-            "Using Power Adapter",
-            comment: "Menu status indicating the Mac is using the power adapter"
+        static let poweredByAdapter = NSLocalizedString(
+            "MacBook is powered by the power adapter",
+            comment: "Menu status indicating the MacBook is powered by the power adapter"
         )
 
         static func chargingUntil(maxCharge: Int) -> String {
@@ -42,13 +42,50 @@ extension BTLocalization {
             comment: "Menu status indicating charging to full battery"
         )
 
-        static func holdingCharge(minCharge: Int) -> String {
+        static func chargingResumesBelow(minCharge: Int) -> String {
             String.localizedStringWithFormat(
                 NSLocalizedString(
-                    "Charging paused until below %d%%",
-                    comment: "Menu status indicating charging is paused until battery drops below the minimum limit"
+                    "Charging resumes below %d%%",
+                    comment: "Menu detail indicating charging resumes after the battery drops below the minimum limit"
                 ),
                 minCharge
+            )
+        }
+
+        static func chargingResumesBelowWhenAdapterConnected(
+            minCharge: Int
+        ) -> String {
+            String.localizedStringWithFormat(
+                NSLocalizedString(
+                    "Charges again below %d%% when a power adapter is connected",
+                    comment: "Menu detail indicating charging resumes below the minimum limit once a power adapter is connected"
+                ),
+                minCharge
+            )
+        }
+
+        static let chargingWhenAdapterConnected = NSLocalizedString(
+            "Charges when a power adapter is connected",
+            comment: "Menu detail indicating charging can start once a power adapter is connected"
+        )
+
+        static let chargingWhenPowerAdapterUsed = NSLocalizedString(
+            "Charges when the power adapter is used",
+            comment: "Menu detail indicating charging can start once power adapter use is enabled"
+        )
+
+        static let batteryNotActivelyChargingOrDischarging = NSLocalizedString(
+            "Battery is not actively charging or discharging",
+            comment: "Menu detail indicating the battery is neither actively charging nor discharging"
+        )
+
+        static func chargeLimitActive(maxCharge: Int) -> String {
+            String.localizedStringWithFormat(
+                NSLocalizedString(
+                    "Charge limit %d%% is active",
+                    comment: "Menu detail indicating the configured charge limit is active"
+                ),
+                maxCharge
             )
         }
 
@@ -75,18 +112,18 @@ extension BTLocalization {
         static func chargeToLimitNow(maxCharge: Int) -> String {
             String.localizedStringWithFormat(
                 NSLocalizedString(
-                    "Charge to %d %% Now",
+                    "Charge to %d%% Now",
                     comment: "Menu command to start charging immediately up to the configured charge limit"
                 ),
                 maxCharge
             )
         }
 
-        static func requestChargingToLimitNow(maxCharge: Int) -> String {
+        static func requestChargingToLimit(maxCharge: Int) -> String {
             String.localizedStringWithFormat(
                 NSLocalizedString(
-                    "Request Charging to %d %% Now",
-                    comment: "Menu command to request charging up to the configured charge limit"
+                    "Request Charging to %d%%",
+                    comment: "Menu command to request charging up to the configured charge limit when charging cannot start immediately"
                 ),
                 maxCharge
             )

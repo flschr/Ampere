@@ -18,8 +18,8 @@ extension BTLocalization {
         )
 
         static let adapterDisabled = NSLocalizedString(
-            "Power adapter disabled, running on battery",
-            comment: "Menu bar tooltip when the power adapter is disabled"
+            "Power adapter disabled; MacBook is powered by battery",
+            comment: "Menu bar tooltip when the power adapter is disabled and the MacBook is powered by battery"
         )
 
         static let charging = NSLocalizedString(
@@ -30,7 +30,7 @@ extension BTLocalization {
         static func batteryLevel(percent: Int) -> String {
             String.localizedStringWithFormat(
                 NSLocalizedString(
-                    "Battery: %d %%",
+                    "Battery: %d%%",
                     comment: "Menu status indicating the current battery level"
                 ),
                 percent
@@ -38,14 +38,14 @@ extension BTLocalization {
         }
 
         static let chargingToFull = NSLocalizedString(
-            "Charging to 100 %",
+            "Charging to 100%",
             comment: "Menu bar tooltip when charging to full battery"
         )
 
         static func chargingUntil(maxCharge: Int) -> String {
             String.localizedStringWithFormat(
                 NSLocalizedString(
-                    "Charging to %d %%",
+                    "Charging to %d%%",
                     comment: "Menu bar tooltip when charging will stop at the configured charge limit"
                 ),
                 maxCharge
@@ -65,7 +65,7 @@ extension BTLocalization {
         static func holding(minCharge: Int) -> String {
             String.localizedStringWithFormat(
                 NSLocalizedString(
-                    "Holding charge, resumes below %d %%",
+                    "Holding charge, resumes below %d%%",
                     comment: "Menu bar tooltip when charging is paused until the battery drops below the minimum limit"
                 ),
                 minCharge

@@ -44,6 +44,9 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
         )
 
         XCTAssertFalse(snapshot.powerAdapterEnabled.isHidden)
+        XCTAssertFalse(snapshot.disablePowerAdapter.isHidden)
+        XCTAssertEqual(snapshot.disablePowerAdapter.stateOn, true)
+        XCTAssertTrue(snapshot.disablePowerAdapter.isEnabled)
         XCTAssertFalse(snapshot.chargingToLimit.isHidden)
         XCTAssertFalse(snapshot.statusHeader.isHidden)
         XCTAssertEqual(snapshot.statusHeader.title, "Charging to 80%")
@@ -53,7 +56,7 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
         XCTAssertFalse(snapshot.remainingTime.isHidden)
     }
 
-    func testConnectedHoldingChargeShowsOnlyImmediateLimitAction() {
+    func testConnectedHoldingChargeShowsPowerAdapterAndHeldLimit() {
         let snapshot = BTCommandsMenuSnapshotFactory.make(
             state: BTBatteryState(
                 enabled: true,
@@ -75,10 +78,23 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
         )
 
         XCTAssertFalse(snapshot.powerAdapterEnabled.isHidden)
-        XCTAssertFalse(snapshot.notCharging.isHidden)
+        XCTAssertFalse(snapshot.disablePowerAdapter.isHidden)
+        XCTAssertEqual(snapshot.disablePowerAdapter.stateOn, true)
+        XCTAssertTrue(snapshot.disablePowerAdapter.isEnabled)
+        XCTAssertTrue(snapshot.notCharging.isHidden)
+        XCTAssertFalse(snapshot.statusDetail.isHidden)
+        XCTAssertFalse(snapshot.statusSubdetail.isHidden)
         XCTAssertEqual(
             snapshot.statusHeader.title,
-            "Charging paused until below 50%"
+            "MacBook is powered by the power adapter"
+        )
+        XCTAssertEqual(
+            snapshot.statusDetail.title,
+            "Battery is not actively charging or discharging"
+        )
+        XCTAssertEqual(
+            snapshot.statusSubdetail.title,
+            "Charge limit 80% is active"
         )
         XCTAssertFalse(snapshot.chargeToLimitNow.isHidden)
         XCTAssertTrue(snapshot.requestChargingToFull.isHidden)
@@ -109,7 +125,7 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
         )
     }
 
-    func testOnBatteryStandardModeShowsRequestActions() {
+    func testDisconnectedBatteryStandardModeShowsAdapterRequirement() {
         let snapshot = BTCommandsMenuSnapshotFactory.make(
             state: BTBatteryState(
                 enabled: true,
@@ -125,16 +141,86 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
             timeToFullEstimate: nil
         )
 
-        XCTAssertFalse(snapshot.notCharging.isHidden)
+        XCTAssertTrue(snapshot.notCharging.isHidden)
+        XCTAssertFalse(snapshot.statusDetail.isHidden)
         XCTAssertEqual(
             snapshot.statusHeader.title,
-            "Charging paused until below 70%"
+            "MacBook is powered by the battery"
+        )
+        XCTAssertEqual(
+            snapshot.statusDetail.title,
+            "Charges again below 70% when a power adapter is connected"
         )
         XCTAssertTrue(snapshot.remainingTime.title?.contains("until 70%") == true)
         XCTAssertFalse(snapshot.requestChargingToFull.isHidden)
+        XCTAssertFalse(snapshot.requestChargingToFull.isEnabled)
         XCTAssertTrue(snapshot.requestChargingToLimit.isHidden)
         XCTAssertTrue(snapshot.cancelChargingRequest.isHidden)
         XCTAssertFalse(snapshot.remainingTime.isHidden)
+    }
+
+    func testConnectedBatteryStandardModeShowsResumeThreshold() {
+        let snapshot = BTCommandsMenuSnapshotFactory.make(
+            state: BTBatteryState(
+                enabled: true,
+                powerDisabled: true,
+                connected: true,
+                chargingDisabled: true,
+                batteryPercent: 76,
+                progress: .belowFull,
+                chargingMode: .standard,
+                maxCharge: 80
+            ),
+            settings: self.settings,
+            timeToEmptyEstimate: 3600,
+            timeToFullEstimate: nil
+        )
+
+        XCTAssertFalse(snapshot.powerAdapterDisabled.isHidden)
+        XCTAssertFalse(snapshot.enablePowerAdapter.isHidden)
+        XCTAssertEqual(snapshot.enablePowerAdapter.stateOn, false)
+        XCTAssertTrue(snapshot.enablePowerAdapter.isEnabled)
+        XCTAssertTrue(snapshot.notCharging.isHidden)
+        XCTAssertFalse(snapshot.statusDetail.isHidden)
+        XCTAssertEqual(
+            snapshot.statusHeader.title,
+            "MacBook is powered by the battery"
+        )
+        XCTAssertEqual(
+            snapshot.statusDetail.title,
+            "Charging resumes below 70%"
+        )
+        XCTAssertTrue(snapshot.remainingTime.title?.contains("until 70%") == true)
+    }
+
+    func testConnectedBatteryBelowThresholdShowsPowerAdapterRequirement() {
+        let snapshot = BTCommandsMenuSnapshotFactory.make(
+            state: BTBatteryState(
+                enabled: true,
+                powerDisabled: true,
+                connected: true,
+                chargingDisabled: true,
+                batteryPercent: 47,
+                progress: .belowMax,
+                chargingMode: .standard,
+                maxCharge: 80
+            ),
+            settings: try! BTBatterySettings(
+                minCharge: 50,
+                maxCharge: 80,
+                adapterSleep: false,
+                magSafeSync: nil
+            ),
+            timeToEmptyEstimate: 7200,
+            timeToFullEstimate: nil
+        )
+
+        XCTAssertFalse(snapshot.enablePowerAdapter.isHidden)
+        XCTAssertTrue(snapshot.enablePowerAdapter.isEnabled)
+        XCTAssertEqual(
+            snapshot.statusDetail.title,
+            "Charges when the power adapter is used"
+        )
     }
 
     func testDisconnectedPowerDoesNotShowUsingPowerAdapter() {
@@ -161,8 +247,22 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
 
         XCTAssertTrue(snapshot.powerAdapterEnabled.isHidden)
         XCTAssertFalse(snapshot.powerAdapterDisabled.isHidden)
+        XCTAssertFalse(snapshot.disablePowerAdapter.isHidden)
+        XCTAssertEqual(snapshot.disablePowerAdapter.stateOn, false)
+        XCTAssertFalse(snapshot.disablePowerAdapter.isEnabled)
+        XCTAssertTrue(snapshot.enablePowerAdapter.isHidden)
         XCTAssertFalse(snapshot.requestChargingToFull.isHidden)
         XCTAssertFalse(snapshot.requestChargingToLimit.isHidden)
+        XCTAssertFalse(snapshot.requestChargingToFull.isEnabled)
+        XCTAssertFalse(snapshot.requestChargingToLimit.isEnabled)
+        XCTAssertEqual(
+            snapshot.statusDetail.title,
+            "Charges when a power adapter is connected"
+        )
+        XCTAssertEqual(
+            snapshot.requestChargingToLimit.title,
+            "Request Charging to 80%"
+        )
         XCTAssertTrue(snapshot.chargeToFullNow.isHidden)
         XCTAssertTrue(snapshot.chargeToLimitNow.isHidden)
     }
@@ -185,6 +285,7 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
 
         XCTAssertFalse(snapshot.requestedChargingToFull.isHidden)
         XCTAssertFalse(snapshot.requestChargingToLimit.isHidden)
+        XCTAssertFalse(snapshot.requestChargingToLimit.isEnabled)
         XCTAssertFalse(snapshot.cancelChargingRequest.isHidden)
         XCTAssertTrue(snapshot.requestChargingToFull.isHidden)
     }

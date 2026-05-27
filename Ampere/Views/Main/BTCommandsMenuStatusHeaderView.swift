@@ -10,14 +10,15 @@ internal final class BTCommandsMenuStatusHeaderView: NSView {
     private enum Metrics {
         static let width: CGFloat = 360
         static let singleLineHeight: CGFloat = 30
-        static let twoLineHeight: CGFloat = 44
-        static let leadingInset: CGFloat = 14
+        static let twoLineHeight: CGFloat = 48
+        static let threeLineHeight: CGFloat = 64
+        static let leadingInset: CGFloat = 24
         static let trailingInset: CGFloat = 14
         static let verticalInset: CGFloat = 6
         static let detailSpacing: CGFloat = 1
     }
 
-    init(title: String, detail: String?) {
+    init(title: String, detail: String?, subdetail: String? = nil) {
         super.init(
             frame: NSRect(
                 x: 0,
@@ -25,14 +26,16 @@ internal final class BTCommandsMenuStatusHeaderView: NSView {
                 width: Metrics.width,
                 height: detail == nil
                     ? Metrics.singleLineHeight
-                    : Metrics.twoLineHeight
+                    : subdetail == nil
+                        ? Metrics.twoLineHeight
+                        : Metrics.threeLineHeight
             )
         )
 
         let titleLabel = NSTextField(labelWithString: title)
-        titleLabel.font = .systemFont(
-            ofSize: NSFont.systemFontSize,
-            weight: .semibold
+        titleLabel.font = NSFontManager.shared.convert(
+            NSFont.menuFont(ofSize: 0),
+            toHaveTrait: .boldFontMask
         )
         titleLabel.lineBreakMode = .byTruncatingTail
         titleLabel.textColor = .labelColor
@@ -64,13 +67,13 @@ internal final class BTCommandsMenuStatusHeaderView: NSView {
         }
 
         let detailLabel = NSTextField(labelWithString: detail)
-        detailLabel.font = .systemFont(ofSize: 12, weight: .regular)
+        detailLabel.font = .menuFont(ofSize: 0)
         detailLabel.lineBreakMode = .byTruncatingTail
         detailLabel.textColor = .secondaryLabelColor
         detailLabel.translatesAutoresizingMaskIntoConstraints = false
 
         self.addSubview(detailLabel)
-        NSLayoutConstraint.activate([
+        var constraints = [
             titleLabel.leadingAnchor.constraint(
                 equalTo: self.leadingAnchor,
                 constant: Metrics.leadingInset
@@ -91,11 +94,43 @@ internal final class BTCommandsMenuStatusHeaderView: NSView {
                 equalTo: titleLabel.bottomAnchor,
                 constant: Metrics.detailSpacing
             ),
-            detailLabel.bottomAnchor.constraint(
-                equalTo: self.bottomAnchor,
-                constant: -Metrics.verticalInset
-            ),
-        ])
+        ]
+
+        if let subdetail {
+            let subdetailLabel = NSTextField(labelWithString: subdetail)
+            subdetailLabel.font = .menuFont(ofSize: 0)
+            subdetailLabel.lineBreakMode = .byTruncatingTail
+            subdetailLabel.textColor = .secondaryLabelColor
+            subdetailLabel.translatesAutoresizingMaskIntoConstraints = false
+
+            self.addSubview(subdetailLabel)
+            constraints += [
+                subdetailLabel.leadingAnchor.constraint(
+                    equalTo: titleLabel.leadingAnchor
+                ),
+                subdetailLabel.trailingAnchor.constraint(
+                    lessThanOrEqualTo: self.trailingAnchor,
+                    constant: -Metrics.trailingInset
+                ),
+                subdetailLabel.topAnchor.constraint(
+                    equalTo: detailLabel.bottomAnchor,
+                    constant: Metrics.detailSpacing
+                ),
+                subdetailLabel.bottomAnchor.constraint(
+                    equalTo: self.bottomAnchor,
+                    constant: -Metrics.verticalInset
+                ),
+            ]
+        } else {
+            constraints.append(
+                detailLabel.bottomAnchor.constraint(
+                    equalTo: self.bottomAnchor,
+                    constant: -Metrics.verticalInset
+                )
+            )
+        }
+
+        NSLayoutConstraint.activate(constraints)
     }
 
     @available(*, unavailable)

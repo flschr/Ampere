@@ -9,17 +9,39 @@ internal struct BTMenuItemSnapshot: Equatable, Sendable {
     var isHidden: Bool
     var title: String?
     var stateOn: Bool?
+    var isEnabled: Bool
 
-    static let hidden = Self(isHidden: true, title: nil, stateOn: nil)
-    static let visible = Self(isHidden: false, title: nil, stateOn: nil)
+    static let hidden = Self(
+        isHidden: true,
+        title: nil,
+        stateOn: nil,
+        isEnabled: true
+    )
+    static let visible = Self(
+        isHidden: false,
+        title: nil,
+        stateOn: nil,
+        isEnabled: true
+    )
 
-    static func visible(title: String, stateOn: Bool? = nil) -> Self {
-        Self(isHidden: false, title: title, stateOn: stateOn)
+    static func visible(
+        title: String,
+        stateOn: Bool? = nil,
+        isEnabled: Bool = true
+    ) -> Self {
+        Self(
+            isHidden: false,
+            title: title,
+            stateOn: stateOn,
+            isEnabled: isEnabled
+        )
     }
 }
 
 internal struct BTCommandsMenuSnapshot: Equatable, Sendable {
     var statusHeader = BTMenuItemSnapshot.hidden
+    var statusDetail = BTMenuItemSnapshot.hidden
+    var statusSubdetail = BTMenuItemSnapshot.hidden
     var remainingTime = BTMenuItemSnapshot.hidden
     var unknownState = BTMenuItemSnapshot.hidden
     var paused = BTMenuItemSnapshot.hidden
@@ -84,7 +106,7 @@ internal enum BTCommandsMenuSnapshotFactory {
             )
         )
         snapshot.requestChargingToLimit = .visible(
-            title: BTLocalization.Commands.requestChargingToLimitNow(
+            title: BTLocalization.Commands.requestChargingToLimit(
                 maxCharge: state.maxCharge
             )
         )
@@ -137,7 +159,7 @@ internal enum BTCommandsMenuSnapshotFactory {
     ) {
         if state.powerDisabled {
             snapshot.powerAdapterDisabled = .visible(
-                title: BTLocalization.Commands.runningOnBattery
+                title: BTLocalization.Commands.poweredByBattery
             )
             snapshot.enablePowerAdapter = .visible(
                 title: BTLocalization.Commands.usePowerAdapter,
@@ -145,15 +167,16 @@ internal enum BTCommandsMenuSnapshotFactory {
             )
         } else if !state.connected {
             snapshot.powerAdapterDisabled = .visible(
-                title: BTLocalization.Commands.runningOnBattery
+                title: BTLocalization.Commands.poweredByBattery
             )
             snapshot.disablePowerAdapter = .visible(
                 title: BTLocalization.Commands.usePowerAdapter,
-                stateOn: true
+                stateOn: false,
+                isEnabled: false
             )
         } else {
             snapshot.powerAdapterEnabled = .visible(
-                title: BTLocalization.Commands.usingPowerAdapter
+                title: BTLocalization.Commands.poweredByAdapter
             )
             snapshot.disablePowerAdapter = .visible(
                 title: BTLocalization.Commands.usePowerAdapter,
@@ -178,9 +201,10 @@ internal enum BTCommandsMenuSnapshotFactory {
             if state.chargingDisabled {
                 switch state.chargingMode {
                 case .standard:
-                    snapshot.notCharging = .visible(
-                        title: BTLocalization.Commands.holdingCharge(
-                            minCharge: settings.minCharge
+                    snapshot.statusDetail = .visible(
+                        title: self.standardPausedDetail(
+                            state: state,
+                            settings: settings
                         )
                     )
                 case .toLimit:
@@ -201,9 +225,13 @@ internal enum BTCommandsMenuSnapshotFactory {
         if state.chargingDisabled {
             switch state.chargingMode {
             case .standard:
-                snapshot.notCharging = .visible(
-                    title: BTLocalization.Commands.holdingCharge(
-                        minCharge: settings.minCharge
+                snapshot.statusDetail = .visible(
+                    title: BTLocalization.Commands
+                        .batteryNotActivelyChargingOrDischarging
+                )
+                snapshot.statusSubdetail = .visible(
+                    title: BTLocalization.Commands.chargeLimitActive(
+                        maxCharge: state.maxCharge
                     )
                 )
             case .toLimit:
@@ -231,6 +259,29 @@ internal enum BTCommandsMenuSnapshotFactory {
                 )
             }
         }
+    }
+
+    private static func standardPausedDetail(
+        state: BTBatteryState,
+        settings: BTBatterySettings
+    ) -> String {
+        guard state.batteryPercent > settings.minCharge else {
+            if state.connected {
+                return BTLocalization.Commands.chargingWhenPowerAdapterUsed
+            }
+
+            return BTLocalization.Commands.chargingWhenAdapterConnected
+        }
+
+        if state.connected {
+            return BTLocalization.Commands.chargingResumesBelow(
+                minCharge: settings.minCharge
+            )
+        }
+
+        return BTLocalization.Commands.chargingResumesBelowWhenAdapterConnected(
+            minCharge: settings.minCharge
+        )
     }
 
     private static func applyPowerCommandItems(
@@ -265,11 +316,15 @@ internal enum BTCommandsMenuSnapshotFactory {
             case .standard:
                 snapshot.requestChargingToFull.isHidden = !chargeBelowFull
                 snapshot.requestChargingToLimit.isHidden = !chargeBelowMax
+                snapshot.requestChargingToFull.isEnabled = false
+                snapshot.requestChargingToLimit.isEnabled = false
             case .toLimit:
                 snapshot.requestChargingToFull.isHidden = !chargeBelowFull
+                snapshot.requestChargingToFull.isEnabled = false
                 snapshot.cancelChargingRequest = .visible
             case .toFull:
                 snapshot.requestChargingToLimit.isHidden = !chargeBelowMax
+                snapshot.requestChargingToLimit.isEnabled = false
                 snapshot.cancelChargingRequest = .visible
             }
         }

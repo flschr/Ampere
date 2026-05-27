@@ -200,14 +200,35 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
 
         self.statusHeaderItem?.view = BTCommandsMenuStatusHeaderView(
             title: title,
-            detail: self.statusHeaderDetail(from: snapshot, statusTitle: title)
+            detail: self.statusHeaderDetail(from: snapshot, statusTitle: title),
+            subdetail: self.statusHeaderSubdetail(
+                from: snapshot,
+                statusTitle: title
+            )
         )
+    }
+
+    private func statusHeaderSubdetail(
+        from snapshot: BTCommandsMenuSnapshot,
+        statusTitle: String
+    ) -> String? {
+        if let title = self.visibleTitle(snapshot.statusSubdetail),
+           title != statusTitle {
+            return title
+        }
+
+        return nil
     }
 
     private func statusHeaderDetail(
         from snapshot: BTCommandsMenuSnapshot,
         statusTitle: String
     ) -> String? {
+        if let title = self.visibleTitle(snapshot.statusDetail),
+           title != statusTitle {
+            return title
+        }
+
         if let title = self.visibleTitle(snapshot.remainingTime),
            title != statusTitle {
             self.remainingTimeCache[statusTitle] = CachedRemainingTime(
@@ -239,6 +260,7 @@ internal final class BTCommandsMenuDelegate: NSObject, NSMenuDelegate {
         to item: NSMenuItem?
     ) {
         item?.isHidden = snapshot.isHidden
+        item?.isEnabled = snapshot.isEnabled
         if let title = snapshot.title {
             item?.title = title
         }

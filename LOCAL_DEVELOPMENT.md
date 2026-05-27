@@ -58,6 +58,24 @@ Development-signed Release builds carry the `get-task-allow` entitlement, but
 the Release daemon rejects clients with that entitlement as part of its XPC
 hardening.
 
+## Menu Charge Status Copy
+
+The menu header describes the current power source first. Detail lines explain
+what Ampere is waiting for or enforcing:
+
+- When the power adapter supplies the Mac and charging is paused by the charge
+  limit, show that the battery is not actively charging or discharging and that
+  the configured charge limit is active. Do not claim the battery is held at the
+  exact limit unless the current battery level is part of that message.
+- When the Mac runs from battery above the lower charge threshold, describe the
+  threshold that must be crossed before charging resumes.
+- When the Mac runs from battery at or below the lower charge threshold, do not
+  mention the threshold again. The missing condition is either connecting a
+  power adapter or enabling power adapter use.
+- Without a connected power adapter, charge request menu items can be visible
+  for context, but must be disabled. Canceling an already pending charge request
+  remains enabled.
+
 ## Install For Local Testing
 
 Copy the built `Ampere.app` to `/Applications`, then open it from

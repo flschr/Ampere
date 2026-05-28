@@ -63,6 +63,23 @@ code identity no longer matches the daemon bundled in the app. The existing
 daemon `prepareUpdate` and `finishUpdate` commands preserve power state during
 that helper replacement.
 
+## Create a DMG
+
+Use the repository DMG script to create a Finder-ready installer window with
+large icons and a drag target for Applications:
+
+```sh
+scripts/create-dmg.sh \
+  --app "/path/to/signed/Ampere.app" \
+  --output "dist/Ampere.dmg" \
+  --volume-name "Ampere"
+```
+
+The script stores the Finder icon view, window bounds, icon size, and item
+positions in the image before compressing and verifying the final DMG. Run it
+from a logged-in macOS session because Finder writes the installer window
+layout.
+
 ## Generate the Appcast
 
 Place the signed and notarized release artifact in a release directory, then run

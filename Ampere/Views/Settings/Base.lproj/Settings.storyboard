@@ -334,6 +334,10 @@ Gw
 	                    <connections>
 	                        <outlet property="adapterSleepSwitch" destination="ueg-wa-VAZ" id="3Lx-ht-YnK"/>
 	                        <outlet property="magSafeSyncSwitch" destination="Sq5-KE-c3T" id="csD-RV-ou4"/>
+	                        <outlet property="maxChargeSlider" destination="9gz-yn-SNi" id="Qjh-mR-1302"/>
+	                        <outlet property="maxChargeTextField" destination="jVr-RT-V0O" id="eMo-4f-1302"/>
+	                        <outlet property="minChargeSlider" destination="GpU-47-1gg" id="Rcf-wV-1302"/>
+	                        <outlet property="minChargeTextField" destination="UVz-So-HqI" id="9sr-sV-1302"/>
 	                        <outlet property="powerTab" destination="IMi-pw-cwy" id="9fR-1S-DaG"/>
 	                        <outlet property="tabView" destination="NXG-fh-uCo" id="DNX-YP-mN9"/>
 	                    </connections>

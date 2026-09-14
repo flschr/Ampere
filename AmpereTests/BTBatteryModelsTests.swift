@@ -41,6 +41,7 @@ final class BTBatteryModelsTests: XCTestCase {
         let state = try BTBatteryState(payload: payload)
 
         XCTAssertFalse(state.thermallyLimited)
+        XCTAssertEqual(state.capabilities, .legacy)
     }
 
     func testBatteryStateUsesPowerAdapterOnlyWhenConnectedAndEnabled() {
@@ -142,5 +143,49 @@ final class BTBatteryModelsTests: XCTestCase {
         XCTAssertThrowsError(try BTBatterySettings(payload: payload)) { error in
             XCTAssertEqual(error as? BTError, .malformedData)
         }
+    }
+
+    func testSystemManagedCapabilitiesRoundTrip() throws {
+        let capabilities = try XCTUnwrap(
+            BTPowerCapabilities.systemManaged(
+                adapterControl: true,
+                availableLimits: [100, 80, 90, 85, 95]
+            )
+        )
+        let settings = try BTBatterySettings(
+            minCharge: 70,
+            maxCharge: 85,
+            adapterSleep: false,
+            magSafeSync: nil,
+            capabilities: capabilities
+        )
+
+        XCTAssertEqual(
+            try BTBatterySettings(payload: settings.payload).capabilities,
+            capabilities
+        )
+        XCTAssertTrue(capabilities.supports(maxCharge: 90))
+        XCTAssertFalse(capabilities.supports(maxCharge: 91))
+        XCTAssertEqual(capabilities.nearestSupported(maxCharge: 92), 90)
+        XCTAssertEqual(capabilities.nearestSupported(maxCharge: 79), 80)
+    }
+
+    func testCapabilitiesRejectMalformedPayload() {
+        var payload = BTPowerCapabilities.legacy.payload
+        payload[BTPowerCapabilities.Keys.maxChargeStep] = NSNumber(value: 0)
+
+        XCTAssertThrowsError(try BTPowerCapabilities(payload: payload)) {
+            error in
+            XCTAssertEqual(error as? BTError, .malformedData)
+        }
+    }
+
+    func testSystemCapabilitiesRejectIrregularLimits() {
+        XCTAssertNil(
+            BTPowerCapabilities.systemManaged(
+                adapterControl: false,
+                availableLimits: [80, 85, 95, 100]
+            )
+        )
     }
 }

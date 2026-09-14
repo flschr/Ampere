@@ -46,7 +46,8 @@ internal enum BTDaemon {
             progress: progress,
             chargingMode: mode,
             maxCharge: Int(maxCharge),
-            thermallyLimited: thermallyLimited
+            thermallyLimited: thermallyLimited,
+            capabilities: BTChargeController.capabilities
         ).payload
     }
 

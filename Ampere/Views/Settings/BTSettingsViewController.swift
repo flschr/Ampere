@@ -11,6 +11,7 @@ internal final class BTSettingsViewController: NSViewController {
     private static let contentSize = NSSize(width: 520, height: 417)
 
     private var currentSettings: [String: NSObject & Sendable]? = nil
+    private var capabilities = BTPowerCapabilities.legacy
     private weak var cancelButton: NSButton? = nil
     private var optimizedChargingWarning: NSTextField? = nil
     private let initialFocusView = BTSettingsInitialFocusView()
@@ -71,18 +72,15 @@ internal final class BTSettingsViewController: NSViewController {
 
         set {
             let value = newValue.intValue
+            let normalized = self.capabilities.nearestSupported(
+                maxCharge: value
+            )
             //
             // See minChargeNum for an explanation.
             //
-            if value < BTSettingsInfo.Bounds.maxChargeMin {
+            if value != normalized {
                 Task {
-                    self.maxChargeNum = NSNumber(
-                        value: BTSettingsInfo.Bounds.maxChargeMin
-                    )
-                }
-            } else if value > 100 {
-                Task {
-                    self.maxChargeNum = NSNumber(value: 100)
+                    self.maxChargeNum = NSNumber(value: normalized)
                 }
             } else {
                 self.maxChargeVal = UInt8(value)
@@ -131,7 +129,8 @@ internal final class BTSettingsViewController: NSViewController {
                 adapterSleep: self.adapterSleepSwitch.state == .off,
                 magSafeSync: self.magSafeSyncSwitch.isEnabled ?
                     self.magSafeSyncSwitch.state == .on :
-                    nil
+                    nil,
+                capabilities: self.capabilities
             )
         } catch {
             BTErrorHandler.errorHandler(
@@ -311,6 +310,7 @@ internal final class BTSettingsViewController: NSViewController {
 
     private func updateOptimizedChargingWarning() {
         self.optimizedChargingWarning?.isHidden =
+            self.capabilities.chargeControlMode == .systemManaged ||
             !IOPSPrivate.OptimizedBatteryChargingEngaged()
     }
 
@@ -325,31 +325,17 @@ internal final class BTSettingsViewController: NSViewController {
     private func initPowerState() async {
         do {
             let settings = try await BTActions.getSettings()
+            let parsedSettings = try BTBatterySettings(payload: settings)
             self.currentSettings = settings
+            self.capabilities = parsedSettings.capabilities
+            self.configureCapabilities()
             self.updateOptimizedChargingWarning()
 
-            let minChargeNum =
-            settings[BTSettingsInfo.Keys.minCharge] as? NSNumber
-            let maxChargeNum =
-            settings[BTSettingsInfo.Keys.maxCharge] as? NSNumber
-            let adapterSleepNum =
-            settings[BTSettingsInfo.Keys.adapterSleep] as? NSNumber
-            let magSafeSyncNum =
-            settings[BTSettingsInfo.Keys.magSafeSync] as? NSNumber
+            self.setMinCharge(value: parsedSettings.minCharge)
+            self.setMaxCharge(value: parsedSettings.maxCharge)
+            self.setAdapterSleep(value: parsedSettings.adapterSleep)
 
-            guard let minCharge = minChargeNum?.intValue,
-                  let maxCharge = maxChargeNum?.intValue,
-                  let adapterSleep = adapterSleepNum?.boolValue
-            else {
-                BTErrorHandler.errorHandler(error: BTError.commFailed)
-                return
-            }
-
-            self.setMinCharge(value: minCharge)
-            self.setMaxCharge(value: maxCharge)
-            self.setAdapterSleep(value: adapterSleep)
-
-            if let magSafeSync = magSafeSyncNum?.boolValue {
+            if let magSafeSync = parsedSettings.magSafeSync {
                 self.magSafeSyncSwitch.isEnabled = true
                 self.setMagSafeSync(value: magSafeSync)
             } else {
@@ -358,6 +344,24 @@ internal final class BTSettingsViewController: NSViewController {
         } catch {
             BTErrorHandler.errorHandler(error: error)
         }
+    }
+
+    private func configureCapabilities() {
+        let customRange = self.capabilities.customChargeRange
+        self.minChargeTextField.isEnabled = customRange
+        self.minChargeSlider.isEnabled = customRange
+
+        self.maxChargeSlider.minValue = Double(
+            self.capabilities.minimumMaxCharge
+        )
+        self.maxChargeSlider.numberOfTickMarks =
+            (100 - self.capabilities.minimumMaxCharge) /
+            self.capabilities.maxChargeStep + 1
+        self.maxChargeSlider.allowsTickMarkValuesOnly =
+            self.capabilities.maxChargeStep > 1
+
+        self.adapterSleepSwitch.isEnabled =
+            self.capabilities.adapterControl
     }
 }
 

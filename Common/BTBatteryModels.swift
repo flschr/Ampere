@@ -15,6 +15,7 @@ internal struct BTBatteryState: Equatable, Sendable {
     let chargingMode: BTStateInfo.ChargingMode
     let maxCharge: Int
     let thermallyLimited: Bool
+    let capabilities: BTPowerCapabilities
 
     init(
         enabled: Bool,
@@ -25,7 +26,8 @@ internal struct BTBatteryState: Equatable, Sendable {
         progress: BTStateInfo.ChargingProgress = .full,
         chargingMode: BTStateInfo.ChargingMode = .standard,
         maxCharge: Int = Int(BTSettingsInfo.Defaults.maxCharge),
-        thermallyLimited: Bool = false
+        thermallyLimited: Bool = false,
+        capabilities: BTPowerCapabilities = .legacy
     ) {
         self.enabled = enabled
         self.powerDisabled = powerDisabled
@@ -36,6 +38,7 @@ internal struct BTBatteryState: Equatable, Sendable {
         self.chargingMode = chargingMode
         self.maxCharge = maxCharge
         self.thermallyLimited = thermallyLimited
+        self.capabilities = capabilities
     }
 
     var usesPowerAdapter: Bool {
@@ -84,6 +87,7 @@ internal struct BTBatteryState: Equatable, Sendable {
         let thermallyLimited =
             (payload[BTStateInfo.Keys.thermallyLimited] as? NSNumber)?
                 .boolValue ?? false
+        let capabilities = try BTPowerCapabilities(payload: payload)
 
         self.init(
             enabled: enabled,
@@ -94,7 +98,8 @@ internal struct BTBatteryState: Equatable, Sendable {
             progress: progress,
             chargingMode: chargingMode,
             maxCharge: maxCharge,
-            thermallyLimited: thermallyLimited
+            thermallyLimited: thermallyLimited,
+            capabilities: capabilities
         )
     }
 
@@ -103,7 +108,7 @@ internal struct BTBatteryState: Equatable, Sendable {
             return [BTStateInfo.Keys.enabled: NSNumber(value: false)]
         }
 
-        return [
+        var payload: [String: NSObject & Sendable] = [
             BTStateInfo.Keys.enabled: NSNumber(value: self.enabled),
             BTStateInfo.Keys.powerDisabled: NSNumber(
                 value: self.powerDisabled
@@ -126,6 +131,8 @@ internal struct BTBatteryState: Equatable, Sendable {
                 value: self.thermallyLimited
             ),
         ]
+        payload.merge(self.capabilities.payload) { current, _ in current }
+        return payload
     }
 }
 
@@ -134,12 +141,14 @@ internal struct BTBatterySettings: Equatable, Sendable {
     let maxCharge: Int
     let adapterSleep: Bool
     let magSafeSync: Bool?
+    let capabilities: BTPowerCapabilities
 
     init(
         minCharge: Int,
         maxCharge: Int,
         adapterSleep: Bool,
-        magSafeSync: Bool?
+        magSafeSync: Bool?,
+        capabilities: BTPowerCapabilities = .legacy
     ) throws {
         guard BTSettingsInfo.chargeLimitsValid(
             minCharge: minCharge,
@@ -152,6 +161,7 @@ internal struct BTBatterySettings: Equatable, Sendable {
         self.maxCharge = maxCharge
         self.adapterSleep = adapterSleep
         self.magSafeSync = magSafeSync
+        self.capabilities = capabilities
     }
 
     init(payload: [String: NSObject & Sendable]) throws {
@@ -170,11 +180,13 @@ internal struct BTBatterySettings: Equatable, Sendable {
         let magSafeSync =
             (payload[BTSettingsInfo.Keys.magSafeSync] as? NSNumber)?
                 .boolValue
+        let capabilities = try BTPowerCapabilities(payload: payload)
         try self.init(
             minCharge: minCharge,
             maxCharge: maxCharge,
             adapterSleep: adapterSleep,
-            magSafeSync: magSafeSync
+            magSafeSync: magSafeSync,
+            capabilities: capabilities
         )
     }
 
@@ -192,6 +204,8 @@ internal struct BTBatterySettings: Equatable, Sendable {
                 value: magSafeSync
             )
         }
+
+        payload.merge(self.capabilities.payload) { current, _ in current }
 
         return payload
     }

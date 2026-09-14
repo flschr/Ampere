@@ -17,22 +17,31 @@ internal enum BTPowerState {
         self.chargingSleepDisabled = false
         self.adapterSleepDisabled = false
 
-        let chargingDisabled = SMCComm.Power.isChargingDisabled()
-        self.chargingDisabled = chargingDisabled
-        if !chargingDisabled {
+        if BTChargeController.usesLegacyControl {
+            let chargingDisabled = SMCComm.Power.isChargingDisabled()
+            self.chargingDisabled = chargingDisabled
+        } else {
+            self.refreshManagedChargingState()
+        }
+        if BTChargeController.usesLegacyControl && !self.chargingDisabled {
             //
             // Sleep must always be disabled when charging is enabled.
             //
             self.disableChargingSleep()
         }
 
-        let powerDisabled = SMCComm.Power.isPowerAdapterDisabled()
+        let powerDisabled = BTChargeController.capabilities.adapterControl &&
+            SMCComm.Power.isPowerAdapterDisabled()
         self.powerDisabled = powerDisabled
         if powerDisabled {
             //
             // Sleep must be disabled when external power is disabled.
             //
             self.disableAdapterSleep()
+        }
+
+        guard BTChargeController.capabilities.magSafeSync else {
+            return
         }
 
         SMCComm.MagSafe.prepare()
@@ -47,25 +56,34 @@ internal enum BTPowerState {
         // Refresh platform stated when waking from sleep, as events might not
         // fire.
         //
-        let chargingDisabled = SMCComm.Power.isChargingDisabled()
+        let chargingDisabled: Bool
+        if BTChargeController.usesLegacyControl {
+            chargingDisabled = SMCComm.Power.isChargingDisabled()
+        } else {
+            self.refreshManagedChargingState()
+            chargingDisabled = self.chargingDisabled
+        }
         if chargingDisabled != self.chargingDisabled {
             self.chargingDisabled = chargingDisabled
 
-            self.applyChargingSleepEffect(
-                sleepEffect: BTPowerEventStateMachine.chargingSleepEffect(
-                    chargingDisabled: chargingDisabled
+            if BTChargeController.usesLegacyControl {
+                self.applyChargingSleepEffect(
+                    sleepEffect: BTPowerEventStateMachine.chargingSleepEffect(
+                        chargingDisabled: chargingDisabled
+                    )
                 )
-            )
+            }
         }
 
-        let powerDisabled = SMCComm.Power.isPowerAdapterDisabled()
+        let powerDisabled = BTChargeController.capabilities.adapterControl &&
+            SMCComm.Power.isPowerAdapterDisabled()
         if powerDisabled != self.powerDisabled {
             self.powerDisabled = powerDisabled
 
             self.applyPowerAdapterSleepEffect(powerDisabled: powerDisabled)
         }
 
-        if BTSettings.magSafeSync {
+        if BTChargeController.capabilities.magSafeSync && BTSettings.magSafeSync {
             self.syncMagSafeState()
         }
     }
@@ -75,6 +93,9 @@ internal enum BTPowerState {
     }
 
     static func adapterSleepSettingToggled() {
+        guard BTChargeController.capabilities.adapterControl else {
+            return
+        }
         //
         // If power is disabled, toggle sleep.
         //
@@ -110,6 +131,9 @@ internal enum BTPowerState {
     }
 
     static func magSafeSyncSettingToggled() {
+        guard BTChargeController.capabilities.magSafeSync else {
+            return
+        }
         if BTSettings.magSafeSync {
             self.syncMagSafeState()
         } else {
@@ -118,6 +142,9 @@ internal enum BTPowerState {
     }
 
     static func disableCharging(percent: UInt8) -> Bool {
+        guard BTChargeController.capabilities.directChargingControl else {
+            return false
+        }
         guard !self.chargingDisabled else {
             return true
         }
@@ -144,6 +171,9 @@ internal enum BTPowerState {
         disablesSleep: Bool = true,
         force: Bool = false
     ) -> Bool {
+        guard BTChargeController.capabilities.directChargingControl else {
+            return false
+        }
         guard force || self.chargingDisabled else {
             if disablesSleep {
                 self.disableChargingSleep()
@@ -171,6 +201,9 @@ internal enum BTPowerState {
     }
 
     static func disablePowerAdapter() -> Bool {
+        guard BTChargeController.capabilities.adapterControl else {
+            return false
+        }
         guard !self.powerDisabled else {
             return true
         }
@@ -193,6 +226,9 @@ internal enum BTPowerState {
     }
 
     static func enablePowerAdapter(force: Bool = false) -> Bool {
+        guard BTChargeController.capabilities.adapterControl else {
+            return true
+        }
         guard force || self.powerDisabled else {
             return true
         }
@@ -221,6 +257,15 @@ internal enum BTPowerState {
 
     static func isPowerAdapterDisabled() -> Bool {
         return self.powerDisabled
+    }
+
+    private static func refreshManagedChargingState() {
+        guard let (_, charging, fullyCharged) = IOPSPrivate.GetPercentRemaining()
+        else {
+            return
+        }
+        self.chargingDisabled = IOPSPrivate.DrawingUnlimitedPower() &&
+            !charging && !fullyCharged
     }
 
     private static func disableAdapterSleep() {

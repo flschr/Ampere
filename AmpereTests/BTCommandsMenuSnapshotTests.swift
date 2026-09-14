@@ -289,4 +289,32 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
         XCTAssertFalse(snapshot.cancelChargingRequest.isHidden)
         XCTAssertTrue(snapshot.requestChargingToFull.isHidden)
     }
+
+    func testSystemManagedModeHidesUnsupportedDirectControls() throws {
+        let capabilities = try XCTUnwrap(
+            BTPowerCapabilities.systemManaged(
+                adapterControl: false,
+                availableLimits: [80, 85, 90, 95, 100]
+            )
+        )
+        let snapshot = BTCommandsMenuSnapshotFactory.make(
+            state: BTBatteryState(
+                enabled: true,
+                connected: true,
+                chargingDisabled: false,
+                batteryPercent: 75,
+                progress: .belowMax,
+                maxCharge: 80,
+                capabilities: capabilities
+            ),
+            settings: self.settings,
+            timeToEmptyEstimate: nil,
+            timeToFullEstimate: nil
+        )
+
+        XCTAssertTrue(snapshot.disableCharging.isHidden)
+        XCTAssertTrue(snapshot.disablePowerAdapter.isHidden)
+        XCTAssertTrue(snapshot.enablePowerAdapter.isHidden)
+        XCTAssertFalse(snapshot.chargeToFullNow.isHidden)
+    }
 }

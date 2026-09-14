@@ -38,8 +38,12 @@ internal enum BTSettings {
             return
         }
 
-        self.minCharge = UInt8(minCharge)
-        self.maxCharge = UInt8(maxCharge)
+        let limits = BTChargeController.normalizedLimits(
+            minCharge: UInt8(minCharge),
+            maxCharge: UInt8(maxCharge)
+        )
+        self.minCharge = limits.min
+        self.maxCharge = limits.max
     }
 
     static func removeDefaults() {
@@ -64,13 +68,29 @@ internal enum BTSettings {
             minCharge: Int(self.minCharge),
             maxCharge: Int(self.maxCharge),
             adapterSleep: self.adapterSleep,
-            magSafeSync: SMCComm.MagSafe.supported ? self.magSafeSync : nil
+            magSafeSync: BTChargeController.capabilities.magSafeSync ?
+                self.magSafeSync : nil,
+            capabilities: BTChargeController.capabilities
         ) else {
             assertionFailure("Stored battery settings are invalid")
             return [:]
         }
 
         return settings.payload
+    }
+
+    static func normalizeForCapabilities() {
+        let limits = BTChargeController.normalizedLimits(
+            minCharge: self.minCharge,
+            maxCharge: self.maxCharge
+        )
+        guard limits.min != self.minCharge || limits.max != self.maxCharge else {
+            return
+        }
+
+        self.minCharge = limits.min
+        self.maxCharge = limits.max
+        self.writeDefaults()
     }
 
     static func setSettings(
@@ -113,21 +133,36 @@ internal enum BTSettings {
             BTSettingsInfo.chargeLimitsValid(
                 minCharge: minCharge,
                 maxCharge: maxCharge
-            )
+            ),
+            BTChargeController.capabilities.supports(maxCharge: maxCharge)
         else {
             os_log("Client charge limits malformed, preserve current values")
             return false
         }
 
-        self.minCharge = UInt8(minCharge)
-        self.maxCharge = UInt8(maxCharge)
+        let limits = BTChargeController.normalizedLimits(
+            minCharge: UInt8(minCharge),
+            maxCharge: UInt8(maxCharge)
+        )
+        let previousMin = self.minCharge
+        let previousMax = self.maxCharge
+        self.minCharge = limits.min
+        self.maxCharge = limits.max
 
-        BTPowerEvents.settingsChanged()
+        guard BTPowerEvents.settingsChanged() else {
+            self.minCharge = previousMin
+            self.maxCharge = previousMax
+            _ = BTPowerEvents.settingsChanged()
+            return false
+        }
 
         return true
     }
 
     private static func setAdapterSleep(enabled: Bool) {
+        guard BTChargeController.capabilities.adapterControl else {
+            return
+        }
         guard self.adapterSleep != enabled else {
             return
         }
@@ -138,6 +173,9 @@ internal enum BTSettings {
     }
 
     private static func setMagSafeSync(enabled: Bool) {
+        guard BTChargeController.capabilities.magSafeSync else {
+            return
+        }
         guard self.magSafeSync != enabled else {
             return
         }

@@ -18,27 +18,25 @@ public extension SMCComm {
         private static var supportedChargeKeys: [KeyControl] = []
         private static var supportedAdapterKeys: [KeyControl] = []
 
-        static func supported() -> Bool {
-            //
-            // Ensure all required SMC keys are present and well-formed.
-            //
-            let chargeKeys = self.chargeKeys.filter { key in
-                SMCComm.keySupported(keyInfo: key.keyInfo)
-            }
-            guard !chargeKeys.isEmpty else {
-                return false
-            }
-            self.supportedChargeKeys = chargeKeys
+        static var legacyChargingSupported: Bool {
+            !self.supportedChargeKeys.isEmpty
+        }
 
-            let adapterKeys = self.adapterKeys.filter { key in
-                SMCComm.keySupported(keyInfo: key.keyInfo)
-            }
-            guard !adapterKeys.isEmpty else {
-                return false
-            }
-            self.supportedAdapterKeys = adapterKeys
+        static var adapterControlSupported: Bool {
+            !self.supportedAdapterKeys.isEmpty
+        }
 
-            return true
+        static func prepare() {
+            //
+            // Cache every known, well-formed key. Charging and adapter control
+            // are separate capabilities on newer firmware.
+            //
+            self.supportedChargeKeys = self.chargeKeys.filter { key in
+                SMCComm.keySupported(keyInfo: key.keyInfo, logErrors: false)
+            }
+            self.supportedAdapterKeys = self.adapterKeys.filter { key in
+                SMCComm.keySupported(keyInfo: key.keyInfo, logErrors: false)
+            }
         }
 
         static func enableCharging() -> Bool {

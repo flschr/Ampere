@@ -123,6 +123,13 @@
 		CEAA00422E00000000000001 /* BTPowerEventStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA00402E00000000000001 /* BTPowerEventStateMachine.swift */; };
 		CEAA00432E00000000000001 /* BTPowerEventStateMachine.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA00402E00000000000001 /* BTPowerEventStateMachine.swift */; };
 		CEAA00442E00000000000001 /* BTPowerEventStateMachineTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEAA00412E00000000000001 /* BTPowerEventStateMachineTests.swift */; };
+		CE2710012F00000000000001 /* BTPowerCapabilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2710112F00000000000001 /* BTPowerCapabilities.swift */; };
+		CE2710022F00000000000001 /* BTPowerCapabilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2710112F00000000000001 /* BTPowerCapabilities.swift */; };
+		CE2710032F00000000000001 /* BTPowerCapabilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2710112F00000000000001 /* BTPowerCapabilities.swift */; };
+		CE2710042F00000000000001 /* SMCComm+FirmwareChargeLimit.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2710122F00000000000001 /* SMCComm+FirmwareChargeLimit.swift */; };
+		CE2710052F00000000000001 /* BTChargeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2710132F00000000000001 /* BTChargeController.swift */; };
+		CE2710062F00000000000001 /* BTSystemChargeLimitClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2710142F00000000000001 /* BTSystemChargeLimitClient.swift */; };
+		CE2710072F00000000000001 /* BTSystemChargeLimitRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2710152F00000000000001 /* BTSystemChargeLimitRuntime.swift */; };
 		CEB09B7328D7B9A5007FFB37 /* BTDaemonManagement+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB09B7228D7B9A5007FFB37 /* BTDaemonManagement+Legacy.swift */; };
 		CEB4A42428D39ECE004FA277 /* BTDaemonManagement+Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB4A42328D39ECE004FA277 /* BTDaemonManagement+Status.swift */; };
 		CEB4A42828D3B184004FA277 /* BTStateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB4A42728D3B184004FA277 /* BTStateInfo.swift */; };
@@ -320,6 +327,11 @@
 		CEAA001C2E00000000000001 /* BTLowPowerModeState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTLowPowerModeState.swift; sourceTree = "<group>"; };
 		CEAA00402E00000000000001 /* BTPowerEventStateMachine.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTPowerEventStateMachine.swift; sourceTree = "<group>"; };
 		CEAA00412E00000000000001 /* BTPowerEventStateMachineTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTPowerEventStateMachineTests.swift; sourceTree = "<group>"; };
+		CE2710112F00000000000001 /* BTPowerCapabilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTPowerCapabilities.swift; sourceTree = "<group>"; };
+		CE2710122F00000000000001 /* SMCComm+FirmwareChargeLimit.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "SMCComm+FirmwareChargeLimit.swift"; sourceTree = "<group>"; };
+		CE2710132F00000000000001 /* BTChargeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTChargeController.swift; sourceTree = "<group>"; };
+		CE2710142F00000000000001 /* BTSystemChargeLimitClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTSystemChargeLimitClient.swift; sourceTree = "<group>"; };
+		CE2710152F00000000000001 /* BTSystemChargeLimitRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTSystemChargeLimitRuntime.swift; sourceTree = "<group>"; };
 		CEB09B7228D7B9A5007FFB37 /* BTDaemonManagement+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BTDaemonManagement+Legacy.swift"; sourceTree = "<group>"; };
 		CEB4671B2843BFA000D7CB01 /* SMCParamStruct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMCParamStruct.h; sourceTree = "<group>"; };
 		CEB4671D2843C87200D7CB01 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
@@ -417,6 +429,9 @@
 				CEC321AF284BAA2B009B9A30 /* BTPowerEvents.swift */,
 				CEECE31028BAB12000821A3B /* BTPowerState.swift */,
 				CE3A8F6C284D056D00A9E373 /* BTSettings.swift */,
+				CE2710132F00000000000001 /* BTChargeController.swift */,
+				CE2710142F00000000000001 /* BTSystemChargeLimitClient.swift */,
+				CE2710152F00000000000001 /* BTSystemChargeLimitRuntime.swift */,
 			);
 			path = app.justasimple.ampere.daemon;
 			sourceTree = "<group>";
@@ -492,6 +507,7 @@
 				CE2B96BF28A7E2BB00FE3DDB /* GlobalSleep.swift */,
 				CE37DD0D283F86F90060C43F /* SMCComm.swift */,
 				CE37DD0F284164160060C43F /* SMCComm+Power.swift */,
+				CE2710122F00000000000001 /* SMCComm+FirmwareChargeLimit.swift */,
 				CEE4A6ED2B9B855100300506 /* IOPSPrivate.swift */,
 				CE9E6DEB2BF106A10070ABB2 /* SMCComm+MagSafe.swift */,
 			);
@@ -506,6 +522,7 @@
 				CE5E5AF728DF1CB100AF1D07 /* BTError.swift */,
 				CE3C1DA628CA33FD008A0F7D /* BTLegacyHelperInfo.swift */,
 				CEAA00102E00000000000001 /* BTBatteryModels.swift */,
+				CE2710112F00000000000001 /* BTPowerCapabilities.swift */,
 				CEAA00402E00000000000001 /* BTPowerEventStateMachine.swift */,
 				CE0DB56228BEB4E600B8FC4C /* BTSettingsInfo.swift */,
 				CEB4A42728D3B184004FA277 /* BTStateInfo.swift */,
@@ -870,6 +887,11 @@
 				CE7F623428B95A7E00EF58F9 /* BTPreprocessor.m in Sources */,
 				CE5E5AF928DF1CB100AF1D07 /* BTError.swift in Sources */,
 				CEAA00022E00000000000001 /* BTBatteryModels.swift in Sources */,
+				CE2710022F00000000000001 /* BTPowerCapabilities.swift in Sources */,
+				CE2710042F00000000000001 /* SMCComm+FirmwareChargeLimit.swift in Sources */,
+				CE2710052F00000000000001 /* BTChargeController.swift in Sources */,
+				CE2710062F00000000000001 /* BTSystemChargeLimitClient.swift in Sources */,
+				CE2710072F00000000000001 /* BTSystemChargeLimitRuntime.swift in Sources */,
 				CEAA00422E00000000000001 /* BTPowerEventStateMachine.swift in Sources */,
 				CEA80FD2285A28230064ADEA /* BTSettings.swift in Sources */,
 				CEB4A42928D3B184004FA277 /* BTStateInfo.swift in Sources */,
@@ -916,6 +938,7 @@
 				CE397478285A25A1002D0EC9 /* BTDaemonXPCClient.swift in Sources */,
 				CE5E5AF828DF1CB100AF1D07 /* BTError.swift in Sources */,
 				CEAA00012E00000000000001 /* BTBatteryModels.swift in Sources */,
+				CE2710012F00000000000001 /* BTPowerCapabilities.swift in Sources */,
 				CE0DB56328BEB4E600B8FC4C /* BTSettingsInfo.swift in Sources */,
 				CE5E5AF328DF183E00AF1D07 /* BTAuthorizationRights.swift in Sources */,
 				CE2400902E03000000000001 /* BTBuildConfiguration.swift in Sources */,
@@ -971,6 +994,7 @@
 				CEAA00052E00000000000001 /* BTSettingsInfo.swift in Sources */,
 				CEAA00042E00000000000001 /* BTStateInfo.swift in Sources */,
 				CEAA00032E00000000000001 /* BTBatteryModels.swift in Sources */,
+				CE2710032F00000000000001 /* BTPowerCapabilities.swift in Sources */,
 				CE2400A92E03000000000001 /* BTDaemonCommProtocol.swift in Sources */,
 				CEAA00432E00000000000001 /* BTPowerEventStateMachine.swift in Sources */,
 				CEAA001B2E00000000000001 /* BTLowPowerMode.swift in Sources */,

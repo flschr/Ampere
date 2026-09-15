@@ -157,6 +157,19 @@ internal enum BTCommandsMenuSnapshotFactory {
         state: BTBatteryState,
         snapshot: inout BTCommandsMenuSnapshot
     ) {
+        guard state.capabilities.adapterControl else {
+            if state.connected {
+                snapshot.powerAdapterEnabled = .visible(
+                    title: BTLocalization.Commands.poweredByAdapter
+                )
+            } else {
+                snapshot.powerAdapterDisabled = .visible(
+                    title: BTLocalization.Commands.poweredByBattery
+                )
+            }
+            return
+        }
+
         if state.powerDisabled {
             snapshot.powerAdapterDisabled = .visible(
                 title: BTLocalization.Commands.poweredByBattery
@@ -198,26 +211,26 @@ internal enum BTCommandsMenuSnapshotFactory {
         }
 
         guard state.connected, !state.powerDisabled else {
-            if state.chargingDisabled {
-                switch state.chargingMode {
-                case .standard:
+            switch state.chargingMode {
+            case .standard:
+                if state.chargingDisabled {
                     snapshot.statusDetail = .visible(
                         title: self.standardPausedDetail(
                             state: state,
                             settings: settings
                         )
                     )
-                case .toLimit:
-                    snapshot.requestedChargingToLimit = .visible(
-                        title: BTLocalization.Commands.waitingToCharge(
-                            maxCharge: state.maxCharge
-                        )
-                    )
-                case .toFull:
-                    snapshot.requestedChargingToFull = .visible(
-                        title: BTLocalization.Commands.waitingToChargeFull
-                    )
                 }
+            case .toLimit:
+                snapshot.requestedChargingToLimit = .visible(
+                    title: BTLocalization.Commands.waitingToCharge(
+                        maxCharge: state.maxCharge
+                    )
+                )
+            case .toFull:
+                snapshot.requestedChargingToFull = .visible(
+                    title: BTLocalization.Commands.waitingToChargeFull
+                )
             }
             return
         }
@@ -296,7 +309,8 @@ internal enum BTCommandsMenuSnapshotFactory {
         if state.connected {
             snapshot.requestChargingToFull.isHidden = true
             snapshot.requestChargingToLimit.isHidden = true
-            snapshot.disableCharging.isHidden = state.chargingDisabled
+            snapshot.disableCharging.isHidden = state.chargingDisabled ||
+                !state.capabilities.directChargingControl
 
             switch state.chargingMode {
             case .standard, .toLimit:

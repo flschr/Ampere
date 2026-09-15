@@ -294,6 +294,7 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
         let capabilities = try XCTUnwrap(
             BTPowerCapabilities.systemManaged(
                 adapterControl: false,
+                magSafeSync: false,
                 availableLimits: [80, 85, 90, 95, 100]
             )
         )

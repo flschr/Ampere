@@ -72,6 +72,7 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
 
     static func systemManaged(
         adapterControl: Bool,
+        magSafeSync: Bool,
         availableLimits: [UInt8]
     ) -> Self? {
         let limits = Array(Set(availableLimits)).sorted()
@@ -95,19 +96,19 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
             adapterControl: adapterControl,
             directChargingControl: false,
             customChargeRange: false,
-            magSafeSync: false,
+            magSafeSync: magSafeSync,
             minimumMaxCharge: Int(minimum),
             maxChargeStep: Int(step)
         )
     }
 
-    static func firmwareManaged(adapterControl: Bool) -> Self {
+    static func firmwareManaged(adapterControl: Bool, magSafeSync: Bool) -> Self {
         Self(
             chargeControlMode: .firmwareSMC,
             adapterControl: adapterControl,
             directChargingControl: false,
             customChargeRange: true,
-            magSafeSync: false,
+            magSafeSync: magSafeSync,
             minimumMaxCharge: Int(BTSettingsInfo.Bounds.maxChargeMin),
             maxChargeStep: 1
         )
@@ -137,8 +138,7 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
             Self.modeIsConsistent(
                 mode: mode,
                 directChargingControl: directChargingControl,
-                customChargeRange: customChargeRange,
-                magSafeSync: magSafeSync
+                customChargeRange: customChargeRange
             )
         else {
             throw BTError.malformedData
@@ -185,16 +185,15 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
     private static func modeIsConsistent(
         mode: BTChargeControlMode,
         directChargingControl: Bool,
-        customChargeRange: Bool,
-        magSafeSync: Bool
+        customChargeRange: Bool
     ) -> Bool {
         switch mode {
         case .legacySMC:
             return directChargingControl && customChargeRange
         case .firmwareSMC:
-            return !directChargingControl && customChargeRange && !magSafeSync
+            return !directChargingControl && customChargeRange
         case .systemManaged:
-            return !directChargingControl && !customChargeRange && !magSafeSync
+            return !directChargingControl && !customChargeRange
         }
     }
 }

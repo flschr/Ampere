@@ -193,6 +193,7 @@ final class BTBatteryModelsTests: XCTestCase {
         let capabilities = try XCTUnwrap(
             BTPowerCapabilities.systemManaged(
                 adapterControl: true,
+                magSafeSync: true,
                 availableLimits: [100, 80, 90, 85, 95]
             )
         )
@@ -200,7 +201,7 @@ final class BTBatteryModelsTests: XCTestCase {
             minCharge: 70,
             maxCharge: 85,
             adapterSleep: false,
-            magSafeSync: nil,
+            magSafeSync: false,
             capabilities: capabilities
         )
 
@@ -212,6 +213,11 @@ final class BTBatteryModelsTests: XCTestCase {
         XCTAssertFalse(capabilities.supports(maxCharge: 91))
         XCTAssertEqual(capabilities.nearestSupported(maxCharge: 92), 90)
         XCTAssertEqual(capabilities.nearestSupported(maxCharge: 79), 80)
+        XCTAssertTrue(capabilities.magSafeSync)
+        XCTAssertEqual(
+            try BTBatterySettings(payload: settings.payload).magSafeSync,
+            false
+        )
     }
 
     func testCapabilitiesRejectMalformedPayload() {
@@ -228,6 +234,7 @@ final class BTBatteryModelsTests: XCTestCase {
         XCTAssertNil(
             BTPowerCapabilities.systemManaged(
                 adapterControl: false,
+                magSafeSync: false,
                 availableLimits: [80, 85, 95, 100]
             )
         )

@@ -568,6 +568,10 @@ internal enum BTPowerEvents {
     }
 
     private static func restoreDefaults() {
+        if BTSettings.magSafeSync {
+            _ = SMCComm.MagSafe.setSystem()
+        }
+
         if !BTChargeController.usesLegacyControl {
             if !BTChargeController.restoreOriginalState() {
                 os_log("Failed to restore the original charge limit")
@@ -590,9 +594,6 @@ internal enum BTPowerEvents {
             _ = BTPowerState.enableCharging(percent: percent)
             _ = BTPowerState.enablePowerAdapter()
         #endif
-        if BTSettings.magSafeSync {
-            _ = SMCComm.MagSafe.setSystem()
-        }
         self.thermallyLimited = false
     }
 

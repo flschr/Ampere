@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ProcessType</key>
+	<string>Adaptive</string>
+	<key>KeepAlive</key>
+	<dict>
+		<key>SuccessfulExit</key>
+		<false/>
+	</dict>
+	<key>AssociatedBundleIdentifiers</key>
+	<string>app.justasimple.ampere</string>
+	<key>Label</key>
+	<string>app.justasimple.ampere.daemon</string>
+	<key>RunAtLoad</key>
+	<true/>
+	<key>EnableTransactions</key>
+	<false/>
+	<key>MachServices</key>
+	<dict>
+		<key>H2FNY8B779.app.justasimple.ampere.daemon</key>
+		<true/>
+	</dict>
+</dict>
+</plist>

@@ -3,7 +3,9 @@
 // SPDX-License-Identifier: BSD-3-Clause
 //
 
+import Foundation
 import IOKit
+import IOKit.ps
 import notify
 import os.log
 
@@ -27,6 +29,54 @@ public enum IOPSPrivate {
         return (percent, isCharging, isFullyCharged)
     }
 
+    static func GetTimeToEmptyEstimate() -> TimeInterval? {
+        let estimate = IOPSGetTimeRemainingEstimate()
+        if estimate > 0 {
+            return estimate
+        }
+
+        return self.GetPowerSourceMinutes(key: "Time to Empty").map {
+            TimeInterval($0 * 60)
+        }
+    }
+
+    static func GetTimeToFullChargeEstimate() -> TimeInterval? {
+        self.GetPowerSourceMinutes(key: "Time to Full Charge").map {
+            TimeInterval($0 * 60)
+        }
+    }
+
+    static func GetBatteryTemperatureCelsius() -> Double? {
+        let service = IOServiceGetMatchingService(
+            kIOMasterPortDefault,
+            IOServiceMatching("AppleSmartBattery")
+        )
+        guard service != IO_OBJECT_NULL else {
+            return nil
+        }
+        defer {
+            IOObjectRelease(service)
+        }
+
+        guard
+            let value = IORegistryEntryCreateCFProperty(
+                service,
+                "Temperature" as CFString,
+                kCFAllocatorDefault,
+                0
+            )?.takeRetainedValue() as? NSNumber
+        else {
+            return nil
+        }
+
+        let deciKelvin = value.doubleValue
+        guard deciKelvin > 0 else {
+            return nil
+        }
+
+        return deciKelvin / 10 - 273.15
+    }
+
     static func DrawingUnlimitedPower() -> Bool {
         guard let packedBatteryBits = GetPackedBatteryBits() else {
             return true
@@ -34,7 +84,64 @@ public enum IOPSPrivate {
 
         return (packedBatteryBits & kPSTimeRemainingNotifyExternalBit) != 0
     }
-    
+
+    static func OptimizedBatteryChargingEngaged() -> Bool {
+        guard
+            let powerSources = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(),
+            let powerSourceList = IOPSCopyPowerSourcesList(powerSources)?
+                .takeRetainedValue() as? [CFTypeRef]
+        else {
+            return false
+        }
+
+        for source in powerSourceList {
+            guard
+                let description = IOPSGetPowerSourceDescription(
+                    powerSources,
+                    source
+                )?.takeUnretainedValue() as? [String: Any],
+                let engaged = description[
+                    "Optimized Battery Charging Engaged"
+                ] as? Bool
+            else {
+                continue
+            }
+
+            if engaged {
+                return true
+            }
+        }
+
+        return false
+    }
+
+    private static func GetPowerSourceMinutes(key: String) -> Int? {
+        guard
+            let powerSources = IOPSCopyPowerSourcesInfo()?.takeRetainedValue(),
+            let powerSourceList = IOPSCopyPowerSourcesList(powerSources)?
+                .takeRetainedValue() as? [CFTypeRef]
+        else {
+            return nil
+        }
+
+        for source in powerSourceList {
+            guard
+                let description = IOPSGetPowerSourceDescription(
+                    powerSources,
+                    source
+                )?.takeUnretainedValue() as? [String: Any],
+                let minutes = description[key] as? Int,
+                minutes >= 0
+            else {
+                continue
+            }
+
+            return minutes
+        }
+
+        return nil
+    }
+
     private static func GetPackedBatteryBits() -> UInt64? {
         var token: Int32 = 0
         let status = notify_register_check(kIOPSNotifyPercentChange, &token)

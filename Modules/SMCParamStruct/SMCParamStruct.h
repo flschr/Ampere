@@ -31,7 +31,7 @@
 
 __BEGIN_DECLS
 
-// Todo: verify kSMCKeyNotFound
+/* AppleSMC returns this status when the requested key is unavailable. */
 enum {
     kSMCKeyNotFound = 0x84
 };

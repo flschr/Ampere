@@ -68,7 +68,7 @@ public extension SMCComm {
         static let ui32 = SMCComm.KeyType("u", "i", "3", "2")
         static let hex  = SMCComm.KeyType("h", "e", "x", "_")
     }
-    
+
     static func KeyInfoDataEq (
         data1: SMCComm.KeyInfoData,
         data2: SMCComm.KeyInfoData
@@ -140,12 +140,18 @@ public enum SMCComm {
         self.connect = IO_OBJECT_NULL
     }
 
-    static func getKeyInfo(key: SMCComm.Key)
+    static func getKeyInfo(
+        key: SMCComm.Key,
+        logErrors: Bool = true
+    )
         -> SMCComm.KeyInfoData?
     {
         var inputStruct = SMCParamStruct.info(key: key)
 
-        let outputStruct = self.callSMCFunctionYPC(params: &inputStruct)
+        let outputStruct = self.callSMCFunctionYPC(
+            params: &inputStruct,
+            logErrors: logErrors
+        )
         guard let outputStruct else {
             return nil
         }
@@ -153,13 +159,19 @@ public enum SMCComm {
         return outputStruct.keyInfo
     }
 
-    static func keySupported(keyInfo: SMCComm.KeyInfo) -> Bool {
-        let info = SMCComm.getKeyInfo(key: keyInfo.key)
+    static func keySupported(
+        keyInfo: SMCComm.KeyInfo,
+        logErrors: Bool = true
+    ) -> Bool {
+        let info = SMCComm.getKeyInfo(
+            key: keyInfo.key,
+            logErrors: logErrors
+        )
         guard let info = info,
               SMCComm.KeyInfoDataEq(data1: keyInfo.info, data2: info) else {
             return false
         }
-        
+
         return true
     }
 
@@ -170,7 +182,7 @@ public enum SMCComm {
         guard let outputStruct else {
             return nil
         }
-        
+
         let mirror = Mirror(reflecting: outputStruct.bytes)
         let data = mirror.children.prefix(dataSize)
         return data.map { byte in byte.value as! UInt8 }
@@ -200,7 +212,8 @@ public enum SMCComm {
     }
 
     private static func callSMCFunctionYPC(
-        params: inout SMCParamStruct
+        params: inout SMCParamStruct,
+        logErrors: Bool = true
     ) -> SMCParamStruct? {
         assert(self.connect != IO_OBJECT_NULL)
 
@@ -221,7 +234,9 @@ public enum SMCComm {
             resultCall == kIOReturnSuccess,
             outputValues.result == UInt8(kSMCSuccess)
         else {
-            os_log("SMC error: \(resultCall), \(outputValues.result)")
+            if logErrors {
+                os_log("SMC error: \(resultCall), \(outputValues.result)")
+            }
             return nil
         }
 

@@ -18,6 +18,8 @@ internal enum BTDaemonCommCommand: UInt8 {
     case isSupported
     case pauseActivity
     case resumeActivity
+    case enableLowPowerMode
+    case disableLowPowerMode
 }
 
 @objc internal protocol BTDaemonCommProtocol {

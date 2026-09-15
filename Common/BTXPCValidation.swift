@@ -149,18 +149,22 @@ internal enum BTXPCValidation {
     }
 
     private static func requirementsTextFromId(identifier: String) -> String {
-        let debugText = "identifier \"" + identifier + "\"" +
+        let requirementText = "identifier \"" + identifier + "\"" +
             " and anchor apple generic" +
-            " and certificate leaf[subject.CN] = \"" + BT_CODESIGN_CN + "\"" +
+            " and certificate leaf[subject.OU] = \"" + BT_TEAM_ID + "\"" +
             " and certificate 1[field.1.2.840.113635.100.6.2.1] /* exists */" +
             " and !(entitlement[\"com.apple.security.cs.allow-dyld-environment-variables\"] /* exists */)" +
             " and !(entitlement[\"com.apple.security.cs.disable-library-validation\"] /* exists */)" +
             " and !(entitlement[\"com.apple.security.cs.allow-unsigned-executable-memory\"] /* exists */)" +
             " and !(entitlement[\"com.apple.security.cs.allow-jit\"] /* exists */)"
         #if DEBUG
-            return debugText
+            return requirementText
         #else
-            return debugText +
+            if BT_CODESIGN_IDENTITY.hasPrefix("Apple Development") {
+                return requirementText
+            }
+
+            return requirementText +
                 " and !(entitlement[\"com.apple.security.get-task-allow\"] /* exists */)"
         #endif
     }

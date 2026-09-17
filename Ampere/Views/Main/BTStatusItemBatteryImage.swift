@@ -13,60 +13,16 @@ internal enum BTStatusItemBatteryImage {
         isCharging: Bool,
         lowPowerModeEnabled: Bool
     ) -> NSImage {
-        let image = NSImage(size: self.size)
-        for scale in [1, 2, 3] {
-            if let representation = self.representation(
+        let image = NSImage(size: self.size, flipped: false) { _ in
+            self.draw(
                 isCharging: isCharging,
-                lowPowerModeEnabled: lowPowerModeEnabled,
-                scale: scale
-            ) {
-                image.addRepresentation(representation)
-            }
+                lowPowerModeEnabled: lowPowerModeEnabled
+            )
+            return true
         }
 
         image.isTemplate = !lowPowerModeEnabled
         return image
-    }
-
-    private static func representation(
-        isCharging: Bool,
-        lowPowerModeEnabled: Bool,
-        scale: Int
-    ) -> NSBitmapImageRep? {
-        let pixelSize = NSSize(
-            width: self.size.width * CGFloat(scale),
-            height: self.size.height * CGFloat(scale)
-        )
-        guard
-            let representation = NSBitmapImageRep(
-                bitmapDataPlanes: nil,
-                pixelsWide: Int(pixelSize.width),
-                pixelsHigh: Int(pixelSize.height),
-                bitsPerSample: 8,
-                samplesPerPixel: 4,
-                hasAlpha: true,
-                isPlanar: false,
-                colorSpaceName: .deviceRGB,
-                bytesPerRow: 0,
-                bitsPerPixel: 0
-            ),
-            let context = NSGraphicsContext(bitmapImageRep: representation)
-        else {
-            return nil
-        }
-
-        representation.size = self.size
-
-        let previousContext = NSGraphicsContext.current
-        NSGraphicsContext.current = context
-        context.cgContext.scaleBy(x: CGFloat(scale), y: CGFloat(scale))
-        self.draw(
-            isCharging: isCharging,
-            lowPowerModeEnabled: lowPowerModeEnabled
-        )
-        NSGraphicsContext.current = previousContext
-
-        return representation
     }
 
     private static func draw(
@@ -86,7 +42,7 @@ internal enum BTStatusItemBatteryImage {
             xRadius: 0.9,
             yRadius: 0.9
         )
-        let shapeColor = lowPowerModeEnabled ? NSColor.white : .black
+        let shapeColor = lowPowerModeEnabled ? NSColor.labelColor : .black
 
         shapeColor.setFill()
         capPath.fill()

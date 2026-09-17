@@ -141,6 +141,7 @@ internal struct BTBatterySettings: Equatable, Sendable {
     let maxCharge: Int
     let adapterSleep: Bool
     let magSafeSync: Bool?
+    let lowPowerModeThreshold: Int
     let capabilities: BTPowerCapabilities
 
     init(
@@ -148,12 +149,13 @@ internal struct BTBatterySettings: Equatable, Sendable {
         maxCharge: Int,
         adapterSleep: Bool,
         magSafeSync: Bool?,
+        lowPowerModeThreshold: Int = Int(BTSettingsInfo.Defaults.lowPowerModeThreshold),
         capabilities: BTPowerCapabilities = .legacy
     ) throws {
         guard BTSettingsInfo.chargeLimitsValid(
             minCharge: minCharge,
             maxCharge: maxCharge
-        ) else {
+        ), BTSettingsInfo.lowPowerModeThresholdValid(lowPowerModeThreshold) else {
             throw BTError.malformedData
         }
 
@@ -161,6 +163,7 @@ internal struct BTBatterySettings: Equatable, Sendable {
         self.maxCharge = maxCharge
         self.adapterSleep = adapterSleep
         self.magSafeSync = magSafeSync
+        self.lowPowerModeThreshold = lowPowerModeThreshold
         self.capabilities = capabilities
     }
 
@@ -180,12 +183,22 @@ internal struct BTBatterySettings: Equatable, Sendable {
         let magSafeSync =
             (payload[BTSettingsInfo.Keys.magSafeSync] as? NSNumber)?
                 .boolValue
+        let lowPowerModeThreshold: Int
+        if let storedThreshold = payload[BTSettingsInfo.Keys.lowPowerModeThreshold] {
+            guard let number = storedThreshold as? NSNumber else {
+                throw BTError.malformedData
+            }
+            lowPowerModeThreshold = number.intValue
+        } else {
+            lowPowerModeThreshold = Int(BTSettingsInfo.Defaults.lowPowerModeThreshold)
+        }
         let capabilities = try BTPowerCapabilities(payload: payload)
         try self.init(
             minCharge: minCharge,
             maxCharge: maxCharge,
             adapterSleep: adapterSleep,
             magSafeSync: magSafeSync,
+            lowPowerModeThreshold: lowPowerModeThreshold,
             capabilities: capabilities
         )
     }
@@ -196,6 +209,9 @@ internal struct BTBatterySettings: Equatable, Sendable {
             BTSettingsInfo.Keys.maxCharge: NSNumber(value: self.maxCharge),
             BTSettingsInfo.Keys.adapterSleep: NSNumber(
                 value: self.adapterSleep
+            ),
+            BTSettingsInfo.Keys.lowPowerModeThreshold: NSNumber(
+                value: self.lowPowerModeThreshold
             ),
         ]
 

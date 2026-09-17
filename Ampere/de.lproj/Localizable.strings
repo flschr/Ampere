@@ -75,6 +75,8 @@
 "Request Charging to %d%%" = "Laden auf %d%% anfordern";
 "Use Power Adapter Instead of Battery" = "Netzteil statt Akku verwenden";
 "Low Power Mode" = "Stromsparmodus";
+"Low Power Mode on battery at or below:" = "Stromsparmodus im Akkubetrieb bei höchstens:";
+"0% turns this automation off." = "Bei 0 % ist die Automatik aus.";
 "Until Empty: %@" = "Bis leer: %@";
 "Until %d %%: %@" = "Bis %d%%: %@";
 "%@ until empty" = "%@ bis leer";

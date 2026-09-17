@@ -11,11 +11,13 @@ internal enum BTSettingsInfo {
         static let maxCharge: UInt8 = 80
         static let adapterSleep = false
         static let magSafeSync = false
+        static let lowPowerModeThreshold: UInt8 = 0
     }
 
     enum Bounds {
         static let minChargeMin: UInt8 = 20
         static let maxChargeMin: UInt8 = 50
+        static let lowPowerModeThresholdMin: UInt8 = 0
     }
 
     enum Keys {
@@ -23,6 +25,7 @@ internal enum BTSettingsInfo {
         static let maxCharge = "MaxCharge"
         static let adapterSleep = "AdapterSleep"
         static let magSafeSync = "MagSafeSync"
+        static let lowPowerModeThreshold = "LowPowerModeThreshold"
     }
 
     static func chargeLimitsValid(
@@ -33,5 +36,9 @@ internal enum BTSettingsInfo {
             minCharge <= maxCharge &&
             maxCharge <= 100 &&
             self.Bounds.maxChargeMin <= maxCharge
+    }
+
+    static func lowPowerModeThresholdValid(_ threshold: Int) -> Bool {
+        Int(self.Bounds.lowPowerModeThresholdMin) <= threshold && threshold <= 100
     }
 }

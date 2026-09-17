@@ -8,7 +8,7 @@ import os.log
 
 @MainActor
 internal final class BTSettingsViewController: NSViewController {
-    private static let contentSize = NSSize(width: 520, height: 417)
+    private static let contentSize = NSSize(width: 520, height: 515)
 
     private var currentSettings: [String: NSObject & Sendable]? = nil
     private var capabilities = BTPowerCapabilities.legacy
@@ -27,6 +27,9 @@ internal final class BTSettingsViewController: NSViewController {
 
     @IBOutlet private var adapterSleepSwitch: NSSwitch!
     @IBOutlet private var magSafeSyncSwitch: NSSwitch!
+    @IBOutlet private var magSafeDescriptionTextField: NSTextField!
+
+    private let lowPowerThresholdControls = BTLowPowerThresholdControls()
 
     private var minChargeVal = BTSettingsInfo.Defaults.minCharge
     @objc private dynamic var minChargeNum: NSNumber {
@@ -104,7 +107,7 @@ internal final class BTSettingsViewController: NSViewController {
             equalToConstant: Self.contentSize.height
         ).isActive = true
         self.tabView.selectTabViewItem(self.powerTab)
-        self.tabView.heightAnchor.constraint(equalToConstant: 348).isActive = true
+        self.tabView.heightAnchor.constraint(equalToConstant: 446).isActive = true
         self.addInitialFocusView()
         self.configurePowerTabTextFields()
         self.cancelButton = self.view.subviews.compactMap {
@@ -114,6 +117,7 @@ internal final class BTSettingsViewController: NSViewController {
         }
         self.addAboutButton()
         self.addOptimizedChargingWarning()
+        self.addLowPowerThresholdControls()
     }
 
     @IBAction private func cancelButtonAction(_: NSButton) {
@@ -130,6 +134,7 @@ internal final class BTSettingsViewController: NSViewController {
                 magSafeSync: self.magSafeSyncSwitch.isEnabled ?
                     self.magSafeSyncSwitch.state == .on :
                     nil,
+                lowPowerModeThreshold: self.lowPowerThresholdControls.threshold,
                 capabilities: self.capabilities
             )
         } catch {
@@ -308,6 +313,33 @@ internal final class BTSettingsViewController: NSViewController {
         self.optimizedChargingWarning = warning
     }
 
+    private func addLowPowerThresholdControls() {
+        guard let powerView = self.powerTab.view else {
+            return
+        }
+
+        self.lowPowerThresholdControls.translatesAutoresizingMaskIntoConstraints = false
+        powerView.addSubview(self.lowPowerThresholdControls)
+        NSLayoutConstraint.activate([
+            self.lowPowerThresholdControls.leadingAnchor.constraint(
+                equalTo: powerView.leadingAnchor,
+                constant: 20
+            ),
+            self.lowPowerThresholdControls.trailingAnchor.constraint(
+                equalTo: powerView.trailingAnchor,
+                constant: -20
+            ),
+            self.lowPowerThresholdControls.topAnchor.constraint(
+                equalTo: self.magSafeDescriptionTextField.bottomAnchor,
+                constant: 12
+            ),
+            self.lowPowerThresholdControls.bottomAnchor.constraint(
+                equalTo: powerView.bottomAnchor,
+                constant: -20
+            ),
+        ])
+    }
+
     private func updateOptimizedChargingWarning() {
         self.optimizedChargingWarning?.isHidden =
             self.capabilities.chargeControlMode == .systemManaged ||
@@ -334,6 +366,8 @@ internal final class BTSettingsViewController: NSViewController {
             self.setMinCharge(value: parsedSettings.minCharge)
             self.setMaxCharge(value: parsedSettings.maxCharge)
             self.setAdapterSleep(value: parsedSettings.adapterSleep)
+            self.lowPowerThresholdControls.threshold =
+                parsedSettings.lowPowerModeThreshold
 
             if let magSafeSync = parsedSettings.magSafeSync {
                 self.magSafeSyncSwitch.isEnabled = true

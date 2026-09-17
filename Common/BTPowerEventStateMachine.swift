@@ -86,9 +86,18 @@ internal enum BTPowerEventStateMachine {
     }
 
     static func shouldMonitorDisconnectedBattery(
-        chargingMode: BTStateInfo.ChargingMode
+        chargingMode: BTStateInfo.ChargingMode,
+        lowPowerModeThreshold: UInt8 = 0
     ) -> Bool {
-        return chargingMode == .standard
+        return chargingMode == .standard || lowPowerModeThreshold > 0
+    }
+
+    static func shouldEnableLowPowerMode(
+        percent: UInt8,
+        threshold: UInt8,
+        drawingUnlimitedPower: Bool
+    ) -> Bool {
+        return threshold > 0 && !drawingUnlimitedPower && percent <= threshold
     }
 
     static func thermalEffect(

@@ -136,6 +136,21 @@ final class BTBatteryModelsTests: XCTestCase {
         )
     }
 
+    func testBatterySettingsRejectsMalformedLowPowerThresholdPayload() throws {
+        let settings = try BTBatterySettings(
+            minCharge: 70,
+            maxCharge: 80,
+            adapterSleep: false,
+            magSafeSync: nil
+        )
+        var payload = settings.payload
+        payload[BTSettingsInfo.Keys.lowPowerModeThreshold] = NSNull()
+
+        XCTAssertThrowsError(try BTBatterySettings(payload: payload)) { error in
+            XCTAssertEqual(error as? BTError, .malformedData)
+        }
+    }
+
     func testBatterySettingsRoundTripsWithoutMagSafeSupport() throws {
         let settings = try BTBatterySettings(
             minCharge: 75,

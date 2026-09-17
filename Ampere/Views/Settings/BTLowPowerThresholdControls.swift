@@ -1,5 +1,5 @@
 //
-// Copyright (C) 2026 Marvin Häuser. All rights reserved.
+// Copyright (C) 2026 René Fischer. All rights reserved.
 // SPDX-License-Identifier: BSD-3-Clause
 //
 

@@ -19,10 +19,10 @@ internal enum BTPowerEvents {
     private static var powerCreated = false
     private static var percentCreated = false
     private static var thermalTimer: DispatchSourceTimer? = nil
-    private static var automaticLowPowerTriggered = false
     private static let thermalCheckInterval: TimeInterval = 120
 
     static func start() throws {
+        BTLowPowerModeAutomation.reset()
         let smcSuccess = SMCComm.start()
         guard smcSuccess else {
             throw BTError.unknown
@@ -120,7 +120,7 @@ internal enum BTPowerEvents {
     }
 
     static func lowPowerModeThresholdChanged() {
-        self.automaticLowPowerTriggered = false
+        BTLowPowerModeAutomation.reset()
         guard self.powerCreated, !self.unlimitedPower else {
             return
         }
@@ -148,7 +148,7 @@ internal enum BTPowerEvents {
 
         self.chargingMode = .toLimit
         if self.unlimitedPower {
-            self.disableLowPowerModeForPowerAdapter()
+            BTLowPowerModeAutomation.disableForPowerAdapter()
         }
         return self.enableBelowLimitMode(limit: BTSettings.maxCharge)
     }
@@ -159,7 +159,7 @@ internal enum BTPowerEvents {
             return false
         }
 
-        self.disableLowPowerModeForPowerAdapter()
+        BTLowPowerModeAutomation.disableForPowerAdapter()
         self.unlimitedPower = self.drawingUnlimitedPower()
 
         return true
@@ -182,7 +182,7 @@ internal enum BTPowerEvents {
     static func chargeToFull() -> Bool {
         self.chargingMode = .toFull
         if self.unlimitedPower {
-            self.disableLowPowerModeForPowerAdapter()
+            BTLowPowerModeAutomation.disableForPowerAdapter()
         }
         if !BTChargeController.usesLegacyControl {
             return BTChargeController.requestFullCharge()
@@ -324,7 +324,11 @@ internal enum BTPowerEvents {
             self.handleDisconnectedRecovery(percent: percent)
         }
 
-        self.updateAutomaticLowPowerMode(percent: percent)
+        BTLowPowerModeAutomation.apply(
+            percent: percent,
+            threshold: BTSettings.lowPowerModeThreshold,
+            drawingUnlimitedPower: self.drawingUnlimitedPower()
+        )
 
         return percent
     }
@@ -444,7 +448,7 @@ internal enum BTPowerEvents {
 
         self.unlimitedPower = self.drawingUnlimitedPower()
         if self.unlimitedPower {
-            self.disableLowPowerModeForPowerAdapter()
+            BTLowPowerModeAutomation.disableForPowerAdapter()
             guard !self.handleThermalProtection(percent: percent) else {
                 self.updateThermalTimer()
                 return true
@@ -472,9 +476,9 @@ internal enum BTPowerEvents {
         if !BTChargeController.usesLegacyControl {
             self.thermallyLimited = false
             if self.unlimitedPower {
-                self.disableLowPowerModeForPowerAdapter()
+                BTLowPowerModeAutomation.disableForPowerAdapter()
             } else {
-                self.normalizeLowPowerModeForBatteryPower()
+                BTLowPowerModeAutomation.normalizeForBatteryPower()
             }
             if !self.registerPercentChangedHandler() {
                 os_log("Failed to register percent changed handler")
@@ -484,7 +488,7 @@ internal enum BTPowerEvents {
         }
 
         if self.unlimitedPower {
-            self.disableLowPowerModeForPowerAdapter()
+            BTLowPowerModeAutomation.disableForPowerAdapter()
             let success = self.registerPercentChangedHandler()
             if !success {
                 os_log("Failed to register percent changed handler")
@@ -494,7 +498,7 @@ internal enum BTPowerEvents {
         } else {
             self.stopThermalTimer()
             self.thermallyLimited = false
-            self.normalizeLowPowerModeForBatteryPower()
+            BTLowPowerModeAutomation.normalizeForBatteryPower()
             let (percent, _, _) = BTPowerState.getPercentRemaining()
             if BTPowerEventStateMachine.disconnectedRecoveryEffect(
                 percent: percent,
@@ -667,59 +671,5 @@ internal enum BTPowerEvents {
 
         let (percent, _, _) = BTPowerState.getPercentRemaining()
         self.handleConnectedPower(percent: percent)
-    }
-
-    private static func disableLowPowerModeForPowerAdapter() {
-        self.automaticLowPowerTriggered = false
-        do {
-            let changed = try BTLowPowerMode.disableIfEnabled()
-            if changed {
-                os_log("Disabled Low Power Mode for power adapter")
-            }
-        } catch {
-            os_log(
-                "Failed to disable Low Power Mode for power adapter: \(error, privacy: .public)"
-            )
-        }
-    }
-
-    private static func normalizeLowPowerModeForBatteryPower() {
-        do {
-            let changed = try BTLowPowerMode.normalizeForBatteryPower()
-            if changed {
-                os_log("Normalized Low Power Mode for battery power")
-            }
-        } catch {
-            os_log(
-                "Failed to normalize Low Power Mode for battery power: \(error, privacy: .public)"
-            )
-        }
-    }
-
-    private static func updateAutomaticLowPowerMode(percent: UInt8) {
-        let shouldEnable = BTPowerEventStateMachine.shouldEnableLowPowerMode(
-            percent: percent,
-            threshold: BTSettings.lowPowerModeThreshold,
-            drawingUnlimitedPower: IOPSPrivate.DrawingUnlimitedPower()
-        )
-        guard shouldEnable else {
-            self.automaticLowPowerTriggered = false
-            return
-        }
-        guard !self.automaticLowPowerTriggered else {
-            return
-        }
-
-        do {
-            if try !BTLowPowerMode.isEnabled() {
-                try BTLowPowerMode.setEnabled(true)
-                os_log("Enabled Low Power Mode at configured battery threshold")
-            }
-            self.automaticLowPowerTriggered = true
-        } catch {
-            os_log(
-                "Failed to enable Low Power Mode automatically: \(error, privacy: .public)"
-            )
-        }
     }
 }

@@ -96,6 +96,7 @@
 		CEA80FCB285A27CF0064ADEA /* SMCComm.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE37DD0D283F86F90060C43F /* SMCComm.swift */; };
 		CEA80FCC285A27D20064ADEA /* SMCComm+Power.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE37DD0F284164160060C43F /* SMCComm+Power.swift */; };
 		CEA80FD0285A27FB0064ADEA /* BTPowerEvents.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEC321AF284BAA2B009B9A30 /* BTPowerEvents.swift */; };
+		CE1317032F00000000000001 /* BTLowPowerModeAutomation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1317042F00000000000001 /* BTLowPowerModeAutomation.swift */; };
 		CEA80FD2285A28230064ADEA /* BTSettings.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE3A8F6C284D056D00A9E373 /* BTSettings.swift */; };
 		CEA80FD6285A565C0064ADEA /* BTDaemonComm.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA80FD5285A565C0064ADEA /* BTDaemonComm.swift */; };
 		CEA80FD8285A56B60064ADEA /* BTDaemon.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEA80FD7285A56B50064ADEA /* BTDaemon.swift */; };
@@ -341,6 +342,7 @@
 		CEB4A42728D3B184004FA277 /* BTStateInfo.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTStateInfo.swift; sourceTree = "<group>"; };
 		CEB4A42E28D4D4D0004FA277 /* BTSettingsWindowController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTSettingsWindowController.swift; sourceTree = "<group>"; };
 		CEC321AF284BAA2B009B9A30 /* BTPowerEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTPowerEvents.swift; sourceTree = "<group>"; };
+		CE1317042F00000000000001 /* BTLowPowerModeAutomation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTLowPowerModeAutomation.swift; sourceTree = "<group>"; };
 		CED1AB252D7B61400049981E /* PowerEvents.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PowerEvents.swift; sourceTree = "<group>"; };
 		CED8DD3728C364FA0082C02A /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
 		CED8DD3828C365790082C02A /* Security.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Security.framework; path = System/Library/Frameworks/Security.framework; sourceTree = SDKROOT; };
@@ -429,6 +431,7 @@
 				CE397471285A2396002D0EC9 /* BTDaemonXPCServer.swift */,
 				CE8ED7F328C144EE00398581 /* BTDispatcher.swift */,
 				CEC321AF284BAA2B009B9A30 /* BTPowerEvents.swift */,
+				CE1317042F00000000000001 /* BTLowPowerModeAutomation.swift */,
 				CEECE31028BAB12000821A3B /* BTPowerState.swift */,
 				CE3A8F6C284D056D00A9E373 /* BTSettings.swift */,
 				CE2710132F00000000000001 /* BTChargeController.swift */,
@@ -906,6 +909,7 @@
 				CE3179EC28DB543200E9C121 /* SimpleAuth.swift in Sources */,
 				CE9E6DEC2BF106A10070ABB2 /* SMCComm+MagSafe.swift in Sources */,
 				CEA80FD0285A27FB0064ADEA /* BTPowerEvents.swift in Sources */,
+				CE1317032F00000000000001 /* BTLowPowerModeAutomation.swift in Sources */,
 				CE3C1DA828CA33FD008A0F7D /* BTLegacyHelperInfo.swift in Sources */,
 				CE8ED7F428C144EE00398581 /* BTDispatcher.swift in Sources */,
 				CEECE31128BAB12000821A3B /* BTPowerState.swift in Sources */,

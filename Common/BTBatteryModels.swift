@@ -183,9 +183,15 @@ internal struct BTBatterySettings: Equatable, Sendable {
         let magSafeSync =
             (payload[BTSettingsInfo.Keys.magSafeSync] as? NSNumber)?
                 .boolValue
-        let lowPowerModeThreshold =
-            (payload[BTSettingsInfo.Keys.lowPowerModeThreshold] as? NSNumber)?
-                .intValue ?? Int(BTSettingsInfo.Defaults.lowPowerModeThreshold)
+        let lowPowerModeThreshold: Int
+        if let storedThreshold = payload[BTSettingsInfo.Keys.lowPowerModeThreshold] {
+            guard let number = storedThreshold as? NSNumber else {
+                throw BTError.malformedData
+            }
+            lowPowerModeThreshold = number.intValue
+        } else {
+            lowPowerModeThreshold = Int(BTSettingsInfo.Defaults.lowPowerModeThreshold)
+        }
         let capabilities = try BTPowerCapabilities(payload: payload)
         try self.init(
             minCharge: minCharge,

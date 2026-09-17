@@ -75,7 +75,7 @@
 "Request Charging to %d%%" = "Richiedi ricarica al %d%%";
 "Use Power Adapter Instead of Battery" = "Usa alimentatore invece della batteria";
 "Low Power Mode" = "Modalità risparmio energetico";
-"Low Power Mode on battery at or below:" = "Risparmio energetico a batteria dal livello:";
+"Low Power Mode on battery at or below:" = "Risparmio energetico a batteria a questo livello o meno:";
 "0% turns this automation off." = "A 0 %, l'automazione è disattivata.";
 "Until Empty: %@" = "Fino a scarica: %@";
 "Until %d %%: %@" = "Fino al %d%%: %@";

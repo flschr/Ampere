@@ -201,6 +201,9 @@
                                                 </textField>
                                                 <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Ghe-cF-C3L" userLabel="MagSafe Sync Secondary Label">
                                                     <rect key="frame" x="18" y="0.0" width="415" height="42"/>
+                                                    <constraints>
+                                                        <constraint firstAttribute="height" constant="42" id="LPm-GhE-42H"/>
+                                                    </constraints>
                                                     <textFieldCell key="cell" controlSize="small" selectable="YES" id="3Kk-Vy-Cgc">
                                                         <font key="font" metaFont="smallSystem"/>
                                                         <string key="title">Sync the power state of your Mac to the MagSafe indicator light. It flashes amber if charging, glows amber if charging is on hold, glows green if fully charged, and it is off if the power adapter is disabled.</string>

@@ -142,6 +142,46 @@ final class BTPowerEventStateMachineTests: XCTestCase {
         )
     }
 
+    func testLowPowerThresholdKeepsMonitoringDuringChargeRequests() {
+        XCTAssertTrue(
+            BTPowerEventStateMachine.shouldMonitorDisconnectedBattery(
+                chargingMode: .toFull,
+                lowPowerModeThreshold: 20
+            )
+        )
+    }
+
+    func testAutomaticLowPowerModeRequiresBatteryAndNonzeroThreshold() {
+        XCTAssertFalse(
+            BTPowerEventStateMachine.shouldEnableLowPowerMode(
+                percent: 0,
+                threshold: 0,
+                drawingUnlimitedPower: false
+            )
+        )
+        XCTAssertFalse(
+            BTPowerEventStateMachine.shouldEnableLowPowerMode(
+                percent: 20,
+                threshold: 20,
+                drawingUnlimitedPower: true
+            )
+        )
+        XCTAssertFalse(
+            BTPowerEventStateMachine.shouldEnableLowPowerMode(
+                percent: 21,
+                threshold: 20,
+                drawingUnlimitedPower: false
+            )
+        )
+        XCTAssertTrue(
+            BTPowerEventStateMachine.shouldEnableLowPowerMode(
+                percent: 20,
+                threshold: 20,
+                drawingUnlimitedPower: false
+            )
+        )
+    }
+
     func testThermalProtectionPausesHotActiveCharging() {
         XCTAssertEqual(
             BTPowerEventStateMachine.thermalEffect(

@@ -19,6 +19,7 @@ internal enum BTPowerEvents {
     private static var powerCreated = false
     private static var percentCreated = false
     private static var thermalTimer: DispatchSourceTimer? = nil
+    private static var automaticLowPowerTriggered = false
     private static let thermalCheckInterval: TimeInterval = 120
 
     static func start() throws {
@@ -116,6 +117,24 @@ internal enum BTPowerEvents {
 
         _ = self.handlePercentChanged()
         return true
+    }
+
+    static func lowPowerModeThresholdChanged() {
+        self.automaticLowPowerTriggered = false
+        guard self.powerCreated, !self.unlimitedPower else {
+            return
+        }
+
+        if BTSettings.lowPowerModeThreshold > 0 {
+            if !self.registerPercentChangedHandler() {
+                os_log("Failed to monitor battery for Low Power Mode")
+            }
+        } else if BTChargeController.usesLegacyControl &&
+                    !BTPowerEventStateMachine.shouldMonitorDisconnectedBattery(
+                        chargingMode: self.chargingMode
+                    ) {
+            self.unregisterPercentChangedHandler()
+        }
     }
 
     static func chargeToLimit() -> Bool {
@@ -304,6 +323,8 @@ internal enum BTPowerEvents {
         } else {
             self.handleDisconnectedRecovery(percent: percent)
         }
+
+        self.updateAutomaticLowPowerMode(percent: percent)
 
         return percent
     }
@@ -494,7 +515,8 @@ internal enum BTPowerEvents {
             //
             _ = BTPowerEvents.disableCharging()
             if BTPowerEventStateMachine.shouldMonitorDisconnectedBattery(
-                chargingMode: self.chargingMode
+                chargingMode: self.chargingMode,
+                lowPowerModeThreshold: BTSettings.lowPowerModeThreshold
             ) {
                 let success = self.registerPercentChangedHandler()
                 if !success {
@@ -648,6 +670,7 @@ internal enum BTPowerEvents {
     }
 
     private static func disableLowPowerModeForPowerAdapter() {
+        self.automaticLowPowerTriggered = false
         do {
             let changed = try BTLowPowerMode.disableIfEnabled()
             if changed {
@@ -669,6 +692,33 @@ internal enum BTPowerEvents {
         } catch {
             os_log(
                 "Failed to normalize Low Power Mode for battery power: \(error, privacy: .public)"
+            )
+        }
+    }
+
+    private static func updateAutomaticLowPowerMode(percent: UInt8) {
+        let shouldEnable = BTPowerEventStateMachine.shouldEnableLowPowerMode(
+            percent: percent,
+            threshold: BTSettings.lowPowerModeThreshold,
+            drawingUnlimitedPower: IOPSPrivate.DrawingUnlimitedPower()
+        )
+        guard shouldEnable else {
+            self.automaticLowPowerTriggered = false
+            return
+        }
+        guard !self.automaticLowPowerTriggered else {
+            return
+        }
+
+        do {
+            if try !BTLowPowerMode.isEnabled() {
+                try BTLowPowerMode.setEnabled(true)
+                os_log("Enabled Low Power Mode at configured battery threshold")
+            }
+            self.automaticLowPowerTriggered = true
+        } catch {
+            os_log(
+                "Failed to enable Low Power Mode automatically: \(error, privacy: .public)"
             )
         }
     }

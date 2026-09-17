@@ -50,6 +50,7 @@ internal enum BTSettingsPayloadFactory {
         maxCharge: Int,
         adapterSleep: Bool,
         magSafeSync: Bool?,
+        lowPowerModeThreshold: Int = Int(BTSettingsInfo.Defaults.lowPowerModeThreshold),
         capabilities: BTPowerCapabilities = .legacy
     ) throws -> [String: NSObject & Sendable] {
         try BTBatterySettings(
@@ -57,6 +58,7 @@ internal enum BTSettingsPayloadFactory {
             maxCharge: maxCharge,
             adapterSleep: adapterSleep,
             magSafeSync: magSafeSync,
+            lowPowerModeThreshold: lowPowerModeThreshold,
             capabilities: capabilities
         ).payload
     }

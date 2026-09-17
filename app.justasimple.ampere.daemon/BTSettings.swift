@@ -12,6 +12,8 @@ internal enum BTSettings {
     private(set) static var maxCharge = BTSettingsInfo.Defaults.maxCharge
     private(set) static var adapterSleep = BTSettingsInfo.Defaults.adapterSleep
     private(set) static var magSafeSync = BTSettingsInfo.Defaults.magSafeSync
+    private(set) static var lowPowerModeThreshold =
+        BTSettingsInfo.Defaults.lowPowerModeThreshold
 
     static func readDefaults() {
         self.adapterSleep = UserDefaults.standard.bool(
@@ -20,6 +22,12 @@ internal enum BTSettings {
         self.magSafeSync = UserDefaults.standard.bool(
             forKey: BTSettingsInfo.Keys.magSafeSync
         )
+        let storedThreshold = UserDefaults.standard.integer(
+            forKey: BTSettingsInfo.Keys.lowPowerModeThreshold
+        )
+        self.lowPowerModeThreshold =
+            BTSettingsInfo.lowPowerModeThresholdValid(storedThreshold) ?
+                UInt8(storedThreshold) : BTSettingsInfo.Defaults.lowPowerModeThreshold
 
         let minCharge = UserDefaults.standard.integer(
             forKey: BTSettingsInfo.Keys.minCharge
@@ -59,6 +67,9 @@ internal enum BTSettings {
         UserDefaults.standard.removeObject(
             forKey: BTSettingsInfo.Keys.maxCharge
         )
+        UserDefaults.standard.removeObject(
+            forKey: BTSettingsInfo.Keys.lowPowerModeThreshold
+        )
 
         _ = CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
     }
@@ -70,6 +81,7 @@ internal enum BTSettings {
             adapterSleep: self.adapterSleep,
             magSafeSync: BTChargeController.capabilities.magSafeSync ?
                 self.magSafeSync : nil,
+            lowPowerModeThreshold: Int(self.lowPowerModeThreshold),
             capabilities: BTChargeController.capabilities
         ) else {
             assertionFailure("Stored battery settings are invalid")
@@ -119,6 +131,8 @@ internal enum BTSettings {
         if let magSafeSync = parsedSettings.magSafeSync {
             self.setMagSafeSync(enabled: magSafeSync)
         }
+
+        self.setLowPowerModeThreshold(parsedSettings.lowPowerModeThreshold)
 
         self.writeDefaults()
 
@@ -185,6 +199,16 @@ internal enum BTSettings {
         BTPowerState.magSafeSyncSettingToggled()
     }
 
+    private static func setLowPowerModeThreshold(_ threshold: Int) {
+        let value = UInt8(threshold)
+        guard self.lowPowerModeThreshold != value else {
+            return
+        }
+
+        self.lowPowerModeThreshold = value
+        BTPowerEvents.lowPowerModeThresholdChanged()
+    }
+
     private static func writeDefaults() {
         assert(
             BTSettingsInfo.chargeLimitsValid(
@@ -208,6 +232,10 @@ internal enum BTSettings {
         UserDefaults.standard.set(
             self.magSafeSync,
             forKey: BTSettingsInfo.Keys.magSafeSync
+        )
+        UserDefaults.standard.set(
+            self.lowPowerModeThreshold,
+            forKey: BTSettingsInfo.Keys.lowPowerModeThreshold
         )
         //
         // As NSUserDefaults are not automatically synchronized without

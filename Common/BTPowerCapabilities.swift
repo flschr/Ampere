@@ -137,7 +137,8 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
             Self.modeIsConsistent(
                 mode: mode,
                 directChargingControl: directChargingControl,
-                customChargeRange: customChargeRange
+                customChargeRange: customChargeRange,
+                magSafeSync: magSafeSync
             )
         else {
             throw BTError.malformedData
@@ -184,7 +185,8 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
     private static func modeIsConsistent(
         mode: BTChargeControlMode,
         directChargingControl: Bool,
-        customChargeRange: Bool
+        customChargeRange: Bool,
+        magSafeSync: Bool
     ) -> Bool {
         switch mode {
         case .legacySMC:
@@ -192,7 +194,7 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
         case .firmwareSMC:
             return !directChargingControl && customChargeRange
         case .systemManaged:
-            return !directChargingControl && !customChargeRange
+            return !directChargingControl && !customChargeRange && !magSafeSync
         }
     }
 }

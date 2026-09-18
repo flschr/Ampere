@@ -9,6 +9,8 @@ extension BTSettingsViewController {
     func configureMagSafe(settings: BTBatterySettings) {
         if settings.capabilities.chargeControlMode == .systemManaged {
             self.magSafeSyncSwitch.isHidden = true
+            self.magSafeSyncSwitch.isEnabled = false
+            self.magSafeSyncSwitch.state = .off
             self.magSafeSyncLabel.stringValue = Bundle.main.localizedString(
                 forKey: "MagSafeManagedTitle",
                 value: "macOS controls the MagSafe light",

@@ -112,7 +112,8 @@ internal enum BTPowerState {
             syncEnabled: BTSettings.magSafeSync,
             adapterDisabled: self.powerDisabled,
             externalPower: IOPSPrivate.DrawingUnlimitedPower(),
-            battery: IOPSPrivate.GetPercentRemaining(),
+            battery: BTPowerEvents.hasPercentUpdates ?
+                IOPSPrivate.GetPercentRemaining() : nil,
             target: target,
             directChargingDisabled: self.chargingDisabled
         )

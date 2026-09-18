@@ -35,6 +35,10 @@ final class BTMagSafeIndicatorStateTests: XCTestCase {
             self.state(adapterDisabled: true, battery: self.pausedBattery),
             .off
         )
+        XCTAssertEqual(
+            self.state(adapterDisabled: true, battery: nil),
+            .off
+        )
     }
 
     func testChargingIsSteadyAmberEvenAtTarget() {
@@ -54,6 +58,16 @@ final class BTMagSafeIndicatorStateTests: XCTestCase {
         )
         XCTAssertEqual(
             self.state(battery: self.pausedBattery, target: 100),
+            .amber
+        )
+    }
+
+    func testStaleFullyChargedFlagDoesNotOverrideTemporaryFullTarget() {
+        XCTAssertEqual(
+            self.state(
+                battery: (80, false, true),
+                target: 100
+            ),
             .amber
         )
     }

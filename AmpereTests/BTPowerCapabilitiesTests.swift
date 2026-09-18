@@ -19,6 +19,14 @@ final class BTPowerCapabilitiesTests: XCTestCase {
             try BTPowerCapabilities(payload: capabilities.payload),
             capabilities
         )
+
+        var inconsistentPayload = capabilities.payload
+        inconsistentPayload[BTPowerCapabilities.Keys.magSafeSync] = NSNumber(
+            value: true
+        )
+        XCTAssertThrowsError(
+            try BTPowerCapabilities(payload: inconsistentPayload)
+        )
     }
 
     func testFirmwareManagedCapabilitiesPreserveMagSafeSupport() throws {

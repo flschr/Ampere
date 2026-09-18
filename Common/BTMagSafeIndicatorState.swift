@@ -36,7 +36,8 @@ internal enum BTMagSafeIndicatorState: Equatable {
             return .amber
         }
 
-        return battery.fullyCharged || battery.percent >= target ?
-            .green : .amber
+        // A full flag can still describe the previous limit after a request
+        // to charge to 100%, so the active target decides when to show green.
+        return battery.percent >= target ? .green : .amber
     }
 }

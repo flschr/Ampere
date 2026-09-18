@@ -18,6 +18,7 @@ internal enum BTPowerEvents {
 
     private static var powerCreated = false
     private static var percentCreated = false
+    static var hasPercentUpdates: Bool { self.percentCreated }
     private static var thermalTimer: DispatchSourceTimer? = nil
     private static let thermalCheckInterval: TimeInterval = 120
 
@@ -55,6 +56,11 @@ internal enum BTPowerEvents {
     }
 
     private static func restoreState() {
+        if self.updating && BTChargeController.usesLegacyControl &&
+            SMCComm.MagSafe.supported {
+            _ = SMCComm.MagSafe.setSystem()
+        }
+
         //
         // If the daemon is being updated, don't restore the default platform
         // power state.
@@ -138,13 +144,17 @@ internal enum BTPowerEvents {
     }
 
     static func chargeToLimit() -> Bool {
+        let previousMode = self.chargingMode
         if !BTChargeController.usesLegacyControl {
             self.chargingMode = .standard
             let applied = BTChargeController.applyStandardLimit(
                 minCharge: BTSettings.minCharge,
                 maxCharge: BTSettings.maxCharge
             )
-            if applied && BTSettings.magSafeSync {
+            if !applied {
+                self.chargingMode = previousMode
+            }
+            if BTSettings.magSafeSync {
                 BTPowerState.syncMagSafeState()
             }
             return applied
@@ -154,7 +164,14 @@ internal enum BTPowerEvents {
         if self.unlimitedPower {
             BTLowPowerModeAutomation.disableForPowerAdapter()
         }
-        return self.enableBelowLimitMode(limit: BTSettings.maxCharge)
+        let applied = self.enableBelowLimitMode(limit: BTSettings.maxCharge)
+        if !applied {
+            self.chargingMode = previousMode
+        }
+        if BTSettings.magSafeSync {
+            BTPowerState.syncMagSafeState()
+        }
+        return applied
     }
 
     static func enablePowerAdapter() -> Bool {
@@ -184,18 +201,29 @@ internal enum BTPowerEvents {
     }
 
     static func chargeToFull() -> Bool {
+        let previousMode = self.chargingMode
         self.chargingMode = .toFull
         if self.unlimitedPower {
             BTLowPowerModeAutomation.disableForPowerAdapter()
         }
         if !BTChargeController.usesLegacyControl {
             let applied = BTChargeController.requestFullCharge()
-            if applied && BTSettings.magSafeSync {
+            if !applied {
+                self.chargingMode = previousMode
+            }
+            if BTSettings.magSafeSync {
                 BTPowerState.syncMagSafeState()
             }
             return applied
         }
-        return self.enableBelowLimitMode(limit: 100)
+        let applied = self.enableBelowLimitMode(limit: 100)
+        if !applied {
+            self.chargingMode = previousMode
+        }
+        if BTSettings.magSafeSync {
+            BTPowerState.syncMagSafeState()
+        }
+        return applied
     }
 
     static func getChargingProgress() -> BTStateInfo.ChargingProgress {
@@ -321,6 +349,9 @@ internal enum BTPowerEvents {
         assert(self.percentCreated)
 
         guard let (percent, _, _) = IOPSPrivate.GetPercentRemaining() else {
+            if BTSettings.magSafeSync && SMCComm.MagSafe.supported {
+                _ = SMCComm.MagSafe.setSystem()
+            }
             return 100
         }
 
@@ -337,6 +368,10 @@ internal enum BTPowerEvents {
             threshold: BTSettings.lowPowerModeThreshold,
             drawingUnlimitedPower: self.drawingUnlimitedPower()
         )
+
+        if BTChargeController.usesLegacyControl && BTSettings.magSafeSync {
+            BTPowerState.syncMagSafeState()
+        }
 
         return percent
     }
@@ -501,6 +536,7 @@ internal enum BTPowerEvents {
             if !success {
                 os_log("Failed to register percent changed handler")
                 self.restoreDefaults()
+                return
             }
             self.updateThermalTimer()
         } else {
@@ -517,6 +553,8 @@ internal enum BTPowerEvents {
                 if !success {
                     os_log("Failed to register percent changed handler")
                     self.restoreDefaults()
+                } else if BTSettings.magSafeSync {
+                    BTPowerState.syncMagSafeState()
                 }
                 return
             }
@@ -534,10 +572,15 @@ internal enum BTPowerEvents {
                 if !success {
                     os_log("Failed to register percent changed handler")
                     self.restoreDefaults()
+                    return
                 }
             } else {
                 self.unregisterPercentChangedHandler()
             }
+        }
+
+        if BTSettings.magSafeSync {
+            BTPowerState.syncMagSafeState()
         }
     }
 

@@ -8,15 +8,13 @@ import Foundation
 
 @MainActor
 internal final class BTSettingsWindowController: NSWindowController {
-    private static let contentSize = NSSize(width: 520, height: 487)
-
     @IBOutlet private var toolbar: NSToolbar!
 
     override func windowDidLoad() {
         super.windowDidLoad()
-        self.window?.contentMinSize = Self.contentSize
-        self.window?.contentMaxSize = Self.contentSize
-        self.window?.setContentSize(Self.contentSize)
+        self.window?.contentMinSize = BTSettingsViewController.contentSize
+        self.window?.contentMaxSize = BTSettingsViewController.contentSize
+        self.window?.setContentSize(BTSettingsViewController.contentSize)
         self.window?.toolbar = nil
         self.window?.title = Self.appName
     }

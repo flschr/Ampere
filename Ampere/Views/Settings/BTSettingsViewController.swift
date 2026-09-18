@@ -8,7 +8,7 @@ import os.log
 
 @MainActor
 internal final class BTSettingsViewController: NSViewController {
-    private static let contentSize = NSSize(width: 520, height: 390)
+    static let contentSize = NSSize(width: 520, height: 350)
 
     private var currentSettings: [String: NSObject & Sendable]? = nil
     private var capabilities = BTPowerCapabilities.legacy
@@ -104,7 +104,7 @@ internal final class BTSettingsViewController: NSViewController {
             equalToConstant: Self.contentSize.height
         ).isActive = true
         self.tabView.selectTabViewItem(self.powerTab)
-        self.tabView.heightAnchor.constraint(equalToConstant: 321).isActive = true
+        self.tabView.heightAnchor.constraint(equalToConstant: 281).isActive = true
         self.addInitialFocusView()
         self.configurePowerTabTextFields()
         self.cancelButton = self.view.subviews.compactMap {
@@ -324,11 +324,7 @@ internal final class BTSettingsViewController: NSViewController {
             ),
             self.lowPowerThresholdControls.topAnchor.constraint(
                 equalTo: self.chargingSleepDescription.bottomAnchor,
-                constant: 12
-            ),
-            self.lowPowerThresholdControls.bottomAnchor.constraint(
-                equalTo: powerView.bottomAnchor,
-                constant: -20
+                constant: 8
             ),
         ])
     }

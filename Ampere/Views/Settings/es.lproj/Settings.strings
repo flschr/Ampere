@@ -1,5 +1,5 @@
 "0sD-aV-92m.title" = "%";
-"1HE-SM-FyJ.title" = "Tu Mac no entrará en reposo mientras se carga para poder supervisar el nivel de batería. El reposo se volverá a activar cuando el Mac deje de cargar por cualquier motivo.";
+"1HE-SM-FyJ.title" = "Con este método de carga, el Mac permanece activo mientras carga para que Ampere pueda detenerla en el límite elegido. Ampere deja de mantenerlo activo cuando la carga se pausa o desconectas el adaptador.";
 "IMi-pw-cwy.label" = "Energía";
 "SrC-Z2-byQ.title" = "70";
 "WC9-iw-C9D.title" = "%";

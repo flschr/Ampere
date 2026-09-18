@@ -1,5 +1,5 @@
 "0sD-aV-92m.title" = "%";
-"1HE-SM-FyJ.title" = "Dein Mac wird während des Ladens daran gehindert, in den Ruhezustand zu wechseln, damit der Batteriestand überwacht werden kann. Der Ruhezustand wird wieder aktiviert, sobald dein Mac aus irgendeinem Grund nicht mehr lädt.";
+"1HE-SM-FyJ.title" = "Bei dieser Ladesteuerung bleibt dein Mac während des Ladens wach, damit Ampere bei der eingestellten Grenze stoppen kann. Sobald das Laden pausiert oder du das Netzteil trennst, hält Ampere ihn nicht mehr wach.";
 "IMi-pw-cwy.label" = "Energie";
 "SrC-Z2-byQ.title" = "70";
 "WC9-iw-C9D.title" = "%";

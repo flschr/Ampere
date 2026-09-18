@@ -8,25 +8,31 @@ import os.log
 
 @MainActor
 internal final class BTSettingsViewController: NSViewController {
-    static let contentSize = NSSize(width: 520, height: 350)
+    static let contentSize = NSSize(width: 520, height: 308)
+    static let legacyContentSize = NSSize(width: 520, height: 350)
+    static let footerHeight: CGFloat = 69
 
-    private var currentSettings: [String: NSObject & Sendable]? = nil
-    private var capabilities = BTPowerCapabilities.legacy
+    var currentSettings: [String: NSObject & Sendable]? = nil
+    var capabilities = BTPowerCapabilities.legacy
     private weak var cancelButton: NSButton? = nil
-    private var optimizedChargingWarning: NSTextField? = nil
-    private let initialFocusView = BTSettingsInitialFocusView()
+    var optimizedChargingWarning: NSTextField? = nil
+    let initialFocusView = BTSettingsInitialFocusView()
+    var contentHeightConstraint: NSLayoutConstraint?
+    var tabHeightConstraint: NSLayoutConstraint?
+    var legacySectionTopConstraint: NSLayoutConstraint?
+    var managedSectionTopConstraint: NSLayoutConstraint?
 
-    @IBOutlet private var tabView: NSTabView!
-    @IBOutlet private var powerTab: NSTabViewItem!
+    @IBOutlet var tabView: NSTabView!
+    @IBOutlet var powerTab: NSTabViewItem!
 
-    @IBOutlet private var minChargeTextField: NSTextField!
-    @IBOutlet private var minChargeSlider: NSSlider!
+    @IBOutlet var minChargeTextField: NSTextField!
+    @IBOutlet var minChargeSlider: NSSlider!
 
-    @IBOutlet private var maxChargeTextField: NSTextField!
-    @IBOutlet private var maxChargeSlider: NSSlider!
-    @IBOutlet private var chargingSleepDescription: NSTextField!
+    @IBOutlet var maxChargeTextField: NSTextField!
+    @IBOutlet var maxChargeSlider: NSSlider!
+    @IBOutlet var chargingSleepDescription: NSTextField!
 
-    private let lowPowerThresholdControls = BTLowPowerThresholdControls()
+    let lowPowerThresholdControls = BTLowPowerThresholdControls()
 
     private var minChargeVal = BTSettingsInfo.Defaults.minCharge
     @objc private dynamic var minChargeNum: NSNumber {
@@ -100,11 +106,15 @@ internal final class BTSettingsViewController: NSViewController {
         self.view.widthAnchor.constraint(
             equalToConstant: Self.contentSize.width
         ).isActive = true
-        self.view.heightAnchor.constraint(
+        self.contentHeightConstraint = self.view.heightAnchor.constraint(
             equalToConstant: Self.contentSize.height
-        ).isActive = true
+        )
+        self.contentHeightConstraint?.isActive = true
         self.tabView.selectTabViewItem(self.powerTab)
-        self.tabView.heightAnchor.constraint(equalToConstant: 281).isActive = true
+        self.tabHeightConstraint = self.tabView.heightAnchor.constraint(
+            equalToConstant: Self.contentSize.height - Self.footerHeight
+        )
+        self.tabHeightConstraint?.isActive = true
         self.addInitialFocusView()
         self.configurePowerTabTextFields()
         self.cancelButton = self.view.subviews.compactMap {
@@ -164,224 +174,26 @@ internal final class BTSettingsViewController: NSViewController {
         }
     }
 
-    @objc private func aboutButtonAction(_: NSButton) {
-        self.presentAsSheet(BTAboutInfoViewController())
-    }
-
     override func viewWillAppear() {
         super.viewWillAppear()
-
         self.view.window?.initialFirstResponder = self.initialFocusView
-
         Task {
             await self.initPowerState()
             self.view.window?.center()
-            //
-            // Activate the app when the Settings window is shown, e.g., when
-            // invoked from the Menu Bar Extra.
-            //
             NSApp.activate(ignoringOtherApps: true)
         }
     }
 
     override func viewDidAppear() {
         super.viewDidAppear()
-
         self.view.window?.makeFirstResponder(self.initialFocusView)
     }
 
-    private func addInitialFocusView() {
-        self.initialFocusView.translatesAutoresizingMaskIntoConstraints = false
-        self.view.addSubview(self.initialFocusView)
-
-        NSLayoutConstraint.activate([
-            self.initialFocusView.leadingAnchor.constraint(
-                equalTo: self.view.leadingAnchor
-            ),
-            self.initialFocusView.topAnchor.constraint(
-                equalTo: self.view.topAnchor
-            ),
-            self.initialFocusView.widthAnchor.constraint(equalToConstant: 0),
-            self.initialFocusView.heightAnchor.constraint(equalToConstant: 0),
-        ])
-    }
-
-    private func configurePowerTabTextFields() {
-        guard let powerView = self.powerTab.view else {
-            assertionFailure()
-            return
-        }
-
-        for textField in powerView.allTextFields {
-            textField.setContentCompressionResistancePriority(
-                .defaultLow,
-                for: .horizontal
-            )
-
-            guard !textField.isEditable else {
-                continue
-            }
-
-            if textField.font?.pointSize ?? 0 < NSFont.systemFontSize {
-                textField.cell?.wraps = true
-                textField.lineBreakMode = .byWordWrapping
-            } else {
-                textField.cell?.wraps = false
-                textField.lineBreakMode = .byTruncatingTail
-            }
-        }
-    }
-
-    private func addAboutButton() {
-        let aboutButton = NSButton(
-            title: "",
-            target: self,
-            action: #selector(self.aboutButtonAction(_:))
-        )
-        aboutButton.translatesAutoresizingMaskIntoConstraints = false
-        aboutButton.bezelStyle = .circular
-        aboutButton.image = NSImage(
-            systemSymbolName: "info.circle",
-            accessibilityDescription:
-                BTLocalization.Settings.About.infoButtonAccessibilityLabel
-        )
-        aboutButton.imagePosition = .imageOnly
-        aboutButton.toolTip =
-            BTLocalization.Settings.About.infoButtonAccessibilityLabel
-        aboutButton.setAccessibilityLabel(
-            BTLocalization.Settings.About.infoButtonAccessibilityLabel
-        )
-
-        self.view.addSubview(aboutButton)
-
-        NSLayoutConstraint.activate([
-            aboutButton.leadingAnchor.constraint(
-                equalTo: self.view.leadingAnchor,
-                constant: 20
-            ),
-            aboutButton.bottomAnchor.constraint(
-                equalTo: self.view.bottomAnchor,
-                constant: -20
-            ),
-            aboutButton.widthAnchor.constraint(equalToConstant: 24),
-            aboutButton.heightAnchor.constraint(equalToConstant: 24),
-        ])
-    }
-
-    private func setMinCharge(value: Int) {
+    func setMinCharge(value: Int) {
         self.minChargeNum = NSNumber(value: value)
     }
 
-    private func setMaxCharge(value: Int) {
+    func setMaxCharge(value: Int) {
         self.maxChargeNum = NSNumber(value: value)
-    }
-
-    private func addOptimizedChargingWarning() {
-        let warning = NSTextField(
-            labelWithString: BTLocalization.Settings.optimizedChargingWarning
-        )
-        warning.translatesAutoresizingMaskIntoConstraints = false
-        warning.textColor = .systemOrange
-        warning.lineBreakMode = .byTruncatingTail
-        warning.maximumNumberOfLines = 1
-        warning.isHidden = true
-
-        self.view.addSubview(warning)
-
-        NSLayoutConstraint.activate([
-            warning.leadingAnchor.constraint(
-                equalTo: self.view.leadingAnchor,
-                constant: 20
-            ),
-            warning.trailingAnchor.constraint(
-                lessThanOrEqualTo: self.view.trailingAnchor,
-                constant: -20
-            ),
-            warning.bottomAnchor.constraint(
-                equalTo: self.view.bottomAnchor,
-                constant: -52
-            ),
-        ])
-
-        self.optimizedChargingWarning = warning
-    }
-
-    private func addLowPowerThresholdControls() {
-        guard let powerView = self.powerTab.view else {
-            return
-        }
-
-        self.lowPowerThresholdControls.translatesAutoresizingMaskIntoConstraints = false
-        powerView.addSubview(self.lowPowerThresholdControls)
-        NSLayoutConstraint.activate([
-            self.lowPowerThresholdControls.leadingAnchor.constraint(
-                equalTo: powerView.leadingAnchor,
-                constant: 20
-            ),
-            self.lowPowerThresholdControls.trailingAnchor.constraint(
-                equalTo: powerView.trailingAnchor,
-                constant: -20
-            ),
-            self.lowPowerThresholdControls.topAnchor.constraint(
-                equalTo: self.chargingSleepDescription.bottomAnchor,
-                constant: 8
-            ),
-        ])
-    }
-
-    private func updateOptimizedChargingWarning() {
-        self.optimizedChargingWarning?.isHidden =
-            self.capabilities.chargeControlMode == .systemManaged ||
-            !IOPSPrivate.OptimizedBatteryChargingEngaged()
-    }
-
-    private func initPowerState() async {
-        do {
-            let settings = try await BTActions.getSettings()
-            let parsedSettings = try BTBatterySettings(payload: settings)
-            self.currentSettings = settings
-            self.capabilities = parsedSettings.capabilities
-            self.configureCapabilities()
-            self.updateOptimizedChargingWarning()
-
-            self.setMinCharge(value: parsedSettings.minCharge)
-            self.setMaxCharge(value: parsedSettings.maxCharge)
-            self.lowPowerThresholdControls.threshold =
-                parsedSettings.lowPowerModeThreshold
-
-        } catch {
-            BTErrorHandler.errorHandler(error: error)
-        }
-    }
-
-    private func configureCapabilities() {
-        let customRange = self.capabilities.customChargeRange
-        self.minChargeTextField.isEnabled = customRange
-        self.minChargeSlider.isEnabled = customRange
-
-        self.maxChargeSlider.minValue = Double(
-            self.capabilities.minimumMaxCharge
-        )
-        self.maxChargeSlider.numberOfTickMarks =
-            (100 - self.capabilities.minimumMaxCharge) /
-            self.capabilities.maxChargeStep + 1
-        self.maxChargeSlider.allowsTickMarkValuesOnly =
-            self.capabilities.maxChargeStep > 1
-
-    }
-}
-
-private final class BTSettingsInitialFocusView: NSView {
-    override var acceptsFirstResponder: Bool {
-        true
-    }
-}
-
-private extension NSView {
-    var allTextFields: [NSTextField] {
-        self.subviews.flatMap { subview in
-            ([subview as? NSTextField].compactMap { $0 }) +
-                subview.allTextFields
-        }
     }
 }

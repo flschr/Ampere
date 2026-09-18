@@ -1,5 +1,5 @@
 "0sD-aV-92m.title" = "%";
-"1HE-SM-FyJ.title" = "Votre Mac sera empêché de se mettre en veille pendant la recharge afin de surveiller le niveau de batterie. La veille sera réactivée dès que votre Mac arrêtera de charger, quelle qu'en soit la raison.";
+"1HE-SM-FyJ.title" = "Avec ce mode de charge, votre Mac reste éveillé pendant la recharge pour qu'Ampere puisse l'arrêter au seuil choisi. Ampere cesse de le maintenir éveillé quand la charge est en pause ou que l'adaptateur est débranché.";
 "IMi-pw-cwy.label" = "Alimentation";
 "SrC-Z2-byQ.title" = "70";
 "WC9-iw-C9D.title" = "%";

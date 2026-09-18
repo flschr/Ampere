@@ -12,11 +12,15 @@ internal final class BTSettingsWindowController: NSWindowController {
 
     override func windowDidLoad() {
         super.windowDidLoad()
-        self.window?.contentMinSize = BTSettingsViewController.contentSize
-        self.window?.contentMaxSize = BTSettingsViewController.contentSize
-        self.window?.setContentSize(BTSettingsViewController.contentSize)
+        self.setSettingsContentSize(BTSettingsViewController.contentSize)
         self.window?.toolbar = nil
         self.window?.title = Self.appName
+    }
+
+    func setSettingsContentSize(_ size: NSSize) {
+        self.window?.contentMinSize = size
+        self.window?.contentMaxSize = size
+        self.window?.setContentSize(size)
     }
 
     override func close() {

@@ -8,13 +8,13 @@ import Foundation
 extension BTLocalization {
     enum Settings {
         static let lowPowerModeThreshold = NSLocalizedString(
-            "Low Power Mode on battery at or below:",
+            "Turn on Low Power Mode on battery at:",
             comment: "Battery percentage threshold for automatic Low Power Mode"
         )
 
         static let lowPowerModeOffHint = NSLocalizedString(
-            "0% turns this automation off.",
-            comment: "Explains the off position of the automatic Low Power Mode slider"
+            "At this battery level or below. At 0%, Ampere does not turn it on automatically.",
+            comment: "Explains the battery threshold and off position of the automatic Low Power Mode slider"
         )
 
         enum About {

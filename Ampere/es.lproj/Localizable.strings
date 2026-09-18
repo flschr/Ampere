@@ -75,8 +75,8 @@
 "Request Charging to %d%%" = "Solicitar carga al %d%%";
 "Use Power Adapter Instead of Battery" = "Usar adaptador de corriente en lugar de batería";
 "Low Power Mode" = "Modo de bajo consumo";
-"Low Power Mode on battery at or below:" = "Modo de bajo consumo con batería a este nivel o menos:";
-"0% turns this automation off." = "Con 0 %, la automatización está desactivada.";
+"Turn on Low Power Mode on battery at:" = "Activar el modo de bajo consumo con batería al:";
+"At this battery level or below. At 0%, Ampere does not turn it on automatically." = "Con este nivel de batería o menos. Al 0 %, Ampere no lo activa automáticamente.";
 "Until Empty: %@" = "Hasta agotar: %@";
 "Until %d %%: %@" = "Hasta el %d%%: %@";
 "%@ until empty" = "%@ hasta agotar";

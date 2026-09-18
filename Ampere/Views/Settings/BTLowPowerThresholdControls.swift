@@ -41,6 +41,9 @@ internal final class BTLowPowerThresholdControls: NSView {
         )
         hint.font = NSFont.systemFont(ofSize: NSFont.smallSystemFontSize)
         hint.textColor = .secondaryLabelColor
+        hint.cell?.wraps = true
+        hint.lineBreakMode = .byWordWrapping
+        hint.maximumNumberOfLines = 2
 
         self.slider.minValue = 0
         self.slider.maxValue = 100
@@ -91,6 +94,7 @@ internal final class BTLowPowerThresholdControls: NSView {
             percentLabel.centerYAnchor.constraint(equalTo: self.slider.centerYAnchor),
 
             hint.leadingAnchor.constraint(equalTo: self.leadingAnchor),
+            hint.trailingAnchor.constraint(equalTo: self.trailingAnchor),
             hint.topAnchor.constraint(equalTo: self.slider.bottomAnchor, constant: 8),
             hint.bottomAnchor.constraint(equalTo: self.bottomAnchor),
         ])

@@ -48,7 +48,7 @@ internal enum BTPowerEvents {
 
         let registerSuccess = self.registerLimitedPowerHandler()
         guard registerSuccess else {
-            _ = BTChargeController.restoreOriginalState()
+            self.restoreState()
             SMCComm.stop()
             throw BTError.unknown
         }

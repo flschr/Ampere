@@ -53,7 +53,7 @@ internal enum BTLocalization {
         )
 
         static let quitInfo = NSLocalizedString(
-            "Ampere will stop the background service and disable automatic startup. Charging management will not continue until you open Ampere again.",
+            "Ampere will stop the background service. Charging management pauses until you reopen Ampere or sign in to your Mac again. Automatic startup remains enabled.",
             comment: "Prompt text explaining what happens when quitting the app"
         )
 
@@ -94,7 +94,7 @@ internal enum BTLocalization {
             )
 
             static let disableInfo = NSLocalizedString(
-                "Do you want to disable background activity for Ampere?",
+                "Ampere will stop charging management and automatic startup until you open the app again.",
                 comment: "Prompt text asking whether to disable background activity"
             )
 

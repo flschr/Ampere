@@ -7,7 +7,7 @@
 "Disable and Quit" = "Désactiver et quitter";
 "Open System Settings" = "Ouvrir Réglages Système";
 "Quit Ampere?" = "Quitter Ampere ?";
-"Ampere will stop the background service and disable automatic startup. Charging management will not continue until you open Ampere again." = "Ampere arrêtera le service en arrière-plan et désactivera le lancement automatique. La gestion de la charge ne reprendra que lorsque vous ouvrirez à nouveau Ampere.";
+"Ampere will stop the background service. Charging management pauses until you reopen Ampere or sign in to your Mac again. Automatic startup remains enabled." = "Ampere arrêtera le service en arrière-plan. La gestion de la charge reprendra lorsque vous rouvrirez Ampere ou vous reconnecterez à votre Mac. Le démarrage automatique reste activé.";
 "Ampere will continue to run in the background. To permanently suspend it, disable the background activity from the Ampere menu." = "Ampere continuera de fonctionner en arrière-plan. Pour le suspendre définitivement, désactivez l'activité en arrière-plan dans le menu Ampere.";
 "To temporarily suspend it, disable the background activity in System Settings." = "Pour le suspendre temporairement, désactivez l'activité en arrière-plan dans Réglages Système.";
 "An unexpected error has occured." = "Une erreur inattendue s'est produite.";
@@ -17,7 +17,7 @@
 "Do you want to approve the Ampere Login Item in System Settings?" = "Voulez-vous autoriser l'élément d'ouverture Ampere dans Réglages Système ?";
 "Failed to enable background activity." = "Impossible d'activer l'activité en arrière-plan.";
 "Disable background activity?" = "Désactiver l'activité en arrière-plan ?";
-"Do you want to disable background activity for Ampere?" = "Voulez-vous désactiver l'activité en arrière-plan de Ampere ?";
+"Ampere will stop charging management and automatic startup until you open the app again." = "Ampere arrêtera la gestion de la charge et désactivera le démarrage automatique jusqu'à ce que vous rouvriez l'application.";
 "An error occurred disabling background activity." = "Une erreur s'est produite lors de la désactivation de l'activité en arrière-plan.";
 "Uninstall Ampere?" = "Désinstaller Ampere ?";
 "Ampere will remove the background service, disable automatic startup, delete its local settings, move the app to the Trash, and quit." = "Ampere supprimera le service en arrière-plan, désactivera le lancement automatique, supprimera ses réglages locaux, placera l'app dans la corbeille et se fermera.";

@@ -7,6 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CE1329022F00000000000001 /* BTAppExitCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1329012F00000000000001 /* BTAppExitCoordinator.swift */; };
+		CE1329032F00000000000001 /* BTAppExitCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1329012F00000000000001 /* BTAppExitCoordinator.swift */; };
+		CE1329052F00000000000001 /* BTAppPrompts+Lifecycle.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1329042F00000000000001 /* BTAppPrompts+Lifecycle.swift */; };
+		CE1329072F00000000000001 /* BTAppExitCoordinatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1329062F00000000000001 /* BTAppExitCoordinatorTests.swift */; };
 		CE01E25928E8BF6B00EFDDD6 /* AutostartHelper.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE01E25828E8BF6B00EFDDD6 /* AutostartHelper.swift */; };
 		CE01E25B28E8C01E00EFDDD6 /* AmpereAutostart.app in CopyFiles */ = {isa = PBXBuildFile; fileRef = CE9BD24628E8908000B6C61D /* AmpereAutostart.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		CE0DB56328BEB4E600B8FC4C /* BTSettingsInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0DB56228BEB4E600B8FC4C /* BTSettingsInfo.swift */; };
@@ -223,6 +227,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		CE1329012F00000000000001 /* BTAppExitCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTAppExitCoordinator.swift; sourceTree = "<group>"; };
+		CE1329042F00000000000001 /* BTAppPrompts+Lifecycle.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BTAppPrompts+Lifecycle.swift"; sourceTree = "<group>"; };
+		CE1329062F00000000000001 /* BTAppExitCoordinatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTAppExitCoordinatorTests.swift; sourceTree = "<group>"; };
 		CE00654428A989DD0049B17D /* IOKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOKit.framework; path = System/Library/Frameworks/IOKit.framework; sourceTree = SDKROOT; };
 		CE00654628A989EB0049B17D /* CoreFoundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreFoundation.framework; path = System/Library/Frameworks/CoreFoundation.framework; sourceTree = SDKROOT; };
 		CE01E25728E8BF6B00EFDDD6 /* AutostartHelper.entitlements */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.entitlements; path = AutostartHelper.entitlements; sourceTree = "<group>"; };
@@ -501,6 +508,7 @@
 				CE2400622D7E000000000001 /* BTLocalization+StatusItem.swift */,
 				CE2400102D7D000000000001 /* Localizable.strings */,
 				CE2322D328E5EB8B00874CDE /* BTLoginItem.swift */,
+				CE1329012F00000000000001 /* BTAppExitCoordinator.swift */,
 			);
 			path = Ampere;
 			sourceTree = "<group>";
@@ -611,6 +619,7 @@
 				CEA3908828DF95020023261A /* Upgrading */,
 				CE5E5AE228DE214200AF1D07 /* BTAccessoryMode.swift */,
 				CE54510328DA017300D6EB5F /* BTAppPrompts.swift */,
+				CE1329042F00000000000001 /* BTAppPrompts+Lifecycle.swift */,
 				CE4303CC28E38D00006172ED /* BTErrorHandler.swift */,
 			);
 			path = Views;
@@ -643,6 +652,7 @@
 				CEAA00412E00000000000001 /* BTPowerEventStateMachineTests.swift */,
 				CEAA00192E00000000000001 /* BTLowPowerModeTests.swift */,
 				CEAA00182E00000000000001 /* BTSettingsModelTests.swift */,
+				CE1329062F00000000000001 /* BTAppExitCoordinatorTests.swift */,
 			);
 			path = AmpereTests;
 			sourceTree = "<group>";
@@ -936,6 +946,8 @@
 				CE3179F528DC72D800E9C121 /* BTUpgradingViewController.swift in Sources */,
 				CE7F623528B95A8200EF58F9 /* BTPreprocessor.m in Sources */,
 				CE54510428DA017300D6EB5F /* BTAppPrompts.swift in Sources */,
+				CE1329052F00000000000001 /* BTAppPrompts+Lifecycle.swift in Sources */,
+				CE1329022F00000000000001 /* BTAppExitCoordinator.swift in Sources */,
 				CE4303CD28E38D00006172ED /* BTErrorHandler.swift in Sources */,
 				CEB4A42428D39ECE004FA277 /* BTDaemonManagement+Status.swift in Sources */,
 				CEB09B7328D7B9A5007FFB37 /* BTDaemonManagement+Legacy.swift in Sources */,
@@ -1025,6 +1037,8 @@
 				CEAA001A2E00000000000001 /* BTLowPowerModeTests.swift in Sources */,
 				CEAA00442E00000000000001 /* BTPowerEventStateMachineTests.swift in Sources */,
 				CEAA00112E00000000000002 /* BTSettingsModelTests.swift in Sources */,
+				CE1329032F00000000000001 /* BTAppExitCoordinator.swift in Sources */,
+				CE1329072F00000000000001 /* BTAppExitCoordinatorTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

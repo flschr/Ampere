@@ -7,8 +7,6 @@ import Cocoa
 
 @MainActor
 internal enum BTAppPrompts {
-    private(set) static var open: UInt8 = 0
-
     static func promptQuit() async {
         let alert = NSAlert()
         alert.messageText = BTLocalization.Prompts.quitMessage
@@ -193,100 +191,6 @@ internal enum BTAppPrompts {
             _ = alert.addButton(withTitle: BTLocalization.Prompts.quit)
             _ = await self.runPrompt(alert: alert, window: window)
             NSApp.terminate(self)
-        }
-    }
-
-    private static func cleanupAndTerminate() async {
-        await self.disableStartupAndTerminate(removeAppSettings: true)
-    }
-
-    private static func disableStartupAndTerminate(
-        removeAppSettings: Bool
-    ) async {
-        _ = BTLoginItem.disable()
-
-        if removeAppSettings, let domain = Bundle.main.bundleIdentifier {
-            UserDefaults.standard.removePersistentDomain(forName: domain)
-        }
-
-        NSApp.terminate(nil)
-    }
-
-    private static func tryQuit() async {
-        do {
-            try await BTActions.quitDaemon()
-            await self.disableStartupAndTerminate(removeAppSettings: false)
-        } catch {
-            await self.promptTryQuitError()
-        }
-    }
-
-    private static func tryRemoveDaemon() async {
-        do {
-            try await BTActions.removeDaemon()
-            await self.cleanupAndTerminate()
-        } catch {
-            await self.promptTryRemoveDaemonError()
-        }
-    }
-
-    private static func tryRemoveDaemonAndAppData(window: NSWindow?) async {
-        do {
-            try await BTActions.removeDaemon()
-            try await self.trashApp()
-            await self.cleanupAndTerminate()
-        } catch {
-            await self.promptTryRemoveDaemonAndAppDataError(window: window)
-        }
-    }
-
-    private static func forceRemoveDaemon() async {
-        do {
-            try await BTActions.removeDaemon()
-            await self.cleanupAndTerminate()
-        } catch {
-            await self.promptForceRemoveDaemonError()
-        }
-    }
-
-    private static func trashApp() async throws {
-        let appUrl = Bundle.main.bundleURL
-
-        try await withCheckedThrowingContinuation {
-            (continuation: CheckedContinuation<Void, any Error>) in
-            NSWorkspace.shared.recycle([appUrl]) { _, error in
-                if let error {
-                    continuation.resume(throwing: error)
-                    return
-                }
-
-                continuation.resume()
-            }
-        }
-    }
-
-    private static func runPromptStandalone(alert: NSAlert) -> NSApplication
-        .ModalResponse
-    {
-        self.open += 1
-        NSApp.activate(ignoringOtherApps: true)
-        let response = alert.runModal()
-        self.open -= 1
-
-        return response
-    }
-
-    private static func runPrompt(alert: NSAlert, window: NSWindow? = nil) async -> NSApplication.ModalResponse {
-        guard let window else {
-            return self.runPromptStandalone(alert: alert)
-        }
-
-        return await alert.beginSheetModal(for: window)
-    }
-
-    private static func runPrompt(alert: NSAlert, window: NSWindow? = nil) {
-        Task {
-            await self.runPrompt(alert: alert, window: window)
         }
     }
 }

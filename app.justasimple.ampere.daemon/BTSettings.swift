@@ -10,18 +10,14 @@ import os.log
 internal enum BTSettings {
     private(set) static var minCharge = BTSettingsInfo.Defaults.minCharge
     private(set) static var maxCharge = BTSettingsInfo.Defaults.maxCharge
-    private(set) static var adapterSleep = BTSettingsInfo.Defaults.adapterSleep
-    private(set) static var magSafeSync = BTSettingsInfo.Defaults.magSafeSync
     private(set) static var lowPowerModeThreshold =
         BTSettingsInfo.Defaults.lowPowerModeThreshold
 
     static func readDefaults() {
-        self.adapterSleep = UserDefaults.standard.bool(
-            forKey: BTSettingsInfo.Keys.adapterSleep
-        )
-        self.magSafeSync = UserDefaults.standard.bool(
-            forKey: BTSettingsInfo.Keys.magSafeSync
-        )
+        // Retired controls must not survive an upgrade as hidden preferences.
+        UserDefaults.standard.removeObject(forKey: BTSettingsInfo.Keys.adapterSleep)
+        UserDefaults.standard.removeObject(forKey: BTSettingsInfo.Keys.magSafeSync)
+        _ = CFPreferencesAppSynchronize(kCFPreferencesCurrentApplication)
         let storedThreshold = UserDefaults.standard.integer(
             forKey: BTSettingsInfo.Keys.lowPowerModeThreshold
         )
@@ -78,9 +74,6 @@ internal enum BTSettings {
         guard let settings = try? BTBatterySettings(
             minCharge: Int(self.minCharge),
             maxCharge: Int(self.maxCharge),
-            adapterSleep: self.adapterSleep,
-            magSafeSync: BTChargeController.capabilities.magSafeSync ?
-                self.magSafeSync : nil,
             lowPowerModeThreshold: Int(self.lowPowerModeThreshold),
             capabilities: BTChargeController.capabilities
         ) else {
@@ -126,12 +119,6 @@ internal enum BTSettings {
             return
         }
 
-        self.setAdapterSleep(enabled: parsedSettings.adapterSleep)
-
-        if let magSafeSync = parsedSettings.magSafeSync {
-            self.setMagSafeSync(enabled: magSafeSync)
-        }
-
         self.setLowPowerModeThreshold(parsedSettings.lowPowerModeThreshold)
 
         self.writeDefaults()
@@ -173,32 +160,6 @@ internal enum BTSettings {
         return true
     }
 
-    private static func setAdapterSleep(enabled: Bool) {
-        guard BTChargeController.capabilities.adapterControl else {
-            return
-        }
-        guard self.adapterSleep != enabled else {
-            return
-        }
-
-        self.adapterSleep = enabled
-
-        BTPowerState.adapterSleepSettingToggled()
-    }
-
-    private static func setMagSafeSync(enabled: Bool) {
-        guard BTChargeController.capabilities.magSafeSync else {
-            return
-        }
-        guard self.magSafeSync != enabled else {
-            return
-        }
-
-        self.magSafeSync = enabled
-
-        BTPowerState.magSafeSyncSettingToggled()
-    }
-
     private static func setLowPowerModeThreshold(_ threshold: Int) {
         let value = UInt8(threshold)
         guard self.lowPowerModeThreshold != value else {
@@ -224,14 +185,6 @@ internal enum BTSettings {
         UserDefaults.standard.set(
             self.maxCharge,
             forKey: BTSettingsInfo.Keys.maxCharge
-        )
-        UserDefaults.standard.set(
-            self.adapterSleep,
-            forKey: BTSettingsInfo.Keys.adapterSleep
-        )
-        UserDefaults.standard.set(
-            self.magSafeSync,
-            forKey: BTSettingsInfo.Keys.magSafeSync
         )
         UserDefaults.standard.set(
             self.lowPowerModeThreshold,

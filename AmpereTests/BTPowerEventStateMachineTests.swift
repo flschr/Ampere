@@ -287,39 +287,16 @@ final class BTPowerEventStateMachineTests: XCTestCase {
         )
     }
 
-    func testChargingSleepEffectBalancesSleepWithChargingState() {
+    func testChargingSleepRequiresActiveLegacyPower() {
+        let effect = BTPowerEventStateMachine.chargingSleepEffect
         XCTAssertEqual(
-            BTPowerEventStateMachine.chargingSleepEffect(chargingDisabled: true),
-            .restoreSleep
-        )
-        XCTAssertEqual(
-            BTPowerEventStateMachine.chargingSleepEffect(chargingDisabled: false),
+            effect(false, false, true, true),
             .disableSleep
         )
-    }
-
-    func testPowerAdapterSleepEffectHonorsAdapterSleepSetting() {
-        XCTAssertEqual(
-            BTPowerEventStateMachine.powerAdapterSleepEffect(
-                powerDisabled: true,
-                adapterSleep: false
-            ),
-            .disableSleep
-        )
-        XCTAssertEqual(
-            BTPowerEventStateMachine.powerAdapterSleepEffect(
-                powerDisabled: false,
-                adapterSleep: false
-            ),
-            .restoreSleep
-        )
-        XCTAssertEqual(
-            BTPowerEventStateMachine.powerAdapterSleepEffect(
-                powerDisabled: true,
-                adapterSleep: true
-            ),
-            .none
-        )
+        XCTAssertEqual(effect(true, false, true, true), .restoreSleep)
+        XCTAssertEqual(effect(false, true, true, true), .restoreSleep)
+        XCTAssertEqual(effect(false, false, false, true), .restoreSleep)
+        XCTAssertEqual(effect(false, false, true, false), .restoreSleep)
     }
 
     func testWakeFromSleepEffectsRefreshAndRestoreSleep() {

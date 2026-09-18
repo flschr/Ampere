@@ -96,12 +96,10 @@ final class BTBatteryModelsTests: XCTestCase {
         }
     }
 
-    func testBatterySettingsRoundTripsWithMagSafeSupport() throws {
+    func testBatterySettingsRoundTrips() throws {
         let settings = try BTBatterySettings(
             minCharge: 70,
             maxCharge: 85,
-            adapterSleep: true,
-            magSafeSync: false,
             lowPowerModeThreshold: 17
         )
 
@@ -112,8 +110,6 @@ final class BTBatteryModelsTests: XCTestCase {
         let settings = try BTBatterySettings(
             minCharge: 70,
             maxCharge: 80,
-            adapterSleep: false,
-            magSafeSync: nil
         )
         var payload = settings.payload
         payload.removeValue(forKey: BTSettingsInfo.Keys.lowPowerModeThreshold)
@@ -129,8 +125,6 @@ final class BTBatteryModelsTests: XCTestCase {
             try BTBatterySettings(
                 minCharge: 70,
                 maxCharge: 80,
-                adapterSleep: false,
-                magSafeSync: nil,
                 lowPowerModeThreshold: 101
             )
         )
@@ -140,8 +134,6 @@ final class BTBatteryModelsTests: XCTestCase {
         let settings = try BTBatterySettings(
             minCharge: 70,
             maxCharge: 80,
-            adapterSleep: false,
-            magSafeSync: nil
         )
         var payload = settings.payload
         payload[BTSettingsInfo.Keys.lowPowerModeThreshold] = NSNull()
@@ -151,18 +143,26 @@ final class BTBatteryModelsTests: XCTestCase {
         }
     }
 
-    func testBatterySettingsRoundTripsWithoutMagSafeSupport() throws {
+    func testBatterySettingsWritesSafeLegacyCompatibilityValues() throws {
         let settings = try BTBatterySettings(
             minCharge: 75,
             maxCharge: 80,
-            adapterSleep: false,
-            magSafeSync: nil
         )
 
         let parsed = try BTBatterySettings(payload: settings.payload)
 
         XCTAssertEqual(parsed, settings)
-        XCTAssertNil(parsed.payload[BTSettingsInfo.Keys.magSafeSync])
+        XCTAssertEqual((parsed.payload[BTSettingsInfo.Keys.adapterSleep] as? NSNumber)?.boolValue, true)
+        XCTAssertEqual((parsed.payload[BTSettingsInfo.Keys.magSafeSync] as? NSNumber)?.boolValue, false)
+
+        var oldPayload = parsed.payload
+        oldPayload[BTSettingsInfo.Keys.adapterSleep] = NSNumber(value: false)
+        oldPayload[BTSettingsInfo.Keys.magSafeSync] = NSNumber(value: true)
+        XCTAssertEqual(try BTBatterySettings(payload: oldPayload), settings)
+        XCTAssertEqual(
+            (try BTBatterySettings(payload: oldPayload).payload[BTSettingsInfo.Keys.magSafeSync] as? NSNumber)?.boolValue,
+            false
+        )
     }
 
     func testBatterySettingsRejectsInvalidChargeLimits() {
@@ -170,23 +170,19 @@ final class BTBatteryModelsTests: XCTestCase {
             try BTBatterySettings(
                 minCharge: 90,
                 maxCharge: 80,
-                adapterSleep: false,
-                magSafeSync: nil
             )
         ) { error in
             XCTAssertEqual(error as? BTError, .malformedData)
         }
     }
 
-    func testBatterySettingsRejectsMissingRequiredValues() {
+    func testBatterySettingsAcceptsMissingRetiredValues() throws {
         let payload: [String: NSObject & Sendable] = [
             BTSettingsInfo.Keys.minCharge: NSNumber(value: 75),
             BTSettingsInfo.Keys.maxCharge: NSNumber(value: 80),
         ]
 
-        XCTAssertThrowsError(try BTBatterySettings(payload: payload)) { error in
-            XCTAssertEqual(error as? BTError, .malformedData)
-        }
+        XCTAssertEqual(try BTBatterySettings(payload: payload).minCharge, 75)
     }
 
     func testSystemManagedCapabilitiesRoundTrip() throws {
@@ -199,8 +195,6 @@ final class BTBatteryModelsTests: XCTestCase {
         let settings = try BTBatterySettings(
             minCharge: 70,
             maxCharge: 85,
-            adapterSleep: false,
-            magSafeSync: nil,
             capabilities: capabilities
         )
 
@@ -212,6 +206,10 @@ final class BTBatteryModelsTests: XCTestCase {
         XCTAssertFalse(capabilities.supports(maxCharge: 91))
         XCTAssertEqual(capabilities.nearestSupported(maxCharge: 92), 90)
         XCTAssertEqual(capabilities.nearestSupported(maxCharge: 79), 80)
+        XCTAssertEqual(
+            (settings.payload[BTPowerCapabilities.Keys.magSafeSync] as? NSNumber)?.boolValue,
+            false
+        )
     }
 
     func testCapabilitiesRejectMalformedPayload() {

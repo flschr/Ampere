@@ -1,8 +1,5 @@
 "0sD-aV-92m.title" = "%";
 "1HE-SM-FyJ.title" = "Tu Mac no entrará en reposo mientras se carga para poder supervisar el nivel de batería. El reposo se volverá a activar cuando el Mac deje de cargar por cualquier motivo.";
-"3Kk-Vy-Cgc.title" = "Sincroniza el estado de energía de tu Mac con la luz indicadora MagSafe. Parpadea en ámbar si está cargando, se queda en ámbar si la carga está en pausa, se ilumina en verde si está completamente cargado y se apaga si el adaptador de corriente está desactivado.";
-"47S-lH-kMQ.title" = "Sincronizar luz indicadora MagSafe";
-"BOx-qm-k90.title" = "Cuando la tapa está cerrada, tu Mac puede entrar en reposo automáticamente con el adaptador de corriente desactivado, incluso si hay una pantalla externa conectada y encendida.";
 "IMi-pw-cwy.label" = "Energía";
 "SrC-Z2-byQ.title" = "70";
 "WC9-iw-C9D.title" = "%";
@@ -12,5 +9,4 @@
 "ZWd-cD-Dlp.paletteLabel" = "Energía";
 "cnq-Zd-qMS.title" = "OK";
 "dqT-oI-86h.title" = "Cancelar";
-"fIe-Jy-1ot.title" = "Impedir que el Mac entre en reposo cuando el adaptador de corriente está desactivado";
 "sW6-EL-lV5.title" = "80";

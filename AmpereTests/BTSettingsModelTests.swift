@@ -28,32 +28,24 @@ final class BTSettingsModelTests: XCTestCase {
         XCTAssertEqual(draft.maxCharge, 100)
     }
 
-    func testSettingsPayloadFactoryOmitsUnsupportedMagSafe() throws {
+    func testSettingsPayloadFactoryRetiresObsoleteControls() throws {
         let payload = try BTSettingsPayloadFactory.make(
             minCharge: 70,
             maxCharge: 80,
-            adapterSleep: false,
-            magSafeSync: nil
         )
 
-        XCTAssertNil(payload[BTSettingsInfo.Keys.magSafeSync])
-        XCTAssertFalse(
-            try BTBatterySettings(payload: payload).adapterSleep
-        )
+        XCTAssertEqual((payload[BTSettingsInfo.Keys.magSafeSync] as? NSNumber)?.boolValue, false)
+        XCTAssertEqual((payload[BTSettingsInfo.Keys.adapterSleep] as? NSNumber)?.boolValue, true)
     }
 
     func testSettingsPayloadFactoryDetectsChangedPayload() throws {
         let current = try BTSettingsPayloadFactory.make(
             minCharge: 70,
             maxCharge: 80,
-            adapterSleep: false,
-            magSafeSync: true
         )
         let changed = try BTSettingsPayloadFactory.make(
             minCharge: 70,
             maxCharge: 85,
-            adapterSleep: false,
-            magSafeSync: true
         )
 
         XCTAssertFalse(BTSettingsPayloadFactory.changed(current, from: current))

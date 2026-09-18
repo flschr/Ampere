@@ -22,6 +22,9 @@ internal enum BTChargeController {
         self.capabilities = .legacy
         SMCComm.Power.prepare()
         SMCComm.MagSafe.prepare()
+        if SMCComm.MagSafe.supported {
+            _ = SMCComm.MagSafe.setSystem()
+        }
         let adapterControl = SMCComm.Power.adapterControlSupported
 
         if SMCComm.FirmwareChargeLimit.supported,
@@ -36,8 +39,7 @@ internal enum BTChargeController {
 
         if SMCComm.Power.legacyChargingSupported {
             self.capabilities = .legacy(
-                adapterControl: adapterControl,
-                magSafeSync: SMCComm.MagSafe.supported
+                adapterControl: adapterControl
             )
             return true
         }

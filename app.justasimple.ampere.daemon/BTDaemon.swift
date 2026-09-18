@@ -69,7 +69,8 @@ internal enum BTDaemon {
         let success = PowerEvents.register(callback: callback)
         guard success else {
             os_log("Error registering system power event")
-            exit(-1)
+            BTPowerEvents.stop()
+            throw BTError.unknown
         }
     }
 

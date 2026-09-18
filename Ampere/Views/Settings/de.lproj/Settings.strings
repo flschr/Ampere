@@ -1,8 +1,5 @@
 "0sD-aV-92m.title" = "%";
 "1HE-SM-FyJ.title" = "Dein Mac wird während des Ladens daran gehindert, in den Ruhezustand zu wechseln, damit der Batteriestand überwacht werden kann. Der Ruhezustand wird wieder aktiviert, sobald dein Mac aus irgendeinem Grund nicht mehr lädt.";
-"3Kk-Vy-Cgc.title" = "Synchronisiert den Energiezustand deines Mac mit der MagSafe-Statusleuchte. Sie blinkt gelb, wenn geladen wird, leuchtet gelb, wenn das Laden gehalten wird, leuchtet grün, wenn vollständig geladen ist, und ist aus, wenn das Netzteil deaktiviert ist.";
-"47S-lH-kMQ.title" = "MagSafe-Statusleuchte synchronisieren";
-"BOx-qm-k90.title" = "Wenn der Deckel geschlossen ist, wechselt dein Mac bei deaktiviertem Netzteil möglicherweise automatisch in den Ruhezustand, selbst wenn ein externes Display angeschlossen und eingeschaltet ist.";
 "IMi-pw-cwy.label" = "Energie";
 "SrC-Z2-byQ.title" = "70";
 "WC9-iw-C9D.title" = "%";
@@ -12,5 +9,4 @@
 "ZWd-cD-Dlp.paletteLabel" = "Energie";
 "cnq-Zd-qMS.title" = "OK";
 "dqT-oI-86h.title" = "Abbrechen";
-"fIe-Jy-1ot.title" = "Ruhezustand des Mac verhindern, wenn das Netzteil deaktiviert ist";
 "sW6-EL-lV5.title" = "80";

@@ -132,6 +132,7 @@
 		CE2710052F00000000000001 /* BTChargeController.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2710132F00000000000001 /* BTChargeController.swift */; };
 		CE2710062F00000000000001 /* BTSystemChargeLimitClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2710142F00000000000001 /* BTSystemChargeLimitClient.swift */; };
 		CE2710072F00000000000001 /* BTSystemChargeLimitRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2710152F00000000000001 /* BTSystemChargeLimitRuntime.swift */; };
+		CE1303012F00000000000001 /* BTPowerCapabilitiesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1303112F00000000000001 /* BTPowerCapabilitiesTests.swift */; };
 		CEB09B7328D7B9A5007FFB37 /* BTDaemonManagement+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB09B7228D7B9A5007FFB37 /* BTDaemonManagement+Legacy.swift */; };
 		CEB4A42428D39ECE004FA277 /* BTDaemonManagement+Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB4A42328D39ECE004FA277 /* BTDaemonManagement+Status.swift */; };
 		CEB4A42828D3B184004FA277 /* BTStateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB4A42728D3B184004FA277 /* BTStateInfo.swift */; };
@@ -335,6 +336,7 @@
 		CE2710132F00000000000001 /* BTChargeController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTChargeController.swift; sourceTree = "<group>"; };
 		CE2710142F00000000000001 /* BTSystemChargeLimitClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTSystemChargeLimitClient.swift; sourceTree = "<group>"; };
 		CE2710152F00000000000001 /* BTSystemChargeLimitRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTSystemChargeLimitRuntime.swift; sourceTree = "<group>"; };
+		CE1303112F00000000000001 /* BTPowerCapabilitiesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTPowerCapabilitiesTests.swift; sourceTree = "<group>"; };
 		CEB09B7228D7B9A5007FFB37 /* BTDaemonManagement+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BTDaemonManagement+Legacy.swift"; sourceTree = "<group>"; };
 		CEB4671B2843BFA000D7CB01 /* SMCParamStruct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMCParamStruct.h; sourceTree = "<group>"; };
 		CEB4671D2843C87200D7CB01 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
@@ -634,6 +636,7 @@
 			isa = PBXGroup;
 			children = (
 				CEAA00122E00000000000001 /* BTBatteryModelsTests.swift */,
+				CE1303112F00000000000001 /* BTPowerCapabilitiesTests.swift */,
 				CE2400852E01000000000001 /* BTAboutInfoModelTests.swift */,
 				CE2400C02E05000000000001 /* BTErrorTests.swift */,
 				CEAA00162E00000000000001 /* BTCommandsMenuSnapshotTests.swift */,
@@ -1015,6 +1018,7 @@
 				CEAA000A2E00000000000001 /* BTCommandsMenuSnapshot.swift in Sources */,
 				CEAA000F2E00000000000001 /* BTSettingsModel.swift in Sources */,
 				CEAA00072E00000000000001 /* BTBatteryModelsTests.swift in Sources */,
+				CE1303012F00000000000001 /* BTPowerCapabilitiesTests.swift in Sources */,
 				CE2400862E01000000000001 /* BTAboutInfoModelTests.swift in Sources */,
 				CE2400C12E05000000000001 /* BTErrorTests.swift in Sources */,
 				CEAA000D2E00000000000001 /* BTCommandsMenuSnapshotTests.swift in Sources */,

@@ -21,16 +21,10 @@ internal enum BTPowerState {
         } else {
             self.refreshManagedChargingState()
         }
-        if BTChargeController.usesLegacyControl && !self.chargingDisabled {
-            //
-            // Sleep must always be disabled when charging is enabled.
-            //
-            self.disableChargingSleep()
-        }
-
         let powerDisabled = BTChargeController.capabilities.adapterControl &&
             SMCComm.Power.isPowerAdapterDisabled()
         self.powerDisabled = powerDisabled
+        self.reconcileChargingSleep()
     }
 
     static func refreshState() {
@@ -45,21 +39,12 @@ internal enum BTPowerState {
             self.refreshManagedChargingState()
             chargingDisabled = self.chargingDisabled
         }
-        if chargingDisabled != self.chargingDisabled {
-            self.chargingDisabled = chargingDisabled
-
-            if BTChargeController.usesLegacyControl {
-                self.applyChargingSleepEffect(
-                    sleepEffect: BTPowerEventStateMachine.chargingSleepEffect(
-                        chargingDisabled: chargingDisabled
-                    )
-                )
-            }
-        }
+        self.chargingDisabled = chargingDisabled
 
         let powerDisabled = BTChargeController.capabilities.adapterControl &&
             SMCComm.Power.isPowerAdapterDisabled()
         self.powerDisabled = powerDisabled
+        self.reconcileChargingSleep()
     }
 
     static func getPercentRemaining() -> (UInt8, Bool, Bool) {
@@ -71,65 +56,64 @@ internal enum BTPowerState {
             return false
         }
         guard !self.chargingDisabled else {
+            self.reconcileChargingSleep()
             return true
         }
 
         let success = SMCComm.Power.disableCharging()
         guard success else {
             os_log("Failed to disable charging")
+            self.refreshState()
             return false
         }
 
         self.chargingDisabled = true
 
-        self.restoreChargingSleep()
+        self.reconcileChargingSleep()
 
         return true
     }
 
-    static func enableCharging(
-        disablesSleep: Bool = true,
-        force: Bool = false
-    ) -> Bool {
+    static func enableCharging(force: Bool = false) -> Bool {
         guard BTChargeController.capabilities.directChargingControl else {
             return false
         }
         guard force || self.chargingDisabled else {
-            if disablesSleep {
-                self.disableChargingSleep()
-            }
+            self.reconcileChargingSleep()
             return true
         }
 
         let success = SMCComm.Power.enableCharging()
         if !success {
             os_log("Failed to enable charging")
+            self.refreshState()
             return false
         }
 
-        if disablesSleep {
-            self.disableChargingSleep()
-        }
-
         self.chargingDisabled = false
+        self.reconcileChargingSleep()
 
         return true
     }
+
     static func disablePowerAdapter() -> Bool {
         guard BTChargeController.capabilities.adapterControl else {
             return false
         }
         guard !self.powerDisabled else {
+            self.reconcileChargingSleep()
             return true
         }
 
         let success = SMCComm.Power.disablePowerAdapter()
         guard success else {
             os_log("Failed to disable power adapter")
+            self.refreshState()
             return false
         }
 
         self.powerDisabled = true
+        self.reconcileChargingSleep()
         return true
     }
 
@@ -138,16 +122,19 @@ internal enum BTPowerState {
             return true
         }
         guard force || self.powerDisabled else {
+            self.reconcileChargingSleep()
             return true
         }
 
         let success = SMCComm.Power.enablePowerAdapter()
         guard success else {
             os_log("Failed to enable power adapter")
+            self.refreshState()
             return false
         }
 
         self.powerDisabled = false
+        self.reconcileChargingSleep()
 
         return true
     }
@@ -185,6 +172,17 @@ internal enum BTPowerState {
 
         GlobalSleep.restore()
         self.chargingSleepDisabled = false
+    }
+
+    private static func reconcileChargingSleep() {
+        self.applyChargingSleepEffect(
+            sleepEffect: BTPowerEventStateMachine.chargingSleepEffect(
+                chargingDisabled: self.chargingDisabled,
+                powerDisabled: self.powerDisabled,
+                externalPower: IOPSPrivate.DrawingUnlimitedPower(),
+                usesLegacyControl: BTChargeController.usesLegacyControl
+            )
+        )
     }
 
     private static func applyChargingSleepEffect(

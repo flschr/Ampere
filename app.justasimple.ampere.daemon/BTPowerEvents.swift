@@ -473,13 +473,7 @@ internal enum BTPowerEvents {
             }
         }
 
-        let chargingEnabled = BTPowerState.enableCharging(
-            disablesSleep: self.unlimitedPower,
-            force: force
-        )
-        if self.unlimitedPower {
-            _ = BTPowerState.enableCharging(force: force)
-        }
+        let chargingEnabled = BTPowerState.enableCharging(force: force)
         self.updateThermalTimer()
 
         return chargingEnabled
@@ -488,6 +482,7 @@ internal enum BTPowerEvents {
     private static func handleLimitedPowerGuarded() {
         assert(self.powerCreated)
 
+        BTPowerState.refreshState()
         self.unlimitedPower = self.drawingUnlimitedPower()
 
         if !BTChargeController.usesLegacyControl {
@@ -500,7 +495,6 @@ internal enum BTPowerEvents {
             if !self.registerPercentChangedHandler() {
                 os_log("Failed to register percent changed handler")
             }
-            BTPowerState.refreshState()
             return
         }
 

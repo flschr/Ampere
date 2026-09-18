@@ -140,10 +140,14 @@ internal enum BTPowerEvents {
     static func chargeToLimit() -> Bool {
         if !BTChargeController.usesLegacyControl {
             self.chargingMode = .standard
-            return BTChargeController.applyStandardLimit(
+            let applied = BTChargeController.applyStandardLimit(
                 minCharge: BTSettings.minCharge,
                 maxCharge: BTSettings.maxCharge
             )
+            if applied && BTSettings.magSafeSync {
+                BTPowerState.syncMagSafeState()
+            }
+            return applied
         }
 
         self.chargingMode = .toLimit
@@ -185,7 +189,11 @@ internal enum BTPowerEvents {
             BTLowPowerModeAutomation.disableForPowerAdapter()
         }
         if !BTChargeController.usesLegacyControl {
-            return BTChargeController.requestFullCharge()
+            let applied = BTChargeController.requestFullCharge()
+            if applied && BTSettings.magSafeSync {
+                BTPowerState.syncMagSafeState()
+            }
+            return applied
         }
         return self.enableBelowLimitMode(limit: 100)
     }
@@ -568,7 +576,7 @@ internal enum BTPowerEvents {
     }
 
     private static func restoreDefaults() {
-        if BTSettings.magSafeSync {
+        if SMCComm.MagSafe.supported {
             _ = SMCComm.MagSafe.setSystem()
         }
 

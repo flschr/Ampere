@@ -133,6 +133,11 @@
 		CE2710062F00000000000001 /* BTSystemChargeLimitClient.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2710142F00000000000001 /* BTSystemChargeLimitClient.swift */; };
 		CE2710072F00000000000001 /* BTSystemChargeLimitRuntime.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE2710152F00000000000001 /* BTSystemChargeLimitRuntime.swift */; };
 		CE1303012F00000000000001 /* BTPowerCapabilitiesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1303112F00000000000001 /* BTPowerCapabilitiesTests.swift */; };
+		CE1318202F00000000000001 /* BTMagSafeIndicatorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1318102F00000000000001 /* BTMagSafeIndicatorState.swift */; };
+		CE1318212F00000000000001 /* BTMagSafeIndicatorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1318102F00000000000001 /* BTMagSafeIndicatorState.swift */; };
+		CE1318222F00000000000001 /* BTMagSafeIndicatorState.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1318102F00000000000001 /* BTMagSafeIndicatorState.swift */; };
+		CE1318232F00000000000001 /* BTSettingsViewController+MagSafe.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1318112F00000000000001 /* BTSettingsViewController+MagSafe.swift */; };
+		CE1318242F00000000000001 /* BTMagSafeIndicatorStateTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE1318122F00000000000001 /* BTMagSafeIndicatorStateTests.swift */; };
 		CEB09B7328D7B9A5007FFB37 /* BTDaemonManagement+Legacy.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB09B7228D7B9A5007FFB37 /* BTDaemonManagement+Legacy.swift */; };
 		CEB4A42428D39ECE004FA277 /* BTDaemonManagement+Status.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB4A42328D39ECE004FA277 /* BTDaemonManagement+Status.swift */; };
 		CEB4A42828D3B184004FA277 /* BTStateInfo.swift in Sources */ = {isa = PBXBuildFile; fileRef = CEB4A42728D3B184004FA277 /* BTStateInfo.swift */; };
@@ -337,6 +342,9 @@
 		CE2710142F00000000000001 /* BTSystemChargeLimitClient.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTSystemChargeLimitClient.swift; sourceTree = "<group>"; };
 		CE2710152F00000000000001 /* BTSystemChargeLimitRuntime.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTSystemChargeLimitRuntime.swift; sourceTree = "<group>"; };
 		CE1303112F00000000000001 /* BTPowerCapabilitiesTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTPowerCapabilitiesTests.swift; sourceTree = "<group>"; };
+		CE1318102F00000000000001 /* BTMagSafeIndicatorState.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTMagSafeIndicatorState.swift; sourceTree = "<group>"; };
+		CE1318112F00000000000001 /* BTSettingsViewController+MagSafe.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BTSettingsViewController+MagSafe.swift"; sourceTree = "<group>"; };
+		CE1318122F00000000000001 /* BTMagSafeIndicatorStateTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BTMagSafeIndicatorStateTests.swift; sourceTree = "<group>"; };
 		CEB09B7228D7B9A5007FFB37 /* BTDaemonManagement+Legacy.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "BTDaemonManagement+Legacy.swift"; sourceTree = "<group>"; };
 		CEB4671B2843BFA000D7CB01 /* SMCParamStruct.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = SMCParamStruct.h; sourceTree = "<group>"; };
 		CEB4671D2843C87200D7CB01 /* module.modulemap */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.module-map"; path = module.modulemap; sourceTree = "<group>"; };
@@ -530,6 +538,7 @@
 				CE3C1DA628CA33FD008A0F7D /* BTLegacyHelperInfo.swift */,
 				CEAA00102E00000000000001 /* BTBatteryModels.swift */,
 				CE2710112F00000000000001 /* BTPowerCapabilities.swift */,
+				CE1318102F00000000000001 /* BTMagSafeIndicatorState.swift */,
 				CEAA00402E00000000000001 /* BTPowerEventStateMachine.swift */,
 				CE0DB56228BEB4E600B8FC4C /* BTSettingsInfo.swift */,
 				CEB4A42728D3B184004FA277 /* BTStateInfo.swift */,
@@ -588,6 +597,7 @@
 				CE5E5AE728DE31EB00AF1D07 /* BTSettingsMenuItem.swift */,
 				CEAA00172E00000000000001 /* BTSettingsModel.swift */,
 				CE30CBA028C48995001E2AC6 /* BTSettingsViewController.swift */,
+				CE1318112F00000000000001 /* BTSettingsViewController+MagSafe.swift */,
 				CE1317022F00000000000001 /* BTLowPowerThresholdControls.swift */,
 				CEB4A42E28D4D4D0004FA277 /* BTSettingsWindowController.swift */,
 			);
@@ -637,6 +647,7 @@
 			children = (
 				CEAA00122E00000000000001 /* BTBatteryModelsTests.swift */,
 				CE1303112F00000000000001 /* BTPowerCapabilitiesTests.swift */,
+				CE1318122F00000000000001 /* BTMagSafeIndicatorStateTests.swift */,
 				CE2400852E01000000000001 /* BTAboutInfoModelTests.swift */,
 				CE2400C02E05000000000001 /* BTErrorTests.swift */,
 				CEAA00162E00000000000001 /* BTCommandsMenuSnapshotTests.swift */,
@@ -897,6 +908,7 @@
 				CE5E5AF928DF1CB100AF1D07 /* BTError.swift in Sources */,
 				CEAA00022E00000000000001 /* BTBatteryModels.swift in Sources */,
 				CE2710022F00000000000001 /* BTPowerCapabilities.swift in Sources */,
+				CE1318212F00000000000001 /* BTMagSafeIndicatorState.swift in Sources */,
 				CE2710042F00000000000001 /* SMCComm+FirmwareChargeLimit.swift in Sources */,
 				CE2710052F00000000000001 /* BTChargeController.swift in Sources */,
 				CE2710062F00000000000001 /* BTSystemChargeLimitClient.swift in Sources */,
@@ -949,6 +961,7 @@
 				CE5E5AF828DF1CB100AF1D07 /* BTError.swift in Sources */,
 				CEAA00012E00000000000001 /* BTBatteryModels.swift in Sources */,
 				CE2710012F00000000000001 /* BTPowerCapabilities.swift in Sources */,
+				CE1318202F00000000000001 /* BTMagSafeIndicatorState.swift in Sources */,
 				CE0DB56328BEB4E600B8FC4C /* BTSettingsInfo.swift in Sources */,
 				CE5E5AF328DF183E00AF1D07 /* BTAuthorizationRights.swift in Sources */,
 				CE2400902E03000000000001 /* BTBuildConfiguration.swift in Sources */,
@@ -960,6 +973,7 @@
 				CE2400802E01000000000001 /* BTUpdateController.swift in Sources */,
 				CEAA000E2E00000000000001 /* BTSettingsModel.swift in Sources */,
 				CE30CBA128C48995001E2AC6 /* BTSettingsViewController.swift in Sources */,
+				CE1318232F00000000000001 /* BTSettingsViewController+MagSafe.swift in Sources */,
 				CE1317012F00000000000001 /* BTLowPowerThresholdControls.swift in Sources */,
 				CE5E5AE528DE292D00AF1D07 /* BTCommandsMenuDelegate.swift in Sources */,
 				CE5300012D7D100000000001 /* BTStatusItemController.swift in Sources */,
@@ -1006,6 +1020,7 @@
 				CEAA00042E00000000000001 /* BTStateInfo.swift in Sources */,
 				CEAA00032E00000000000001 /* BTBatteryModels.swift in Sources */,
 				CE2710032F00000000000001 /* BTPowerCapabilities.swift in Sources */,
+				CE1318222F00000000000001 /* BTMagSafeIndicatorState.swift in Sources */,
 				CE2400A92E03000000000001 /* BTDaemonCommProtocol.swift in Sources */,
 				CEAA00432E00000000000001 /* BTPowerEventStateMachine.swift in Sources */,
 				CEAA001B2E00000000000001 /* BTLowPowerMode.swift in Sources */,
@@ -1019,6 +1034,7 @@
 				CEAA000F2E00000000000001 /* BTSettingsModel.swift in Sources */,
 				CEAA00072E00000000000001 /* BTBatteryModelsTests.swift in Sources */,
 				CE1303012F00000000000001 /* BTPowerCapabilitiesTests.swift in Sources */,
+				CE1318242F00000000000001 /* BTMagSafeIndicatorStateTests.swift in Sources */,
 				CE2400862E01000000000001 /* BTAboutInfoModelTests.swift in Sources */,
 				CE2400C12E05000000000001 /* BTErrorTests.swift in Sources */,
 				CEAA000D2E00000000000001 /* BTCommandsMenuSnapshotTests.swift in Sources */,

@@ -30,18 +30,6 @@ public extension SMCComm {
         static func setOrange() -> Bool {
             return self.setColor(color: 0x04)
         }
-
-        static func setOrangeSlowBlink() -> Bool {
-            return self.setColor(color: 0x06)
-        }
-
-        static func setOrangeFastBlink() -> Bool {
-            return self.setColor(color: 0x07)
-        }
-
-        static func setOrangeBlinkOff() -> Bool {
-            return self.setColor(color: 0x19)
-        }
     }
 }
 

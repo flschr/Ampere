@@ -193,7 +193,7 @@
                                                     <constraints>
                                                         <constraint firstAttribute="width" constant="411" id="VFA-XY-kKI"/>
                                                     </constraints>
-                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="Sync MagSafe indicator light" id="47S-lH-kMQ">
+                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="Adapt MagSafe light to charge limit" id="47S-lH-kMQ">
                                                         <font key="font" metaFont="system"/>
                                                         <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -206,7 +206,7 @@
                                                     </constraints>
                                                     <textFieldCell key="cell" controlSize="small" selectable="YES" id="3Kk-Vy-Cgc">
                                                         <font key="font" metaFont="smallSystem"/>
-                                                        <string key="title">Sync the power state of your Mac to the MagSafe indicator light. It flashes amber if charging, glows amber if charging is on hold, glows green if fully charged, and it is off if the power adapter is disabled.</string>
+                                                        <string key="title">Amber while charging or paused below the limit; green when the charge target is reached. No blinking. The light is off if the power adapter is disabled.</string>
                                                         <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
@@ -336,6 +336,7 @@ Gw
 	                    <connections>
 	                        <outlet property="adapterSleepSwitch" destination="ueg-wa-VAZ" id="3Lx-ht-YnK"/>
 	                        <outlet property="magSafeSyncSwitch" destination="Sq5-KE-c3T" id="csD-RV-ou4"/>
+	                        <outlet property="magSafeSyncLabel" destination="4VU-bn-waD" id="CE1318-MGS-LABEL"/>
 	                        <outlet property="magSafeDescriptionTextField" destination="Ghe-cF-C3L" id="CE1317-MGS-DESC"/>
 	                        <outlet property="maxChargeSlider" destination="9gz-yn-SNi" id="Qjh-mR-1302"/>
 	                        <outlet property="maxChargeTextField" destination="jVr-RT-V0O" id="eMo-4f-1302"/>

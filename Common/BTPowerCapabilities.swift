@@ -72,7 +72,6 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
 
     static func systemManaged(
         adapterControl: Bool,
-        magSafeSync: Bool,
         availableLimits: [UInt8]
     ) -> Self? {
         let limits = Array(Set(availableLimits)).sorted()
@@ -96,7 +95,7 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
             adapterControl: adapterControl,
             directChargingControl: false,
             customChargeRange: false,
-            magSafeSync: magSafeSync,
+            magSafeSync: false,
             minimumMaxCharge: Int(minimum),
             maxChargeStep: Int(step)
         )

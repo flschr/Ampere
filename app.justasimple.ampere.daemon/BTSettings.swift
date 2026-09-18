@@ -92,11 +92,18 @@ internal enum BTSettings {
     }
 
     static func normalizeForCapabilities() {
+        let obsoleteMagSafeSync = self.magSafeSync &&
+            !BTChargeController.capabilities.magSafeSync
+        if obsoleteMagSafeSync {
+            self.magSafeSync = false
+        }
+
         let limits = BTChargeController.normalizedLimits(
             minCharge: self.minCharge,
             maxCharge: self.maxCharge
         )
-        guard limits.min != self.minCharge || limits.max != self.maxCharge else {
+        guard obsoleteMagSafeSync ||
+            limits.min != self.minCharge || limits.max != self.maxCharge else {
             return
         }
 

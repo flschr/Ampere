@@ -6,6 +6,21 @@
 import XCTest
 
 final class BTPowerCapabilitiesTests: XCTestCase {
+    func testSystemManagedModeLeavesMagSafeToMacOS() throws {
+        let capabilities = try XCTUnwrap(
+            BTPowerCapabilities.systemManaged(
+                adapterControl: true,
+                availableLimits: [80, 85, 90, 95, 100]
+            )
+        )
+
+        XCTAssertFalse(capabilities.magSafeSync)
+        XCTAssertEqual(
+            try BTPowerCapabilities(payload: capabilities.payload),
+            capabilities
+        )
+    }
+
     func testFirmwareManagedCapabilitiesPreserveMagSafeSupport() throws {
         let capabilities = BTPowerCapabilities.firmwareManaged(
             adapterControl: false,

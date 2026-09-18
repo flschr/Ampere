@@ -40,13 +40,7 @@ internal enum BTPowerState {
             self.disableAdapterSleep()
         }
 
-        guard BTChargeController.capabilities.magSafeSync else {
-            return
-        }
-
-        SMCComm.MagSafe.prepare()
-
-        if BTSettings.magSafeSync {
+        if SMCComm.MagSafe.supported {
             self.syncMagSafeState()
         }
     }
@@ -106,27 +100,32 @@ internal enum BTPowerState {
         self.applyPowerAdapterSleepEffect(powerDisabled: true)
     }
 
-    static func syncMagSafeStatePowerEnabled(percent: UInt8) {
-        assert(BTSettings.magSafeSync)
-        assert(!self.powerDisabled)
-
-        if percent == 100 {
-            _ = SMCComm.MagSafe.setGreen()
-        } else if self.chargingDisabled {
-            _ = SMCComm.MagSafe.setOrange()
-        } else {
-            _ = SMCComm.MagSafe.setOrangeSlowBlink()
-        }
-    }
-
     static func syncMagSafeState() {
-        assert(BTSettings.magSafeSync)
+        guard SMCComm.MagSafe.supported else {
+            return
+        }
 
-        if self.powerDisabled {
+        let target: UInt8 = BTPowerEvents.chargingMode == .toFull ?
+            100 : BTSettings.maxCharge
+        let state = BTMagSafeIndicatorState.resolve(
+            mode: BTChargeController.capabilities.chargeControlMode,
+            syncEnabled: BTSettings.magSafeSync,
+            adapterDisabled: self.powerDisabled,
+            externalPower: IOPSPrivate.DrawingUnlimitedPower(),
+            battery: IOPSPrivate.GetPercentRemaining(),
+            target: target,
+            directChargingDisabled: self.chargingDisabled
+        )
+
+        switch state {
+        case .system:
+            _ = SMCComm.MagSafe.setSystem()
+        case .off:
             _ = SMCComm.MagSafe.setOff()
-        } else {
-            let (percent, _, _) = self.getPercentRemaining()
-            self.syncMagSafeStatePowerEnabled(percent: percent)
+        case .amber:
+            _ = SMCComm.MagSafe.setOrange()
+        case .green:
+            _ = SMCComm.MagSafe.setGreen()
         }
     }
 
@@ -134,11 +133,7 @@ internal enum BTPowerState {
         guard BTChargeController.capabilities.magSafeSync else {
             return
         }
-        if BTSettings.magSafeSync {
-            self.syncMagSafeState()
-        } else {
-            _ = SMCComm.MagSafe.setSystem()
-        }
+        self.syncMagSafeState()
     }
 
     static func disableCharging(percent: UInt8) -> Bool {
@@ -158,7 +153,7 @@ internal enum BTPowerState {
         self.chargingDisabled = true
 
         if BTSettings.magSafeSync {
-            BTPowerState.syncMagSafeStatePowerEnabled(percent: percent)
+            BTPowerState.syncMagSafeState()
         }
 
         self.restoreChargingSleep()
@@ -194,7 +189,7 @@ internal enum BTPowerState {
         self.chargingDisabled = false
 
         if BTSettings.magSafeSync {
-            BTPowerState.syncMagSafeStatePowerEnabled(percent: percent)
+            BTPowerState.syncMagSafeState()
         }
 
         return true
@@ -242,8 +237,7 @@ internal enum BTPowerState {
         self.powerDisabled = false
 
         if BTSettings.magSafeSync {
-            let (percent, _, _) = self.getPercentRemaining()
-            BTPowerState.syncMagSafeStatePowerEnabled(percent: percent)
+            BTPowerState.syncMagSafeState()
         }
 
         self.restoreAdapterSleep()

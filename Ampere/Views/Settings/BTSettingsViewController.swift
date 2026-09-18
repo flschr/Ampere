@@ -26,8 +26,9 @@ internal final class BTSettingsViewController: NSViewController {
     @IBOutlet private var maxChargeSlider: NSSlider!
 
     @IBOutlet private var adapterSleepSwitch: NSSwitch!
-    @IBOutlet private var magSafeSyncSwitch: NSSwitch!
-    @IBOutlet private var magSafeDescriptionTextField: NSTextField!
+    @IBOutlet var magSafeSyncSwitch: NSSwitch!
+    @IBOutlet var magSafeSyncLabel: NSTextField!
+    @IBOutlet var magSafeDescriptionTextField: NSTextField!
 
     private let lowPowerThresholdControls = BTLowPowerThresholdControls()
 
@@ -350,10 +351,6 @@ internal final class BTSettingsViewController: NSViewController {
         self.adapterSleepSwitch.state = value ? .off : .on
     }
 
-    private func setMagSafeSync(value: Bool) {
-        self.magSafeSyncSwitch.state = value ? .on : .off
-    }
-
     private func initPowerState() async {
         do {
             let settings = try await BTActions.getSettings()
@@ -369,12 +366,7 @@ internal final class BTSettingsViewController: NSViewController {
             self.lowPowerThresholdControls.threshold =
                 parsedSettings.lowPowerModeThreshold
 
-            if let magSafeSync = parsedSettings.magSafeSync {
-                self.magSafeSyncSwitch.isEnabled = true
-                self.setMagSafeSync(value: magSafeSync)
-            } else {
-                self.magSafeSyncSwitch.isEnabled = false
-            }
+            self.configureMagSafe(settings: parsedSettings)
         } catch {
             BTErrorHandler.errorHandler(error: error)
         }

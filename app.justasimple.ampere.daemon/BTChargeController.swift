@@ -22,6 +22,9 @@ internal enum BTChargeController {
         self.capabilities = .legacy
         SMCComm.Power.prepare()
         SMCComm.MagSafe.prepare()
+        if SMCComm.MagSafe.supported {
+            _ = SMCComm.MagSafe.setSystem()
+        }
         let adapterControl = SMCComm.Power.adapterControlSupported
 
         if SMCComm.FirmwareChargeLimit.supported,
@@ -46,7 +49,6 @@ internal enum BTChargeController {
         if let client = BTSystemChargeLimitClient.make(),
            let capabilities = BTPowerCapabilities.systemManaged(
                adapterControl: adapterControl,
-               magSafeSync: SMCComm.MagSafe.supported,
                availableLimits: client.availableLimits
            ) {
             self.systemClient = client

@@ -14,7 +14,7 @@ final class BTPowerCapabilitiesTests: XCTestCase {
             )
         )
 
-        XCTAssertFalse(capabilities.magSafeSync)
+        XCTAssertEqual((capabilities.payload[BTPowerCapabilities.Keys.magSafeSync] as? NSNumber)?.boolValue, false)
         XCTAssertEqual(
             try BTPowerCapabilities(payload: capabilities.payload),
             capabilities
@@ -24,22 +24,19 @@ final class BTPowerCapabilitiesTests: XCTestCase {
         inconsistentPayload[BTPowerCapabilities.Keys.magSafeSync] = NSNumber(
             value: true
         )
-        XCTAssertThrowsError(
-            try BTPowerCapabilities(payload: inconsistentPayload)
-        )
+        XCTAssertEqual(try BTPowerCapabilities(payload: inconsistentPayload), capabilities)
     }
 
-    func testFirmwareManagedCapabilitiesPreserveMagSafeSupport() throws {
+    func testFirmwareManagedCapabilitiesDoNotExposeMagSafeOverride() throws {
         let capabilities = BTPowerCapabilities.firmwareManaged(
-            adapterControl: false,
-            magSafeSync: true
+            adapterControl: false
         )
 
         XCTAssertEqual(
             try BTPowerCapabilities(payload: capabilities.payload),
             capabilities
         )
-        XCTAssertTrue(capabilities.magSafeSync)
+        XCTAssertEqual((capabilities.payload[BTPowerCapabilities.Keys.magSafeSync] as? NSNumber)?.boolValue, false)
         XCTAssertFalse(capabilities.directChargingControl)
     }
 }

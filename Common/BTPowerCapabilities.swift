@@ -26,7 +26,6 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
     let adapterControl: Bool
     let directChargingControl: Bool
     let customChargeRange: Bool
-    let magSafeSync: Bool
     let minimumMaxCharge: Int
     let maxChargeStep: Int
 
@@ -35,7 +34,6 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
         adapterControl: Bool,
         directChargingControl: Bool,
         customChargeRange: Bool,
-        magSafeSync: Bool,
         minimumMaxCharge: Int,
         maxChargeStep: Int
     ) {
@@ -43,7 +41,6 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
         self.adapterControl = adapterControl
         self.directChargingControl = directChargingControl
         self.customChargeRange = customChargeRange
-        self.magSafeSync = magSafeSync
         self.minimumMaxCharge = minimumMaxCharge
         self.maxChargeStep = maxChargeStep
     }
@@ -53,18 +50,16 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
         adapterControl: true,
         directChargingControl: true,
         customChargeRange: true,
-        magSafeSync: true,
         minimumMaxCharge: Int(BTSettingsInfo.Bounds.maxChargeMin),
         maxChargeStep: 1
     )
 
-    static func legacy(adapterControl: Bool, magSafeSync: Bool) -> Self {
+    static func legacy(adapterControl: Bool) -> Self {
         Self(
             chargeControlMode: .legacySMC,
             adapterControl: adapterControl,
             directChargingControl: true,
             customChargeRange: true,
-            magSafeSync: magSafeSync,
             minimumMaxCharge: Int(BTSettingsInfo.Bounds.maxChargeMin),
             maxChargeStep: 1
         )
@@ -95,19 +90,17 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
             adapterControl: adapterControl,
             directChargingControl: false,
             customChargeRange: false,
-            magSafeSync: false,
             minimumMaxCharge: Int(minimum),
             maxChargeStep: Int(step)
         )
     }
 
-    static func firmwareManaged(adapterControl: Bool, magSafeSync: Bool) -> Self {
+    static func firmwareManaged(adapterControl: Bool) -> Self {
         Self(
             chargeControlMode: .firmwareSMC,
             adapterControl: adapterControl,
             directChargingControl: false,
             customChargeRange: true,
-            magSafeSync: magSafeSync,
             minimumMaxCharge: Int(BTSettingsInfo.Bounds.maxChargeMin),
             maxChargeStep: 1
         )
@@ -126,7 +119,6 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
                 (payload[Keys.directChargingControl] as? NSNumber)?.boolValue,
             let customChargeRange =
                 (payload[Keys.customChargeRange] as? NSNumber)?.boolValue,
-            let magSafeSync = (payload[Keys.magSafeSync] as? NSNumber)?.boolValue,
             let minimumMaxCharge =
                 (payload[Keys.minimumMaxCharge] as? NSNumber)?.intValue,
             let maxChargeStep = (payload[Keys.maxChargeStep] as? NSNumber)?.intValue,
@@ -137,8 +129,7 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
             Self.modeIsConsistent(
                 mode: mode,
                 directChargingControl: directChargingControl,
-                customChargeRange: customChargeRange,
-                magSafeSync: magSafeSync
+                customChargeRange: customChargeRange
             )
         else {
             throw BTError.malformedData
@@ -149,7 +140,6 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
             adapterControl: adapterControl,
             directChargingControl: directChargingControl,
             customChargeRange: customChargeRange,
-            magSafeSync: magSafeSync,
             minimumMaxCharge: minimumMaxCharge,
             maxChargeStep: maxChargeStep
         )
@@ -161,7 +151,8 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
             Keys.adapterControl: NSNumber(value: self.adapterControl),
             Keys.directChargingControl: NSNumber(value: self.directChargingControl),
             Keys.customChargeRange: NSNumber(value: self.customChargeRange),
-            Keys.magSafeSync: NSNumber(value: self.magSafeSync),
+            // Older clients require this field, but LED override is retired.
+            Keys.magSafeSync: NSNumber(value: false),
             Keys.minimumMaxCharge: NSNumber(value: self.minimumMaxCharge),
             Keys.maxChargeStep: NSNumber(value: self.maxChargeStep),
         ]
@@ -185,8 +176,7 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
     private static func modeIsConsistent(
         mode: BTChargeControlMode,
         directChargingControl: Bool,
-        customChargeRange: Bool,
-        magSafeSync: Bool
+        customChargeRange: Bool
     ) -> Bool {
         switch mode {
         case .legacySMC:
@@ -194,7 +184,7 @@ internal struct BTPowerCapabilities: Equatable, Sendable {
         case .firmwareSMC:
             return !directChargingControl && customChargeRange
         case .systemManaged:
-            return !directChargingControl && !customChargeRange && !magSafeSync
+            return !directChargingControl && !customChargeRange
         }
     }
 }

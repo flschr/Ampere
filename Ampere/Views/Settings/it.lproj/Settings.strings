@@ -1,10 +1,5 @@
 "0sD-aV-92m.title" = "%";
 "1HE-SM-FyJ.title" = "Il Mac non entrerà in stop durante la ricarica, così Ampere potrà monitorare il livello della batteria. Lo stop verrà riattivato quando il Mac smetterà di caricare per qualsiasi motivo.";
-"3Kk-Vy-Cgc.title" = "Arancione durante la ricarica o una pausa sotto il limite; verde al raggiungimento dell'obiettivo di carica. Nessun lampeggio. Spenta se l'alimentatore è disattivato.";
-"47S-lH-kMQ.title" = "Adatta la spia MagSafe al limite di carica";
-"MagSafeManagedTitle" = "macOS controlla la spia MagSafe";
-"MagSafeManagedDescription" = "La spia segue la carica e il limite impostati da macOS. Ampere non deve controllarla separatamente.";
-"BOx-qm-k90.title" = "Quando il coperchio è chiuso, il Mac potrebbe entrare automaticamente in stop con l'alimentatore disattivato, anche se è collegato e acceso uno schermo esterno.";
 "IMi-pw-cwy.label" = "Alimentazione";
 "SrC-Z2-byQ.title" = "70";
 "WC9-iw-C9D.title" = "%";
@@ -14,5 +9,4 @@
 "ZWd-cD-Dlp.paletteLabel" = "Alimentazione";
 "cnq-Zd-qMS.title" = "OK";
 "dqT-oI-86h.title" = "Annulla";
-"fIe-Jy-1ot.title" = "Impedisci al Mac di andare in stop quando l'alimentatore è disattivato";
 "sW6-EL-lV5.title" = "80";

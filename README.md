@@ -22,13 +22,9 @@ Even when connected to power, your Mac's battery may slowly lose battery charge 
 
 ## Allows you to disable the power adapter
 
-If you want to discharge the battery of your Mac, e.g., to recalibrate it, you can turn off the power adapter without actually unplugging it. You can also have Ampere disable sleeping when the power adapter is disabled.
+If you want to discharge the battery of your Mac, e.g., to recalibrate it, you can turn off the power adapter without actually unplugging it. macOS controls sleep normally while the power adapter is disabled.
 
 **Note:** Your Mac may go to sleep immediately after enabling the power adapter again. This is a software bug in macOS and cannot easily be worked around.
-
-|<img alt="Power Settings" src="Resources/PowerSettings.png" width=607>|
-|:--:| 
-| **Fig. 1**. *Power Settings* |
 
 ## Grants you manual control
 
@@ -41,7 +37,7 @@ The Ampere "Commands" menu and its menu bar extra allow you to issue various com
 
 |<img alt="Menu Bar Extra" src="Resources/MenuBarExtra.png" width=283>|
 |:----------|
-| **Fig. 2**. *Menu Bar Extra* |
+| **Fig. 1**. *Menu Bar Extra* |
 
 # Install
 
@@ -83,11 +79,11 @@ On macOS 15 Sequoia or above:
 
 1. Open Ampere from your Applications folder
 2. The menu bar will change to show the app menus, and a menu bar extra will should be visible
-3. Configure the settings through either method (see **Fig. 2, 3, 4**)
+3. Configure the settings through either method (see **Fig. 1, 2, 3**)
 
 |<img alt="Menu Bar Main" src="Resources/MenuBarMain.png" width=316>|<img alt="Menu Bar Extra" src="Resources/MenuBarCommands.png" width=248>|
 |:----------|:----------|
-| **Fig. 3**. *Main Menu* | **Fig. 4**. *Menu Bar Commands* |
+| **Fig. 2**. *Main Menu* | **Fig. 3**. *Menu Bar Commands* |
 
 If you prefer, you can quit the GUI to hide the menu bar extra and Ampere will keep running in the background.
 If you want to change any settings, simply re-open the app.
@@ -95,7 +91,7 @@ If you want to change any settings, simply re-open the app.
 # Uninstall
 
 1. Focus Ampere
-2. Open the main Ampere menu in the menu bar (see **Fig. 3**)
+2. Open the main Ampere menu in the menu bar (see **Fig. 2**)
 3. Choose "Disable Background Activity"
 4. Move the app to the Trash and empty it
 
@@ -105,7 +101,7 @@ Ampere disables sleep while it is charging, because it has to actively disable c
 
 Apps, including Ampere, cannot control the charge state when the machine is shut down. If the charger remains plugged in while the Mac is off, the battery will charge to 100&nbsp;%.
 
-Note that sleep should usually be disabled when the power adapter is disabled, as this will exit Clamshell mode and the machine will sleep immediately if the lid is closed. Refer to the toggle in the Settings dialog (see **Fig. 1**).
+With the power adapter disabled, a closed MacBook may leave clamshell mode and sleep even when an external display is connected.
 
 # Technical Details
 
@@ -130,4 +126,4 @@ These recent Ampere additions should be preserved when this README is reworked:
 
 * Battery protection: Ampere pauses charging when the battery gets too warm and resumes only after it has cooled down enough. This is a battery-longevity protection layer on top of macOS' built-in hardware safety behavior.
 * Low Power Mode: Ampere can manage macOS Low Power Mode from the menu bar workflow.
-* Positioning: Ampere focuses on explicit charge limits, lower-limit hysteresis, power adapter control, thermal charging protection, MagSafe indicator sync, Low Power Mode control, and a small native menu bar experience.
+* Positioning: Ampere focuses on explicit charge limits, lower-limit hysteresis, power adapter control, thermal charging protection, Low Power Mode control, and a small native menu bar experience. macOS owns the MagSafe indicator.

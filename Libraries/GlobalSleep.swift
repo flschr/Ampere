@@ -20,9 +20,8 @@ public enum GlobalSleep {
     /// requiring property services to be up during shutdown.
     private static let previousSleepDisabledKey = "PreviousSleepDisabled"
 
-    /// There can be multiple factors to disable sleep, e.g., active battery
-    /// charging or a disabled power adapter. Use a counter to allow independent
-    /// control by all sources.
+    /// Active charging and short-lived setup phases can overlap. Use a counter
+    /// so each source restores only its own sleep-prevention request.
     private static var disabledCounter: UInt8 = 0
 
     /// Honour the user-specified sleep disabled state for restoration.

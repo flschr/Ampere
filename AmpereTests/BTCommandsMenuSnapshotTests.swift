@@ -9,8 +9,6 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
     private let settings = try! BTBatterySettings(
         minCharge: 70,
         maxCharge: 80,
-        adapterSleep: false,
-        magSafeSync: nil
     )
 
     func testPausedStateShowsResumeOnly() {
@@ -70,8 +68,6 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
             settings: try! BTBatterySettings(
                 minCharge: 50,
                 maxCharge: 80,
-                adapterSleep: false,
-                magSafeSync: nil
             ),
             timeToEmptyEstimate: nil,
             timeToFullEstimate: nil
@@ -208,8 +204,6 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
             settings: try! BTBatterySettings(
                 minCharge: 50,
                 maxCharge: 80,
-                adapterSleep: false,
-                magSafeSync: nil
             ),
             timeToEmptyEstimate: 7200,
             timeToFullEstimate: nil
@@ -238,8 +232,6 @@ final class BTCommandsMenuSnapshotTests: XCTestCase {
             settings: try! BTBatterySettings(
                 minCharge: 50,
                 maxCharge: 80,
-                adapterSleep: false,
-                magSafeSync: nil
             ),
             timeToEmptyEstimate: 7200,
             timeToFullEstimate: nil

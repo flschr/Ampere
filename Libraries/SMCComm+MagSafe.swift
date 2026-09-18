@@ -16,19 +16,11 @@ public extension SMCComm {
         }
 
         static func setSystem() -> Bool {
-            return self.setColor(color: 0x00)
-        }
+            guard self.supported else {
+                return false
+            }
 
-        static func setOff() -> Bool {
-            return self.setColor(color: 0x01)
-        }
-
-        static func setGreen() -> Bool {
-            return self.setColor(color: 0x03)
-        }
-
-        static func setOrange() -> Bool {
-            return self.setColor(color: 0x04)
+            return SMCComm.writeKey(key: self.Keys.ACLC.key, bytes: [0x00])
         }
     }
 }
@@ -45,11 +37,4 @@ private extension SMCComm.MagSafe {
         )
     }
 
-    private static func setColor(color: UInt8) -> Bool {
-        guard self.supported else {
-            return false
-        }
-
-        return SMCComm.writeKey(key: self.Keys.ACLC.key, bytes: [color])
-    }
 }

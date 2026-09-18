@@ -8,7 +8,7 @@ import os.log
 
 @MainActor
 internal final class BTSettingsViewController: NSViewController {
-    private static let contentSize = NSSize(width: 520, height: 515)
+    private static let contentSize = NSSize(width: 520, height: 390)
 
     private var currentSettings: [String: NSObject & Sendable]? = nil
     private var capabilities = BTPowerCapabilities.legacy
@@ -24,11 +24,7 @@ internal final class BTSettingsViewController: NSViewController {
 
     @IBOutlet private var maxChargeTextField: NSTextField!
     @IBOutlet private var maxChargeSlider: NSSlider!
-
-    @IBOutlet private var adapterSleepSwitch: NSSwitch!
-    @IBOutlet var magSafeSyncSwitch: NSSwitch!
-    @IBOutlet var magSafeSyncLabel: NSTextField!
-    @IBOutlet var magSafeDescriptionTextField: NSTextField!
+    @IBOutlet private var chargingSleepDescription: NSTextField!
 
     private let lowPowerThresholdControls = BTLowPowerThresholdControls()
 
@@ -108,7 +104,7 @@ internal final class BTSettingsViewController: NSViewController {
             equalToConstant: Self.contentSize.height
         ).isActive = true
         self.tabView.selectTabViewItem(self.powerTab)
-        self.tabView.heightAnchor.constraint(equalToConstant: 446).isActive = true
+        self.tabView.heightAnchor.constraint(equalToConstant: 321).isActive = true
         self.addInitialFocusView()
         self.configurePowerTabTextFields()
         self.cancelButton = self.view.subviews.compactMap {
@@ -131,10 +127,6 @@ internal final class BTSettingsViewController: NSViewController {
             settings = try BTSettingsPayloadFactory.make(
                 minCharge: self.minChargeNum.intValue,
                 maxCharge: self.maxChargeNum.intValue,
-                adapterSleep: self.adapterSleepSwitch.state == .off,
-                magSafeSync: self.magSafeSyncSwitch.isEnabled ?
-                    self.magSafeSyncSwitch.state == .on :
-                    nil,
                 lowPowerModeThreshold: self.lowPowerThresholdControls.threshold,
                 capabilities: self.capabilities
             )
@@ -331,8 +323,8 @@ internal final class BTSettingsViewController: NSViewController {
                 constant: -20
             ),
             self.lowPowerThresholdControls.topAnchor.constraint(
-                equalTo: self.magSafeDescriptionTextField.bottomAnchor,
-                constant: 12
+                equalTo: self.chargingSleepDescription.bottomAnchor,
+                constant: 20
             ),
             self.lowPowerThresholdControls.bottomAnchor.constraint(
                 equalTo: powerView.bottomAnchor,
@@ -347,10 +339,6 @@ internal final class BTSettingsViewController: NSViewController {
             !IOPSPrivate.OptimizedBatteryChargingEngaged()
     }
 
-    private func setAdapterSleep(value: Bool) {
-        self.adapterSleepSwitch.state = value ? .off : .on
-    }
-
     private func initPowerState() async {
         do {
             let settings = try await BTActions.getSettings()
@@ -362,11 +350,9 @@ internal final class BTSettingsViewController: NSViewController {
 
             self.setMinCharge(value: parsedSettings.minCharge)
             self.setMaxCharge(value: parsedSettings.maxCharge)
-            self.setAdapterSleep(value: parsedSettings.adapterSleep)
             self.lowPowerThresholdControls.threshold =
                 parsedSettings.lowPowerModeThreshold
 
-            self.configureMagSafe(settings: parsedSettings)
         } catch {
             BTErrorHandler.errorHandler(error: error)
         }
@@ -386,8 +372,6 @@ internal final class BTSettingsViewController: NSViewController {
         self.maxChargeSlider.allowsTickMarkValuesOnly =
             self.capabilities.maxChargeStep > 1
 
-        self.adapterSleepSwitch.isEnabled =
-            self.capabilities.adapterControl
     }
 }
 

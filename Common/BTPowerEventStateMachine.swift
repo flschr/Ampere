@@ -148,17 +148,6 @@ internal enum BTPowerEventStateMachine {
         return chargingDisabled ? .restoreSleep : .disableSleep
     }
 
-    static func powerAdapterSleepEffect(
-        powerDisabled: Bool,
-        adapterSleep: Bool
-    ) -> SleepEffect {
-        guard !adapterSleep else {
-            return .none
-        }
-
-        return powerDisabled ? .disableSleep : .restoreSleep
-    }
-
     static func wakeFromSleepEffects(
         percentHandlerRegistered: Bool
     ) -> [WakeEffect] {

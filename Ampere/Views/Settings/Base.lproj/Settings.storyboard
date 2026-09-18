@@ -15,10 +15,10 @@
                     <window key="window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" restorable="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="utilityWindow" tabbingMode="disallowed" toolbarStyle="preference" id="zbj-Ah-uH1">
                         <windowStyleMask key="styleMask" titled="YES"/>
                         <windowCollectionBehavior key="collectionBehavior" fullScreenNone="YES" fullScreenDisallowsTiling="YES"/>
-                        <rect key="contentRect" x="2080" y="983" width="480" height="234"/>
+                        <rect key="contentRect" x="2080" y="983" width="520" height="390"/>
                         <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1415"/>
                         <view key="contentView" id="zIT-84-1ZB">
-                            <rect key="frame" x="0.0" y="0.0" width="480" height="234"/>
+                            <rect key="frame" x="0.0" y="0.0" width="520" height="390"/>
                             <autoresizingMask key="autoresizingMask"/>
                         </view>
                         <toolbar key="toolbar" implicitIdentifier="139CDA02-1562-4BA9-8D5C-8C3CA70163F7" autosavesConfiguration="NO" allowsUserCustomization="NO" showsBaselineSeparator="NO" displayMode="iconAndLabel" sizeMode="regular" id="w28-jh-n04">
@@ -52,15 +52,15 @@
             <objects>
                 <viewController storyboardIdentifier="SettingsViewController" showSeguePresentationStyle="single" id="qK6-EM-YZH" userLabel="SettingsViewController" customClass="BTSettingsViewController" customModule="Battery_Toolkit" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" translatesAutoresizingMaskIntoConstraints="NO" id="IvC-q3-fvl" userLabel="Settings View">
-                        <rect key="frame" x="0.0" y="0.0" width="495" height="515"/>
+                        <rect key="frame" x="0.0" y="0.0" width="520" height="390"/>
                         <subviews>
                             <tabView allowsTruncatedLabels="NO" type="noTabsNoBorder" translatesAutoresizingMaskIntoConstraints="NO" id="NXG-fh-uCo">
-                                <rect key="frame" x="0.0" y="69" width="495" height="446"/>
+                                <rect key="frame" x="0.0" y="69" width="520" height="321"/>
                                 <font key="font" metaFont="system"/>
                                 <tabViewItems>
                                     <tabViewItem label="Power" identifier="" id="IMi-pw-cwy" userLabel="Power">
                                         <view key="view" id="Blc-dd-9Qv">
-                                            <rect key="frame" x="0.0" y="0.0" width="495" height="446"/>
+                                            <rect key="frame" x="0.0" y="0.0" width="520" height="321"/>
                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                             <subviews>
                                                 <textField focusRingType="none" verticalHuggingPriority="750" mirrorLayoutDirectionWhenInternationalizing="never" preferredMaxLayoutWidth="30" textCompletion="NO" translatesAutoresizingMaskIntoConstraints="NO" id="UVz-So-HqI" userLabel="Min Charge ">
@@ -162,58 +162,6 @@
                                                         <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                     </textFieldCell>
                                                 </textField>
-                                                <box verticalHuggingPriority="750" boxType="separator" translatesAutoresizingMaskIntoConstraints="NO" id="Z0P-wM-ijd">
-                                                    <rect key="frame" x="20" y="121" width="455" height="5"/>
-                                                </box>
-                                                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="gVg-BR-NcJ" userLabel="Adapter Sleep Label">
-                                                    <rect key="frame" x="18" y="100" width="415" height="15"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="411" id="4kI-hg-lpd"/>
-                                                    </constraints>
-                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="Prevent your Mac from sleeping when the power adapter is disabled" id="fIe-Jy-1ot">
-                                                        <font key="font" metaFont="system"/>
-                                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                    </textFieldCell>
-                                                </textField>
-                                                <switch horizontalHuggingPriority="750" verticalHuggingPriority="750" controlSize="mini" baseWritingDirection="leftToRight" alignment="left" state="on" translatesAutoresizingMaskIntoConstraints="NO" id="ueg-wa-VAZ">
-                                                    <rect key="frame" x="448" y="99" width="28" height="16"/>
-                                                </switch>
-                                                <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Kei-Vw-B1H" userLabel="Adapter Sleep Secondary Label">
-                                                    <rect key="frame" x="18" y="69" width="415" height="28"/>
-                                                    <textFieldCell key="cell" controlSize="small" selectable="YES" id="BOx-qm-k90">
-                                                        <font key="font" metaFont="smallSystem"/>
-                                                        <string key="title">When the lid is closed, your Mac may automatically sleep with the power adapter disabled, even if an external display is connected and turned on.</string>
-                                                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                    </textFieldCell>
-                                                </textField>
-                                                <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="4VU-bn-waD" userLabel="MagSafe Sync Label">
-                                                    <rect key="frame" x="18" y="45" width="415" height="16"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="width" constant="411" id="VFA-XY-kKI"/>
-                                                    </constraints>
-                                                    <textFieldCell key="cell" lineBreakMode="clipping" title="Adapt MagSafe light to charge limit" id="47S-lH-kMQ">
-                                                        <font key="font" metaFont="system"/>
-                                                        <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
-                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                    </textFieldCell>
-                                                </textField>
-                                                <textField focusRingType="none" verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" translatesAutoresizingMaskIntoConstraints="NO" id="Ghe-cF-C3L" userLabel="MagSafe Sync Secondary Label">
-                                                    <rect key="frame" x="18" y="0.0" width="415" height="42"/>
-                                                    <constraints>
-                                                        <constraint firstAttribute="height" constant="42" id="LPm-GhE-42H"/>
-                                                    </constraints>
-                                                    <textFieldCell key="cell" controlSize="small" selectable="YES" id="3Kk-Vy-Cgc">
-                                                        <font key="font" metaFont="smallSystem"/>
-                                                        <string key="title">Amber while charging or paused below the limit; green when the charge target is reached. No blinking. The light is off if the power adapter is disabled.</string>
-                                                        <color key="textColor" name="secondaryLabelColor" catalog="System" colorSpace="catalog"/>
-                                                        <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
-                                                    </textFieldCell>
-                                                </textField>
-                                                <switch horizontalHuggingPriority="750" verticalHuggingPriority="750" controlSize="mini" baseWritingDirection="leftToRight" alignment="left" translatesAutoresizingMaskIntoConstraints="NO" id="Sq5-KE-c3T">
-                                                    <rect key="frame" x="448" y="45" width="28" height="16"/>
-                                                </switch>
                                                 <textField focusRingType="none" horizontalHuggingPriority="251" verticalHuggingPriority="750" translatesAutoresizingMaskIntoConstraints="NO" id="eKL-lO-rZG" userLabel="Charging Sleep">
                                                     <rect key="frame" x="18" y="132" width="459" height="42"/>
                                                     <constraints>
@@ -229,54 +177,32 @@
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="cpE-XY-Cm8" firstAttribute="centerY" secondItem="GpU-47-1gg" secondAttribute="centerY" id="1dl-YS-6Zu"/>
-                                                <constraint firstItem="Ghe-cF-C3L" firstAttribute="leading" secondItem="4VU-bn-waD" secondAttribute="leading" id="2RH-su-Np3"/>
                                                 <constraint firstItem="cpE-XY-Cm8" firstAttribute="leading" secondItem="UVz-So-HqI" secondAttribute="trailing" constant="5" id="5BV-JP-wks"/>
-                                                <constraint firstItem="gVg-BR-NcJ" firstAttribute="top" secondItem="Z0P-wM-ijd" secondAttribute="bottom" constant="8" symbolic="YES" id="6JY-Uc-bCv"/>
                                                 <constraint firstItem="jVr-RT-V0O" firstAttribute="centerY" secondItem="9gz-yn-SNi" secondAttribute="centerY" id="7Rl-Gj-COU"/>
-                                                <constraint firstItem="Kei-Vw-B1H" firstAttribute="leading" secondItem="gVg-BR-NcJ" secondAttribute="leading" id="BIy-17-5GJ"/>
                                                 <constraint firstItem="eKL-lO-rZG" firstAttribute="leading" secondItem="9gz-yn-SNi" secondAttribute="leading" id="BY0-uc-RVE"/>
-                                                <constraint firstAttribute="trailing" secondItem="Sq5-KE-c3T" secondAttribute="trailing" constant="20" symbolic="YES" id="Cto-Ja-rGl"/>
                                                 <constraint firstItem="UVz-So-HqI" firstAttribute="leading" secondItem="GpU-47-1gg" secondAttribute="trailing" constant="8" symbolic="YES" id="GGc-ca-f1c"/>
                                                 <constraint firstItem="xbB-Gg-5TD" firstAttribute="top" secondItem="Blc-dd-9Qv" secondAttribute="top" constant="20" id="GUv-KX-cgU"/>
                                                 <constraint firstItem="GpU-47-1gg" firstAttribute="top" secondItem="xbB-Gg-5TD" secondAttribute="bottom" constant="8" symbolic="YES" id="HJY-El-CV7"/>
-                                                <constraint firstItem="Kei-Vw-B1H" firstAttribute="top" secondItem="gVg-BR-NcJ" secondAttribute="bottom" constant="3" id="HN7-MJ-nQS"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="zNI-F1-3zH" secondAttribute="trailing" constant="20" symbolic="YES" id="Hq4-Jc-hce"/>
                                                 <constraint firstItem="jVr-RT-V0O" firstAttribute="width" secondItem="UVz-So-HqI" secondAttribute="width" id="Jhg-b8-0QC"/>
                                                 <constraint firstItem="kwg-mE-JId" firstAttribute="centerY" secondItem="9gz-yn-SNi" secondAttribute="centerY" id="Jti-qG-eyX"/>
-                                                <constraint firstItem="Kei-Vw-B1H" firstAttribute="leading" secondItem="Blc-dd-9Qv" secondAttribute="leading" constant="20" symbolic="YES" id="KRY-s2-g81"/>
                                                 <constraint firstItem="eKL-lO-rZG" firstAttribute="top" secondItem="9gz-yn-SNi" secondAttribute="bottom" constant="8" symbolic="YES" id="LGz-F9-lWX"/>
-                                                <constraint firstItem="Sq5-KE-c3T" firstAttribute="centerY" secondItem="4VU-bn-waD" secondAttribute="centerY" id="LTy-1O-IYQ"/>
-                                                <constraint firstItem="4VU-bn-waD" firstAttribute="top" secondItem="Kei-Vw-B1H" secondAttribute="bottom" constant="8" symbolic="YES" id="Mnj-hi-FzQ"/>
-                                                <constraint firstItem="ueg-wa-VAZ" firstAttribute="centerY" secondItem="gVg-BR-NcJ" secondAttribute="centerY" id="PTV-z9-vU7"/>
                                                 <constraint firstItem="9gz-yn-SNi" firstAttribute="leading" secondItem="Blc-dd-9Qv" secondAttribute="leading" constant="20" symbolic="YES" id="Q20-yh-euj"/>
-                                                <constraint firstItem="Ghe-cF-C3L" firstAttribute="width" secondItem="4VU-bn-waD" secondAttribute="width" id="RqI-ZC-Kck"/>
                                                 <constraint firstAttribute="trailing" secondItem="cpE-XY-Cm8" secondAttribute="trailing" constant="20" symbolic="YES" id="Te3-hT-ilx"/>
                                                 <constraint firstItem="jVr-RT-V0O" firstAttribute="height" secondItem="UVz-So-HqI" secondAttribute="height" id="Vso-fw-dlC"/>
-                                                <constraint firstItem="4VU-bn-waD" firstAttribute="leading" secondItem="Blc-dd-9Qv" secondAttribute="leading" constant="20" symbolic="YES" id="XDG-Oy-TLS"/>
                                                 <constraint firstItem="eKL-lO-rZG" firstAttribute="leading" secondItem="Blc-dd-9Qv" secondAttribute="leading" constant="20" symbolic="YES" id="XOK-Vw-w9X"/>
                                                 <constraint firstItem="9gz-yn-SNi" firstAttribute="top" secondItem="zNI-F1-3zH" secondAttribute="bottom" constant="8" symbolic="YES" id="Zu6-zf-Np0"/>
                                                 <constraint firstItem="GpU-47-1gg" firstAttribute="leading" secondItem="Blc-dd-9Qv" secondAttribute="leading" constant="20" symbolic="YES" id="alr-Si-237"/>
                                                 <constraint firstItem="xbB-Gg-5TD" firstAttribute="leading" secondItem="Blc-dd-9Qv" secondAttribute="leading" constant="20" symbolic="YES" id="cZK-Uh-Yci"/>
                                                 <constraint firstAttribute="trailing" relation="greaterThanOrEqual" secondItem="xbB-Gg-5TD" secondAttribute="trailing" constant="20" symbolic="YES" id="cjw-eH-9lo"/>
-                                                <constraint firstAttribute="trailing" secondItem="Z0P-wM-ijd" secondAttribute="trailing" constant="20" symbolic="YES" id="df3-4V-POG"/>
-                                                <constraint firstAttribute="trailing" secondItem="ueg-wa-VAZ" secondAttribute="trailing" constant="20" symbolic="YES" id="f7d-Fr-Xpc"/>
-                                                <constraint firstItem="Z0P-wM-ijd" firstAttribute="leading" secondItem="Blc-dd-9Qv" secondAttribute="leading" constant="20" symbolic="YES" id="g5d-KP-936"/>
-                                                <constraint firstItem="Sq5-KE-c3T" firstAttribute="leading" secondItem="4VU-bn-waD" secondAttribute="trailing" constant="18" id="hDN-ZH-CZF"/>
                                                 <constraint firstItem="kwg-mE-JId" firstAttribute="leading" secondItem="jVr-RT-V0O" secondAttribute="trailing" constant="5" id="iJT-WO-ahy"/>
-                                                <constraint firstItem="Kei-Vw-B1H" firstAttribute="width" secondItem="gVg-BR-NcJ" secondAttribute="width" id="kw1-bL-IZV"/>
                                                 <constraint firstItem="kwg-mE-JId" firstAttribute="trailing" secondItem="eKL-lO-rZG" secondAttribute="trailing" id="l71-gL-9vs"/>
-                                                <constraint firstItem="Ghe-cF-C3L" firstAttribute="leading" secondItem="Blc-dd-9Qv" secondAttribute="leading" constant="20" symbolic="YES" id="las-Hj-6YJ"/>
                                                 <constraint firstAttribute="trailing" secondItem="cpE-XY-Cm8" secondAttribute="trailing" constant="20" symbolic="YES" id="oke-SA-KVP"/>
                                                 <constraint firstAttribute="trailing" secondItem="kwg-mE-JId" secondAttribute="trailing" constant="20" symbolic="YES" id="qzf-2H-ZeH"/>
                                                 <constraint firstItem="jVr-RT-V0O" firstAttribute="leading" secondItem="9gz-yn-SNi" secondAttribute="trailing" constant="8" symbolic="YES" id="sfe-IQ-HFX"/>
-                                                <constraint firstItem="gVg-BR-NcJ" firstAttribute="leading" secondItem="Blc-dd-9Qv" secondAttribute="leading" constant="20" symbolic="YES" id="tAO-9H-ewl"/>
                                                 <constraint firstItem="zNI-F1-3zH" firstAttribute="top" secondItem="GpU-47-1gg" secondAttribute="bottom" constant="8" symbolic="YES" id="uJV-HU-RAa"/>
-                                                <constraint firstItem="Ghe-cF-C3L" firstAttribute="top" secondItem="4VU-bn-waD" secondAttribute="bottom" constant="3" id="uey-Nz-udH"/>
-                                                <constraint firstItem="ueg-wa-VAZ" firstAttribute="top" secondItem="Z0P-wM-ijd" secondAttribute="bottom" constant="8" symbolic="YES" id="x5Q-Ss-5ia"/>
                                                 <constraint firstItem="UVz-So-HqI" firstAttribute="centerY" secondItem="GpU-47-1gg" secondAttribute="centerY" id="yDc-YR-IUQ"/>
-                                                <constraint firstItem="Z0P-wM-ijd" firstAttribute="top" secondItem="eKL-lO-rZG" secondAttribute="bottom" constant="8" symbolic="YES" id="zIq-cq-EHv"/>
                                                 <constraint firstItem="zNI-F1-3zH" firstAttribute="leading" secondItem="Blc-dd-9Qv" secondAttribute="leading" constant="20" symbolic="YES" id="zPY-hG-OHc"/>
-                                                <constraint firstItem="ueg-wa-VAZ" firstAttribute="leading" secondItem="gVg-BR-NcJ" secondAttribute="trailing" constant="18" id="zPl-ny-cvl"/>
                                             </constraints>
                                         </view>
                                     </tabViewItem>
@@ -334,10 +260,7 @@ Gw
                         </constraints>
                     </view>
 	                    <connections>
-	                        <outlet property="adapterSleepSwitch" destination="ueg-wa-VAZ" id="3Lx-ht-YnK"/>
-	                        <outlet property="magSafeSyncSwitch" destination="Sq5-KE-c3T" id="csD-RV-ou4"/>
-	                        <outlet property="magSafeSyncLabel" destination="4VU-bn-waD" id="CE1318-MGS-LABEL"/>
-	                        <outlet property="magSafeDescriptionTextField" destination="Ghe-cF-C3L" id="CE1317-MGS-DESC"/>
+	                        <outlet property="chargingSleepDescription" destination="eKL-lO-rZG" id="CE1319-CHG-SLEEP"/>
 	                        <outlet property="maxChargeSlider" destination="9gz-yn-SNi" id="Qjh-mR-1302"/>
 	                        <outlet property="maxChargeTextField" destination="jVr-RT-V0O" id="eMo-4f-1302"/>
 	                        <outlet property="minChargeSlider" destination="GpU-47-1gg" id="Rcf-wV-1302"/>

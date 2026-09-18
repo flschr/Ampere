@@ -31,8 +31,7 @@ internal enum BTChargeController {
            let originalState = SMCComm.FirmwareChargeLimit.read() {
             self.firmwareOriginalState = originalState
             self.capabilities = .firmwareManaged(
-                adapterControl: adapterControl,
-                magSafeSync: SMCComm.MagSafe.supported
+                adapterControl: adapterControl
             )
             os_log("Using firmware-managed charge limits")
             return true
@@ -40,8 +39,7 @@ internal enum BTChargeController {
 
         if SMCComm.Power.legacyChargingSupported {
             self.capabilities = .legacy(
-                adapterControl: adapterControl,
-                magSafeSync: SMCComm.MagSafe.supported
+                adapterControl: adapterControl
             )
             return true
         }

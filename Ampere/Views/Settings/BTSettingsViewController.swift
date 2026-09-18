@@ -324,7 +324,7 @@ internal final class BTSettingsViewController: NSViewController {
             ),
             self.lowPowerThresholdControls.topAnchor.constraint(
                 equalTo: self.chargingSleepDescription.bottomAnchor,
-                constant: 20
+                constant: 12
             ),
             self.lowPowerThresholdControls.bottomAnchor.constraint(
                 equalTo: powerView.bottomAnchor,
